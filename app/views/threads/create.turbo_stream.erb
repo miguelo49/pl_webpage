@@ -6,7 +6,7 @@
   <% end %>
 <% else %>
   <%= turbo_stream.prepend "threads_list" do %>
-    <%= render "threads/thread_card", topic: @topic, thread: @thread %>
+    <%= render "threads/thread_card", thread: @thread %>
   <% end %>
 
   <%= turbo_stream.replace "new_thread" do %>

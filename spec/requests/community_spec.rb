@@ -22,30 +22,35 @@ RSpec.describe "Community threads and comments", type: :request do
     User.create!(attrs)
   end
 
-  def create_thread(author:, title: "Hilo visible", status: nil)
+  def create_thread(author:, title: "Hilo visible", status: nil, topic_for: topic)
     thread = ForumThread.create!(
       title: title,
       body: "Contenido del hilo",
-      topic: topic,
+      topic: topic_for,
       user: author
     )
     thread.update_column(:status, status) if status
     thread.reload
   end
 
-  describe "GET /topics/:topic_id/threads" do
-    it "does not list pending threads publicly" do
+  describe "GET /threads" do
+    it "lists approved threads from multiple topics together" do
+      other_topic = Topic.create!(name: "Debate", slug: "debate", description: "Discusión", position: 2)
       viewer = create_user(role: :sympathizer)
       author = create_user(role: :sympathizer)
-      approved = create_thread(author: author, title: "Hilo aprobado", status: :approved)
-      pending = create_thread(author: author, title: "Hilo pendiente", status: :pending)
+      ideas_thread = create_thread(author: author, title: "Hilo de ideas", status: :approved, topic_for: topic)
+      debate_thread = create_thread(author: author, title: "Hilo de debate", status: :approved, topic_for: other_topic)
+      create_thread(author: author, title: "Hilo pendiente", status: :pending, topic_for: topic)
 
       sign_in viewer
-      get topic_threads_path(topic)
+      get threads_path
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include(approved.title)
-      expect(response.body).not_to include(pending.title)
+      expect(response.body).to include(ideas_thread.title)
+      expect(response.body).to include(debate_thread.title)
+      expect(response.body).to include(topic.name)
+      expect(response.body).to include(other_topic.name)
+      expect(response.body).not_to include("Hilo pendiente")
     end
   end
 
@@ -62,7 +67,7 @@ RSpec.describe "Community threads and comments", type: :request do
 
       thread = ForumThread.last
       expect(thread.status).to eq("pending")
-      expect(response).to redirect_to(topic_threads_path(topic))
+      expect(response).to redirect_to(threads_path)
     end
   end
 

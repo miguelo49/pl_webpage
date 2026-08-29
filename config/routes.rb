@@ -51,6 +51,8 @@ Rails.application.routes.draw do
 
   resources :law_proposals, only: [ :index, :show ]
 
+  resources :threads, only: [ :index ]
+
   namespace :moderation do
     root to: "queue#index"
     resources :reports, only: [ :index ]
@@ -67,8 +69,8 @@ Rails.application.routes.draw do
     resources :training_categories
   end
 
-  resources :topics, only: [ :index ] do
-    resources :threads, only: [ :index, :show, :new, :create, :edit, :update ] do
+  resources :topics, only: [] do
+    resources :threads, only: [ :show, :new, :create, :edit, :update ] do
       member do
         post :react
         post :bookmark

@@ -3,16 +3,18 @@ class ThreadsController < ApplicationController
   include BookmarkHandling
 
   before_action :authenticate_user!
-  before_action :set_topic
+  before_action :set_topic, except: [ :index ]
   before_action :set_thread, only: [ :show, :edit, :update, :react, :bookmark ]
 
   def index
     authorize ForumThread, :index?
+    @topics = Topic.ordered
     @threads = policy_scope(ForumThread)
-      .where(topic: @topic)
-      .includes(:user, :reactions)
-      .order(created_at: :desc)
-    @thread = @topic.threads.build
+      .includes(:user, :topic, :reactions)
+      .left_joins(:comments)
+      .group("threads.id")
+      .select("threads.*, GREATEST(threads.created_at, COALESCE(MAX(comments.created_at), threads.created_at)) AS last_activity_at")
+      .order("last_activity_at DESC")
   end
 
   def show
@@ -91,7 +93,7 @@ class ThreadsController < ApplicationController
 
   def redirect_after_create
     if @thread.pending?
-      redirect_to topic_threads_path(@topic), notice: "Tu hilo fue creado y está pendiente de aprobación."
+      redirect_to threads_path, notice: "Tu hilo fue creado y está pendiente de aprobación."
     else
       redirect_to topic_thread_path(@topic, @thread), notice: "Hilo publicado correctamente."
     end

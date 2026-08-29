@@ -1,7 +1,7 @@
 module NavigationHelper
   BOTTOM_NAV_ITEMS = [
     { key: :home, label: "Inicio", path_helper: :root_path, controllers: %w[home political_contexts] },
-    { key: :community, label: "Foro", path_helper: :topics_path, controllers: %w[topics threads comments news initiatives law_proposals] },
+    { key: :community, label: "Foro", path_helper: :threads_path, controllers: %w[topics threads comments news initiatives law_proposals] },
     { key: :events, label: "Eventos", path_helper: :events_path, controllers: %w[events attendances] },
     { key: :training, label: "Formación", path_helper: :training_materials_path, controllers: %w[training_materials] },
     { key: :profile, label: "Perfil", path_helper: :profile_path, controllers: %w[profiles], signed_in_only: true, signed_out_path_helper: :new_user_session_path }
