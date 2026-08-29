@@ -11,6 +11,10 @@ class ThreadPolicy < ApplicationPolicy
     record.user_id == user.id || user.board_member? || user.moderator?
   end
 
+  def index?
+    authenticated?
+  end
+
   def show?
     return false unless authenticated?
 

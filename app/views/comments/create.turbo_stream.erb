@@ -1,0 +1,25 @@
+<% if @comment.errors.any? %>
+  <%= turbo_stream.replace "comment_form" do %>
+    <div id="comment_form">
+      <%= render "comments/form", topic: @topic, thread: @thread, comment: @comment %>
+    </div>
+  <% end %>
+<% else %>
+  <%= turbo_stream.append "comments_list" do %>
+    <%= render "comments/comment", comment: @comment %>
+  <% end %>
+
+  <%= turbo_stream.replace "comment_form" do %>
+    <div id="comment_form">
+      <%= render "comments/form", topic: @topic, thread: @thread, comment: @thread.comments.build %>
+    </div>
+  <% end %>
+
+  <%= turbo_stream.update "flash_messages" do %>
+    <% if @comment.pending? %>
+      <p class="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">Tu comentario fue enviado y está pendiente de aprobación.</p>
+    <% else %>
+      <p class="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-800">Comentario publicado.</p>
+    <% end %>
+  <% end %>
+<% end %>

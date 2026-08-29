@@ -3,7 +3,7 @@ class Comment < ApplicationRecord
   belongs_to :commentable, polymorphic: true
   belongs_to :parent, class_name: "Comment", optional: true
 
-  has_many :replies, class_name: "Comment", foreign_key: :parent_id, dependent: :destroy, inverse_of: :parent
+  has_many :replies, -> { publicly_visible.order(:created_at) }, class_name: "Comment", foreign_key: :parent_id, dependent: :destroy, inverse_of: :parent
 
   enum :status, {
     pending: 0,
@@ -17,6 +17,8 @@ class Comment < ApplicationRecord
   validate :parent_must_be_top_level, if: -> { parent_id.present? }
   validate :parent_matches_commentable, if: -> { parent_id.present? }
 
+  before_validation :set_initial_status, on: :create
+
   scope :top_level, -> { where(parent_id: nil) }
   scope :publicly_visible, -> { approved }
 
@@ -29,6 +31,14 @@ class Comment < ApplicationRecord
   end
 
   private
+
+  def set_initial_status
+    self.status = auto_approved_on_create? ? :approved : :pending
+  end
+
+  def auto_approved_on_create?
+    user.board_member? || user.moderator?
+  end
 
   def parent_must_be_top_level
     return unless parent&.parent_id.present?

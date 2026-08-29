@@ -1,0 +1,43 @@
+<div class="space-y-6">
+  <div>
+    <%= link_to "← #{@topic.name}", topic_threads_path(@topic), class: "text-sm text-blue-600 hover:text-blue-800" %>
+    <h2 class="mt-2 text-xl font-semibold text-gray-900"><%= @thread.title %></h2>
+    <div class="mt-2 flex items-center gap-2 text-xs text-gray-400">
+      <span><%= @thread.user.first_name %></span>
+      <span>·</span>
+      <time datetime="<%= @thread.created_at.iso8601 %>"><%= @thread.created_at.to_fs(:short) %></time>
+    </div>
+  </div>
+
+  <article class="rounded-lg border border-gray-200 bg-white p-4">
+    <div class="prose prose-sm max-w-none text-gray-700">
+      <%= simple_format(@thread.body) %>
+    </div>
+  </article>
+
+  <% if policy(@thread).update? %>
+    <div>
+      <%= link_to "Editar hilo", edit_topic_thread_path(@topic, @thread), class: "text-sm text-blue-600 hover:text-blue-800" %>
+    </div>
+  <% end %>
+
+  <%= turbo_frame_tag "comments" do %>
+    <section class="space-y-4">
+      <h3 class="text-base font-semibold text-gray-900">Comentarios</h3>
+
+      <div id="comments_list" class="space-y-4">
+        <% if @comments.any? %>
+          <% @comments.each do |comment| %>
+            <%= render "comments/comment", comment: comment %>
+          <% end %>
+        <% else %>
+          <p class="text-sm text-gray-500">Sé el primero en comentar.</p>
+        <% end %>
+      </div>
+
+      <div id="comment_form">
+        <%= render "comments/form", topic: @topic, thread: @thread, comment: @comment %>
+      </div>
+    </section>
+  <% end %>
+</div>

@@ -12,6 +12,12 @@ Rails.application.routes.draw do
 
   root "home#index"
 
+  resources :topics, only: [ :index ] do
+    resources :threads, only: [ :index, :show, :new, :create, :edit, :update ] do
+      resources :comments, only: [ :create ]
+    end
+  end
+
   resource :onboarding, only: [ :show, :update ], controller: "onboardings"
   resource :profile, only: [ :show, :update ], controller: "profiles"
 

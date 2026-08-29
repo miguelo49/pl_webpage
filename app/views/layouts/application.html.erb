@@ -64,6 +64,10 @@
               <span class="h-5 w-5 rounded bg-gray-200" aria-hidden="true"></span>
               Inicio
             <% end %>
+            <%= link_to topics_path, class: "flex flex-col items-center gap-1 hover:text-gray-600 #{'text-blue-600' if controller_name.in?(%w[topics threads comments])}" do %>
+              <span class="h-5 w-5 rounded bg-gray-200" aria-hidden="true"></span>
+              Comunidad
+            <% end %>
             <% if user_signed_in? %>
               <%= link_to profile_path, class: "flex flex-col items-center gap-1 hover:text-gray-600 #{'text-blue-600' if controller_name == 'profiles'}" do %>
                 <span class="h-5 w-5 rounded bg-gray-200" aria-hidden="true"></span>
@@ -75,10 +79,6 @@
                 Entrar
               <% end %>
             <% end %>
-            <span class="flex flex-col items-center gap-1">
-              <span class="h-5 w-5 rounded bg-gray-200" aria-hidden="true"></span>
-              Más
-            </span>
           </div>
         </nav>
       <% end %>

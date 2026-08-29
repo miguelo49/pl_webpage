@@ -1,0 +1,10 @@
+<div class="space-y-6">
+  <div>
+    <%= link_to "← Volver al hilo", topic_thread_path(@topic, @thread), class: "text-sm text-blue-600 hover:text-blue-800" %>
+    <h2 class="mt-2 text-xl font-semibold text-gray-900">Editar hilo</h2>
+  </div>
+
+  <div class="rounded-lg border border-gray-200 bg-white p-4">
+    <%= render "threads/form", topic: @topic, thread: @thread, frame_id: "_top" %>
+  </div>
+</div>

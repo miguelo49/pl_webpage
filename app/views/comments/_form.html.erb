@@ -1,0 +1,23 @@
+<% input_class = "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" %>
+
+<%= form_with model: comment,
+      url: topic_thread_comments_path(topic, thread),
+      html: { data: { turbo_frame: "comments" }, class: "space-y-3" } do |form| %>
+  <% if comment.errors.any? %>
+    <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+      <ul class="list-inside list-disc space-y-1">
+        <% comment.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :body, "Tu comentario", class: "mb-1 block text-sm font-medium text-gray-700" %>
+    <%= form.text_area :body, rows: 3, class: input_class, placeholder: "Escribe un comentario..." %>
+  </div>
+
+  <%= form.submit "Comentar",
+        class: "w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700" %>
+<% end %>
