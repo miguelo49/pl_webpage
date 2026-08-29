@@ -25,6 +25,26 @@
     <div class="prose prose-sm max-w-none text-gray-700">
       <%= simple_format(@news_item.body) %>
     </div>
+
+    <div class="mt-4 flex flex-wrap items-center gap-2">
+      <%= render "reactions/button",
+            reactable: @news_item,
+            react_path: react_path_for(@news_item) %>
+
+      <div data-controller="share"
+           data-share-url-value="<%= news_url(@news_item) %>"
+           data-share-title-value="<%= @news_item.title %>"
+           data-share-text-value="<%= @news_item.summary %>"
+           class="inline-flex items-center gap-2">
+        <button type="button"
+              data-share-target="button"
+              data-action="click->share#share"
+              class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-600 transition hover:border-green-200 hover:text-green-700">
+          Compartir
+        </button>
+        <span data-share-target="feedback" class="hidden text-xs text-green-700" aria-live="polite"></span>
+      </div>
+    </div>
   </article>
 
   <% if @thread.present? %>

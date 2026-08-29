@@ -12,7 +12,11 @@ Rails.application.routes.draw do
 
   root "home#index"
 
-  resources :news, only: [ :index, :show, :new, :create ]
+  resources :news, only: [ :index, :show, :new, :create ] do
+    member do
+      post :react
+    end
+  end
 
   resources :topics, only: [ :index ] do
     resources :threads, only: [ :index, :show, :new, :create, :edit, :update ] do

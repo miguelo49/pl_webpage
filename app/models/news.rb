@@ -32,6 +32,7 @@ class News < ApplicationRecord
   scope :recent, -> { order(Arel.sql("COALESCE(published_at, created_at) DESC")) }
 
   has_one_attached :featured_image
+  has_many :reactions, as: :reactable, dependent: :destroy
 
   def self.policy_class
     NewsPolicy

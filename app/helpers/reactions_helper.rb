@@ -1,10 +1,12 @@
 module ReactionsHelper
-  def react_path_for(reactable, topic:, thread:)
+  def react_path_for(reactable, topic: nil, thread: nil)
     case reactable
     when ForumThread
       react_topic_thread_path(topic, reactable)
     when Comment
       react_topic_thread_comment_path(topic, thread, reactable)
+    when News
+      react_news_path(reactable)
     else
       raise ArgumentError, "Unsupported reactable: #{reactable.class.name}"
     end

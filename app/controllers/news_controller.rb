@@ -1,6 +1,8 @@
 class NewsController < ApplicationController
+  include ReactionHandling
+
   before_action :authenticate_user!
-  before_action :set_news_item, only: [ :show ]
+  before_action :set_news_item, only: [ :show, :react ]
 
   PER_PAGE = 10
 
@@ -23,6 +25,11 @@ class NewsController < ApplicationController
     load_discussion_context
   end
 
+  def react
+    authorize @news_item, :show?
+    toggle_reaction(@news_item)
+  end
+
   def new
     @news_item = News.new
     authorize @news_item
@@ -42,7 +49,7 @@ class NewsController < ApplicationController
   private
 
   def set_news_item
-    @news_item = News.includes(:user, :thread, featured_image_attachment: :blob).find(params[:id])
+    @news_item = News.includes(:user, :thread, :reactions, featured_image_attachment: :blob).find(params[:id])
   end
 
   def load_discussion_context
