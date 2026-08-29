@@ -74,7 +74,7 @@ TOPICS = [
   {
     name: "Cosas perdidas",
     slug: "lost-and-found",
-    description: "Avisos de objetos perdidos o encontrados en la comunidad.",
+    description: "Avisos de objetos perdidos o encontrados en el foro.",
     position: 5
   },
   {
