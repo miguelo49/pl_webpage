@@ -1,8 +1,9 @@
 <div class="space-y-6">
   <div class="flex items-start justify-between gap-3">
     <div>
-      <h2 class="text-xl font-semibold text-gray-900">Noticias</h2>
-      <p class="mt-1 text-sm text-gray-500">Información del partido y la región.</p>
+      <%= render "shared/page_heading",
+            title: "Noticias",
+            subtitle: "Información del partido y la región." %>
     </div>
 
     <% if policy(News.new).create? %>

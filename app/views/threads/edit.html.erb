@@ -1,7 +1,9 @@
 <div class="space-y-6">
   <div>
     <%= link_to "← Volver al hilo", topic_thread_path(@topic, @thread), class: text_link_class %>
-    <h2 class="mt-2 text-xl font-semibold text-gray-900">Editar hilo</h2>
+    <%= render "shared/page_heading",
+          title: "Editar hilo",
+          heading_class: "mt-2" %>
   </div>
 
   <div class="rounded-lg border border-gray-200 bg-white p-4">

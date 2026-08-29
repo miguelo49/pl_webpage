@@ -17,7 +17,9 @@
       </time>
     </div>
 
-    <h2 class="mt-3 text-xl font-semibold text-gray-900"><%= @news_item.title %></h2>
+    <%= render "shared/page_heading",
+          title: @news_item.title,
+          heading_class: "mt-3" %>
     <p class="mt-3 text-sm font-medium text-gray-700"><%= @news_item.summary %></p>
   </div>
 

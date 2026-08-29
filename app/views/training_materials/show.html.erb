@@ -3,7 +3,9 @@
 
   <div>
     <span class="text-xs text-gray-500"><%= @training_material.training_category.name %></span>
-    <h2 class="mt-1 text-xl font-semibold text-gray-900"><%= @training_material.title %></h2>
+    <%= render "shared/page_heading",
+          title: @training_material.title,
+          heading_class: "mt-1" %>
     <p class="mt-2 text-sm text-gray-700"><%= @training_material.author %></p>
     <time datetime="<%= @training_material.date.iso8601 %>" class="mt-1 block text-xs text-gray-500">
       <%= @training_material.date.to_fs(:long) %>

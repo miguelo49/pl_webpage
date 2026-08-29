@@ -1,8 +1,7 @@
 <div class="space-y-6">
-  <div>
-    <h2 class="text-xl font-semibold text-gray-900">Propuestas de ley</h2>
-    <p class="mt-1 text-sm text-gray-500">Borradores normativos en desarrollo colaborativo.</p>
-  </div>
+  <%= render "shared/page_heading",
+        title: "Propuestas de ley",
+        subtitle: "Borradores normativos en desarrollo colaborativo." %>
 
   <div class="<%= filter_sticky_class %>">
     <%= form_with url: law_proposals_path, method: :get, html: { class: "space-y-3" } do |form| %>

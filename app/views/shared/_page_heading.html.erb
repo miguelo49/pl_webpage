@@ -1,0 +1,6 @@
+<div>
+  <h1 class="<%= page_heading_class(local_assigns[:heading_class]) %>"><%= title %></h1>
+  <% if local_assigns[:subtitle].present? %>
+    <p class="<%= page_subtitle_class %>"><%= subtitle %></p>
+  <% end %>
+</div>

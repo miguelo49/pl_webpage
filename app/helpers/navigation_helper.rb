@@ -72,6 +72,14 @@ module NavigationHelper
     "touch-target inline-flex items-center justify-center rounded-lg bg-blue-700 px-3 py-2 text-sm font-medium text-white hover:bg-blue-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
   end
 
+  def page_heading_class(extra = nil)
+    [ "font-brand text-xl font-semibold text-primary", extra ].compact.join(" ")
+  end
+
+  def page_subtitle_class
+    "mt-1 text-sm text-gray-500"
+  end
+
   def secondary_nav_class(path)
     base = "touch-target inline-flex items-center rounded-full px-3 py-2 text-sm font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
 

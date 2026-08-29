@@ -1,8 +1,7 @@
 <div class="space-y-6">
-  <div>
-    <h2 class="text-xl font-semibold text-gray-900">Comunidad</h2>
-    <p class="mt-1 text-sm text-gray-500">Elige un tópico para ver los hilos de conversación.</p>
-  </div>
+  <%= render "shared/page_heading",
+        title: "Comunidad",
+        subtitle: "Elige un tópico para ver los hilos de conversación." %>
 
   <div class="<%= listing_grid_class %>">
     <% @topics.each do |topic| %>

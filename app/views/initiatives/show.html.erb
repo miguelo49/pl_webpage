@@ -2,7 +2,7 @@
   <%= link_to "← Iniciativas", initiatives_path, class: text_link_class %>
 
   <div>
-    <h2 class="text-xl font-semibold text-gray-900"><%= @initiative.title %></h2>
+    <%= render "shared/page_heading", title: @initiative.title %>
     <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-gray-500">
       <span class="rounded-full bg-gray-100 px-2 py-0.5 font-medium text-gray-700"><%= @initiative.category %></span>
       <span class="rounded-full px-2 py-0.5 font-medium <%= initiative_status_badge_class(@initiative.status) %>">
