@@ -1,0 +1,3 @@
+<%= turbo_stream.replace dom_id(@training_material, :read_mark) do %>
+  <%= render "training_materials/read_mark_button", training_material: @training_material %>
+<% end %>

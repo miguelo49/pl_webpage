@@ -12,6 +12,7 @@ class User < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :reactions, dependent: :destroy
   has_many :bookmarks, dependent: :destroy
+  has_many :read_marks, dependent: :destroy
   has_many :news, dependent: :restrict_with_error
   has_many :events, dependent: :destroy
 

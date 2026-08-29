@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_08_29_143636) do
+ActiveRecord::Schema[7.2].define(version: 2026_08_29_143810) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -114,6 +114,16 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_29_143636) do
     t.index ["user_id"], name: "index_reactions_on_user_id"
   end
 
+  create_table "read_marks", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "training_material_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["training_material_id"], name: "index_read_marks_on_training_material_id"
+    t.index ["user_id", "training_material_id"], name: "index_read_marks_on_user_and_training_material", unique: true
+    t.index ["user_id"], name: "index_read_marks_on_user_id"
+  end
+
   create_table "regions", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -195,6 +205,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_29_143636) do
   add_foreign_key "news", "threads"
   add_foreign_key "news", "users"
   add_foreign_key "reactions", "users"
+  add_foreign_key "read_marks", "training_materials"
+  add_foreign_key "read_marks", "users"
   add_foreign_key "threads", "topics"
   add_foreign_key "threads", "users"
   add_foreign_key "training_materials", "training_categories"
