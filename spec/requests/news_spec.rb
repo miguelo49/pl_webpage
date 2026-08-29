@@ -135,4 +135,58 @@ RSpec.describe "News", type: :request do
       expect(response).to redirect_to(root_path)
     end
   end
+
+  describe "POST /news" do
+    it "creates an associated discussion thread in the Noticias topic" do
+      author = create_user(role: :board_member)
+
+      sign_in author
+
+      expect {
+        post news_index_path, params: {
+          news: {
+            title: "Nueva noticia con discusión",
+            summary: "Resumen para el hilo",
+            body: "Contenido de la noticia",
+            category: "party"
+          }
+        }
+      }.to change(News, :count).by(1).and change(ForumThread, :count).by(1)
+
+      news_item = News.last
+      expect(news_item.thread).to be_present
+      expect(news_item.thread.topic.slug).to eq(Topic::NEWS_SLUG)
+      expect(news_item.thread.title).to eq("Nueva noticia con discusión")
+      expect(news_item.thread.approved?).to be(true)
+    end
+  end
+
+  describe "comments on news detail" do
+    it "uses the associated thread for embedded discussion" do
+      author = create_user(role: :board_member)
+      commenter = create_user(role: :board_member, email: "commenter-#{SecureRandom.hex(4)}@example.com")
+      news_item = nil
+
+      sign_in author
+      post news_index_path, params: {
+        news: {
+          title: "Noticia comentable",
+          summary: "Resumen",
+          body: "Cuerpo",
+          category: "party"
+        }
+      }
+      news_item = News.last
+
+      sign_in commenter
+      expect {
+        post topic_thread_comments_path(news_item.thread.topic, news_item.thread),
+             params: { comment: { body: "Comentario desde la noticia" } },
+             headers: { "Accept" => "text/vnd.turbo-stream.html" }
+      }.to change(Comment, :count).by(1)
+
+      get news_path(news_item)
+      expect(response.body).to include("Comentario desde la noticia")
+    end
+  end
 end

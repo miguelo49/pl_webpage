@@ -1,5 +1,8 @@
 class News < ApplicationRecord
   belongs_to :user
+  belongs_to :thread, class_name: "ForumThread", optional: true, inverse_of: :news
+
+  after_create :create_discussion_thread!
 
   enum :category, {
     party: 0,
@@ -46,5 +49,19 @@ class News < ApplicationRecord
     unless featured_image.content_type.in?(User::ACCEPTED_AVATAR_TYPES)
       errors.add(:featured_image, "must be a JPEG, PNG, WebP, or GIF")
     end
+  end
+
+  def create_discussion_thread!
+    discussion_thread = Topic.news_topic.threads.create!(
+      title: title,
+      body: discussion_thread_body,
+      user: user
+    )
+    discussion_thread.update_column(:status, ForumThread.statuses[:approved])
+    update_column(:thread_id, discussion_thread.id)
+  end
+
+  def discussion_thread_body
+    [ summary, "", "Comenta esta noticia abajo." ].join("\n")
   end
 end

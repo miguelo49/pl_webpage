@@ -26,4 +26,26 @@
       <%= simple_format(@news_item.body) %>
     </div>
   </article>
+
+  <% if @thread.present? %>
+    <%= turbo_frame_tag "comments" do %>
+      <section class="space-y-4">
+        <h3 class="text-base font-semibold text-gray-900">Discusión</h3>
+
+        <div id="comments_list" class="space-y-4">
+          <% if @comments.any? %>
+            <% @comments.each do |comment| %>
+              <%= render "comments/comment", comment: comment, topic: @topic, thread: @thread %>
+            <% end %>
+          <% else %>
+            <p class="text-sm text-gray-500">Sé el primero en comentar esta noticia.</p>
+          <% end %>
+        </div>
+
+        <div id="comment_form">
+          <%= render "comments/form", topic: @topic, thread: @thread, comment: @comment %>
+        </div>
+      </section>
+    <% end %>
+  <% end %>
 </div>

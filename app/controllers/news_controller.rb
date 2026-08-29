@@ -20,6 +20,7 @@ class NewsController < ApplicationController
 
   def show
     authorize @news_item
+    load_discussion_context
   end
 
   def new
@@ -41,7 +42,27 @@ class NewsController < ApplicationController
   private
 
   def set_news_item
-    @news_item = News.includes(:user, featured_image_attachment: :blob).find(params[:id])
+    @news_item = News.includes(:user, :thread, featured_image_attachment: :blob).find(params[:id])
+  end
+
+  def load_discussion_context
+    @thread = @news_item.thread
+    return unless @thread
+
+    @topic = @thread.topic
+    @comments = visible_comments
+    @comment = @thread.comments.build
+    authorize @comment, :create?
+  end
+
+  def visible_comments
+    comments = @thread.comments.top_level
+      .includes(:user, :reactions, :replies, replies: [ :user, :reactions ])
+      .order(created_at: :asc)
+
+    return comments if current_user.board_member? || current_user.moderator? || current_user.technical_admin?
+
+    comments.publicly_visible
   end
 
   def news_params

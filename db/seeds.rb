@@ -97,6 +97,12 @@ TOPICS = [
     slug: "general",
     description: "Conversaciones abiertas que no encajan en otras categorías.",
     position: 8
+  },
+  {
+    name: "Noticias",
+    slug: "news",
+    description: "Discusión asociada a noticias publicadas.",
+    position: 9
   }
 ].freeze
 
