@@ -36,8 +36,9 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :initiatives, only: [ :show ] do
+  resources :initiatives, only: [ :index, :show ] do
     member do
+      patch :change_status
       post :react
       post :attach_documents
       post :comments, action: :create_comment

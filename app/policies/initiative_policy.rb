@@ -9,6 +9,10 @@ class InitiativePolicy < ApplicationPolicy
     authenticated?
   end
 
+  def index?
+    show?
+  end
+
   def attach_documents?
     militant_or_above?
   end

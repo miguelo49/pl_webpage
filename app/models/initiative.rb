@@ -11,6 +11,11 @@ class Initiative < ApplicationRecord
   has_many_attached :documents
   has_many :comments, as: :commentable, dependent: :destroy
   has_many :reactions, as: :reactable, dependent: :destroy
+  has_many :state_changes, class_name: "InitiativeStateChange", dependent: :destroy
+
+  attr_accessor :status_changed_by
+
+  after_update :record_state_change, if: :saved_change_to_status?
 
   enum :status, {
     idea: 0,
@@ -21,6 +26,20 @@ class Initiative < ApplicationRecord
     rejected: 5,
     archived: 6
   }, default: :idea
+
+  scope :by_commune, ->(commune_id) {
+    commune_id.present? ? where(commune_id: commune_id) : all
+  }
+
+  scope :by_category, ->(category) {
+    category.present? ? where(category: category) : all
+  }
+
+  scope :by_status, ->(status) {
+    status.present? && statuses.key?(status) ? where(status: status) : all
+  }
+
+  scope :recent, -> { order(updated_at: :desc) }
 
   validates :title, presence: true
   validates :description, presence: true
@@ -44,5 +63,15 @@ class Initiative < ApplicationRecord
 
       errors.add(:documents, "must be a PDF or Word document")
     end
+  end
+
+  def record_state_change
+    return unless status_changed_by
+
+    state_changes.create!(
+      previous_status: status_before_last_save,
+      new_status: status,
+      user: status_changed_by
+    )
   end
 end

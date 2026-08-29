@@ -2,8 +2,19 @@ class InitiativesController < ApplicationController
   include ReactionHandling
 
   before_action :authenticate_user!
-  before_action :set_initiative, only: [ :show, :react, :attach_documents, :create_comment, :react_comment ]
+  before_action :set_initiative, only: [ :show, :react, :attach_documents, :create_comment, :react_comment, :change_status ]
   before_action :set_comment, only: [ :react_comment ]
+
+  def index
+    authorize Initiative
+
+    @selected_commune_id = params[:commune_id]
+    @selected_category = params[:category].presence
+    @selected_status = selected_status_param
+    @communes = Commune.where(id: Initiative.select(:commune_id)).order(:name)
+    @categories = Initiative.distinct.order(:category).pluck(:category)
+    @initiatives = filtered_initiatives
+  end
 
   def show
     authorize @initiative
@@ -53,6 +64,20 @@ class InitiativesController < ApplicationController
     toggle_reaction(@comment)
   end
 
+  def change_status
+    authorize @initiative, :change_status?
+
+    @initiative.status_changed_by = current_user
+
+    if @initiative.update(status: status_param)
+      redirect_to initiative_path(@initiative), notice: "Estado actualizado."
+    else
+      load_comments
+      flash.now[:alert] = @initiative.errors.full_messages.to_sentence
+      render :show, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_initiative
@@ -61,6 +86,7 @@ class InitiativesController < ApplicationController
         :user,
         :commune,
         :reactions,
+        { state_changes: :user },
         documents_attachments: :blob,
         comments: [ :user, :reactions, { replies: [ :user, :reactions ] } ]
       )
@@ -93,5 +119,25 @@ class InitiativesController < ApplicationController
 
   def document_params
     params.require(:initiative).permit(documents: [])
+  end
+
+  def filtered_initiatives
+    Initiative
+      .includes(:user, :commune, :reactions)
+      .by_commune(@selected_commune_id)
+      .by_category(@selected_category)
+      .by_status(@selected_status)
+      .recent
+  end
+
+  def selected_status_param
+    return unless params[:status].present?
+    return unless Initiative.statuses.key?(params[:status])
+
+    params[:status]
+  end
+
+  def status_param
+    params.require(:initiative).fetch(:status)
   end
 end

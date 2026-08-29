@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_08_29_152048) do
+ActiveRecord::Schema[7.2].define(version: 2026_08_29_152542) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -102,6 +102,18 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_29_152048) do
     t.index ["commune_id"], name: "index_events_on_commune_id"
     t.index ["organizer_id"], name: "index_events_on_organizer_id"
     t.index ["start_at"], name: "index_events_on_start_at"
+  end
+
+  create_table "initiative_state_changes", force: :cascade do |t|
+    t.bigint "initiative_id", null: false
+    t.integer "previous_status", null: false
+    t.integer "new_status", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["initiative_id", "created_at"], name: "index_initiative_state_changes_on_initiative_id_and_created_at"
+    t.index ["initiative_id"], name: "index_initiative_state_changes_on_initiative_id"
+    t.index ["user_id"], name: "index_initiative_state_changes_on_user_id"
   end
 
   create_table "initiatives", force: :cascade do |t|
@@ -238,6 +250,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_29_152048) do
   add_foreign_key "communes", "regions"
   add_foreign_key "events", "communes"
   add_foreign_key "events", "users", column: "organizer_id"
+  add_foreign_key "initiative_state_changes", "initiatives"
+  add_foreign_key "initiative_state_changes", "users"
   add_foreign_key "initiatives", "communes"
   add_foreign_key "initiatives", "users"
   add_foreign_key "news", "threads"

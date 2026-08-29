@@ -17,6 +17,7 @@ class User < ApplicationRecord
   has_many :organized_events, class_name: "Event", foreign_key: :organizer_id, dependent: :destroy
   has_many :attendances, dependent: :destroy
   has_many :initiatives, dependent: :restrict_with_error
+  has_many :initiative_state_changes, dependent: :destroy
 
   belongs_to :residence_commune, class_name: "Commune", optional: true
   belongs_to :work_commune, class_name: "Commune", optional: true
