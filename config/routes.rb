@@ -12,6 +12,8 @@ Rails.application.routes.draw do
 
   root "home#index"
 
+  resources :news, only: [ :index, :show, :new, :create ]
+
   resources :topics, only: [ :index ] do
     resources :threads, only: [ :index, :show, :new, :create, :edit, :update ] do
       member do

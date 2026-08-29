@@ -23,8 +23,12 @@ class News < ApplicationRecord
   validates :summary, presence: true
   validates :body, presence: true
   validates :category, presence: true
+  validate :acceptable_featured_image
 
   scope :publicly_visible, -> { approved }
+  scope :recent, -> { order(Arel.sql("COALESCE(published_at, created_at) DESC")) }
+
+  has_one_attached :featured_image
 
   def self.policy_class
     NewsPolicy
@@ -32,5 +36,15 @@ class News < ApplicationRecord
 
   def publicly_visible?
     approved?
+  end
+
+  private
+
+  def acceptable_featured_image
+    return unless featured_image.attached?
+
+    unless featured_image.content_type.in?(User::ACCEPTED_AVATAR_TYPES)
+      errors.add(:featured_image, "must be a JPEG, PNG, WebP, or GIF")
+    end
   end
 end
