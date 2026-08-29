@@ -1,18 +1,35 @@
+# Active Storage service configuration.
+# https://guides.rubyonrails.org/active_storage_overview.html
+#
+# Development/test use local disk. Production defaults to disk as well;
+# switch to :amazon once AWS credentials and bucket are configured (see below).
+
 test:
   service: Disk
   root: <%= Rails.root.join("tmp/storage") %>
 
+# Local disk storage for development and as a production fallback.
 local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
-# Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
+# --- Production: Amazon S3 ---
+# 1. Add credentials: bin/rails credentials:edit
+#    aws:
+#      access_key_id: YOUR_ACCESS_KEY
+#      secret_access_key: YOUR_SECRET_KEY
+# 2. Set env vars (optional, override credentials):
+#    AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION, AWS_BUCKET
+# 3. In config/environments/production.rb, change:
+#    config.active_storage.service = :amazon
+# 4. Uncomment and adjust the block below:
+#
 # amazon:
 #   service: S3
-#   access_key_id: <%= Rails.application.credentials.dig(:aws, :access_key_id) %>
-#   secret_access_key: <%= Rails.application.credentials.dig(:aws, :secret_access_key) %>
-#   region: us-east-1
-#   bucket: your_own_bucket-<%= Rails.env %>
+#   access_key_id: <%= ENV.fetch("AWS_ACCESS_KEY_ID") { Rails.application.credentials.dig(:aws, :access_key_id) } %>
+#   secret_access_key: <%= ENV.fetch("AWS_SECRET_ACCESS_KEY") { Rails.application.credentials.dig(:aws, :secret_access_key) } %>
+#   region: <%= ENV.fetch("AWS_REGION", "us-east-1") %>
+#   bucket: <%= ENV.fetch("AWS_BUCKET", "pl-webpage-#{Rails.env}") %>
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:
