@@ -9,29 +9,29 @@ RSpec.describe "User registration", type: :request do
             email: "new@example.com",
             password: "password123",
             password_confirmation: "password123",
-            nombre: "María",
-            apellido: "García"
+            first_name: "María",
+            last_name: "García"
           }
         }
       }.to change(User, :count).by(1)
 
       user = User.find_by(email: "new@example.com")
       expect(user).to be_present
-      expect(user.nombre).to eq("María")
-      expect(user.apellido).to eq("García")
+      expect(user.first_name).to eq("María")
+      expect(user.last_name).to eq("García")
       expect(user.role).to eq("sympathizer")
-      expect(user.activo).to be(true)
+      expect(user.active).to be(true)
       expect(response).to redirect_to(root_path)
     end
 
-    it "rejects registration without nombre" do
+    it "rejects registration without first_name" do
       expect {
         post user_registration_path, params: {
           user: {
             email: "invalid@example.com",
             password: "password123",
             password_confirmation: "password123",
-            apellido: "García"
+            last_name: "García"
           }
         }
       }.not_to change(User, :count)
@@ -46,8 +46,8 @@ RSpec.describe "User login", type: :request do
     User.create!(
       email: "login@example.com",
       password: "password123",
-      nombre: "Pedro",
-      apellido: "Soto"
+      first_name: "Pedro",
+      last_name: "Soto"
     )
   end
 

@@ -28,7 +28,7 @@
 
           <div class="flex items-center gap-2 text-sm">
             <% if user_signed_in? %>
-              <span class="hidden truncate text-gray-600 sm:inline"><%= current_user.nombre %></span>
+              <span class="hidden truncate text-gray-600 sm:inline"><%= current_user.first_name %></span>
               <%= button_to "Salir",
                     destroy_user_session_path,
                     method: :delete,

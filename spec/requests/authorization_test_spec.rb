@@ -7,8 +7,8 @@ RSpec.describe "Authorization test access", type: :request do
     User.create!(
       email: "#{role}@example.com",
       password: password,
-      nombre: "Test",
-      apellido: "User",
+      first_name: "Test",
+      last_name: "User",
       role: role
     )
   end

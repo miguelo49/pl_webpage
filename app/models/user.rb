@@ -12,6 +12,6 @@ class User < ApplicationRecord
     technical_admin: 4
   }, default: :sympathizer
 
-  validates :nombre, presence: true
-  validates :apellido, presence: true
+  validates :first_name, presence: true
+  validates :last_name, presence: true
 end

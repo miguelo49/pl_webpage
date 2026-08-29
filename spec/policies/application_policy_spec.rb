@@ -28,8 +28,8 @@ RSpec.describe ApplicationPolicy, type: :policy do
       role: role,
       email: "#{role}@example.com",
       password: "password123",
-      nombre: "Test",
-      apellido: "User"
+      first_name: "Test",
+      last_name: "User"
     )
   end
 
