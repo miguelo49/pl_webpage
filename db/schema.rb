@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_08_29_141427) do
+ActiveRecord::Schema[7.2].define(version: 2026_08_29_141537) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -74,6 +74,19 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_29_141427) do
     t.datetime "updated_at", null: false
     t.index ["region_id", "name"], name: "index_communes_on_region_id_and_name", unique: true
     t.index ["region_id"], name: "index_communes_on_region_id"
+  end
+
+  create_table "news", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "summary", null: false
+    t.text "body", null: false
+    t.integer "category", null: false
+    t.bigint "user_id", null: false
+    t.datetime "published_at"
+    t.integer "status", default: 1, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_news_on_user_id"
   end
 
   create_table "reactions", force: :cascade do |t|
@@ -145,6 +158,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_29_141427) do
   add_foreign_key "comments", "comments", column: "parent_id"
   add_foreign_key "comments", "users"
   add_foreign_key "communes", "regions"
+  add_foreign_key "news", "users"
   add_foreign_key "reactions", "users"
   add_foreign_key "threads", "topics"
   add_foreign_key "threads", "users"
