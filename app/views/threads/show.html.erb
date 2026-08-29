@@ -13,10 +13,13 @@
     <div class="prose prose-sm max-w-none text-gray-700">
       <%= simple_format(@thread.body) %>
     </div>
-    <div class="mt-4">
+    <div class="mt-4 flex flex-wrap items-center gap-2">
       <%= render "reactions/button",
             reactable: @thread,
             react_path: react_path_for(@thread, topic: @topic, thread: @thread) %>
+      <%= render "bookmarks/button",
+            bookmarkable: @thread,
+            bookmark_path: bookmark_path_for(@thread, topic: @topic) %>
     </div>
   </article>
 

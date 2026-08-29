@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     resources :threads, only: [ :index, :show, :new, :create, :edit, :update ] do
       member do
         post :react
+        post :bookmark
       end
 
       resources :comments, only: [ :create ] do

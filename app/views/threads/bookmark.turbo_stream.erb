@@ -1,0 +1,5 @@
+<%= turbo_stream.replace dom_id(@bookmarkable, :bookmark) do %>
+  <%= render "bookmarks/button",
+        bookmarkable: @bookmarkable,
+        bookmark_path: bookmark_path_for(@bookmarkable, topic: @topic) %>
+<% end %>

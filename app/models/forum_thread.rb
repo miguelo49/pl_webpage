@@ -21,6 +21,7 @@ class ForumThread < ApplicationRecord
 
   has_many :comments, as: :commentable, dependent: :destroy
   has_many :reactions, as: :reactable, dependent: :destroy
+  has_many :bookmarks, as: :bookmarkable, dependent: :destroy
 
   def self.policy_class
     ThreadPolicy

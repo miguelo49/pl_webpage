@@ -1,0 +1,18 @@
+<section class="rounded-lg border border-gray-200 bg-white p-4 space-y-3">
+  <h3 class="text-sm font-medium text-gray-900">Guardados</h3>
+
+  <% if bookmarked_threads.any? %>
+    <div id="saved_threads_list" class="space-y-3">
+      <% bookmarked_threads.each do |thread| %>
+        <%= link_to topic_thread_path(thread.topic, thread),
+              class: "block rounded-lg border border-gray-100 bg-gray-50 p-3 transition hover:border-blue-200 hover:bg-blue-50/40" do %>
+          <p class="text-xs text-gray-400"><%= thread.topic.name %></p>
+          <p class="mt-1 text-sm font-semibold text-gray-900"><%= thread.title %></p>
+          <p class="mt-1 line-clamp-2 text-xs text-gray-500"><%= thread.body %></p>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <p id="saved_threads_list" class="text-sm text-gray-500">No tienes hilos guardados todavía.</p>
+  <% end %>
+</section>

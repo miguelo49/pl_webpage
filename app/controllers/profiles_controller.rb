@@ -1,6 +1,7 @@
 class ProfilesController < ApplicationController
   before_action :authenticate_user!
   before_action :load_regions, only: [ :show, :update ]
+  before_action :load_bookmarked_threads, only: [ :show, :update ]
 
   def show
     @user = current_user
@@ -35,5 +36,17 @@ class ProfilesController < ApplicationController
 
   def load_regions
     @regions = Region.order(:name)
+  end
+
+  def load_bookmarked_threads
+    @bookmarked_threads = bookmarked_threads_for(current_user)
+  end
+
+  def bookmarked_threads_for(user)
+    ForumThread
+      .joins(:bookmarks)
+      .where(bookmarks: { user_id: user.id })
+      .includes(:topic, :user)
+      .order("bookmarks.created_at DESC")
   end
 end

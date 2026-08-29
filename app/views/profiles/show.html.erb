@@ -7,4 +7,6 @@
   <%= turbo_frame_tag "profile" do %>
     <%= render "profiles/profile", user: @user, regions: @regions %>
   <% end %>
+
+  <%= render "profiles/saved_threads", bookmarked_threads: @bookmarked_threads %>
 </div>

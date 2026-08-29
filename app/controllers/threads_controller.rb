@@ -1,9 +1,10 @@
 class ThreadsController < ApplicationController
   include ReactionHandling
+  include BookmarkHandling
 
   before_action :authenticate_user!
   before_action :set_topic
-  before_action :set_thread, only: [ :show, :edit, :update, :react ]
+  before_action :set_thread, only: [ :show, :edit, :update, :react, :bookmark ]
 
   def index
     authorize ForumThread, :index?
@@ -24,6 +25,11 @@ class ThreadsController < ApplicationController
   def react
     authorize @thread, :show?
     toggle_reaction(@thread)
+  end
+
+  def bookmark
+    authorize @thread, :show?
+    toggle_bookmark(@thread)
   end
 
   def new
@@ -66,7 +72,7 @@ class ThreadsController < ApplicationController
   end
 
   def set_thread
-    @thread = @topic.threads.includes(:reactions).find(params[:id])
+    @thread = @topic.threads.includes(:reactions, :bookmarks).find(params[:id])
   end
 
   def thread_params
