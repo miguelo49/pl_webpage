@@ -1,1 +1,32 @@
 @import "tailwindcss";
+@import "./poppins.css";
+@source "./token_safelist.html";
+
+/*
+ * Design tokens (Tailwind v4 @theme)
+ *
+ * Colors: text-primary, bg-secondary, border-accent, etc.
+ * Typography: font-brand + font-thin … font-black (weights 100–900)
+ *
+ * Verification (no view wired yet):
+ *   <span class="font-brand text-primary font-black">Brand token preview</span>
+ */
+@theme {
+  /* Brand palette */
+  --color-primary: #ff03b2;
+  --color-secondary: #00e2e2;
+  --color-accent: #0000aa;
+
+  /* Brand typography — use font-brand; default sans stack unchanged for existing UI */
+  --font-brand: "Poppins", ui-sans-serif, system-ui, sans-serif;
+
+  /* Explicit weight tokens (Tailwind utilities: font-thin … font-black) */
+  --font-weight-thin: 100;
+  --font-weight-extralight: 200;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+}
