@@ -20,6 +20,10 @@ Rails.application.routes.draw do
 
   resources :political_contexts, only: [ :index ]
 
+  resources :events, only: [ :show ] do
+    resource :attendance, only: [ :create, :update ]
+  end
+
   resources :training_materials, only: [ :index, :show ] do
     member do
       get :download

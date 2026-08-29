@@ -2,6 +2,8 @@ class Event < ApplicationRecord
   belongs_to :organizer, class_name: "User"
   belongs_to :commune, optional: true
 
+  has_many :attendances, dependent: :destroy
+
   enum :event_type, {
     meeting: 0,
     assembly: 1,
@@ -29,6 +31,26 @@ class Event < ApplicationRecord
 
   def unlimited_capacity?
     capacity.nil?
+  end
+
+  def reserved_spots
+    attendances.active.count
+  end
+
+  def reserved_spots_excluding(attendance = nil)
+    scope = attendances.active
+    scope = scope.where.not(id: attendance.id) if attendance&.persisted?
+    scope.count
+  end
+
+  def remaining_capacity
+    return nil if unlimited_capacity?
+
+    [ capacity - reserved_spots, 0 ].max
+  end
+
+  def full?
+    !unlimited_capacity? && remaining_capacity.zero?
   end
 
   private

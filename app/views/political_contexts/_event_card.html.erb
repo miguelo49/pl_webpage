@@ -9,7 +9,9 @@
       <time datetime="<%= event.start_at.iso8601 %>" class="text-xs text-gray-400">
         <%= event.start_at.to_fs(:short) %>
       </time>
-      <h3 class="mt-1 text-base font-semibold text-gray-900"><%= event.title %></h3>
+      <h3 class="mt-1 text-base font-semibold text-gray-900">
+        <%= link_to event.title, event_path(event), class: "hover:text-blue-700" %>
+      </h3>
       <p class="mt-2 line-clamp-2 text-sm text-gray-600"><%= event.description %></p>
       <% if event.location.present? %>
         <p class="mt-2 text-xs text-gray-500"><%= event.location %></p>

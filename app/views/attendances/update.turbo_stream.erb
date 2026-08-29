@@ -1,0 +1,5 @@
+<%= turbo_stream.replace dom_id(@event, :attendance) do %>
+  <%= render "attendances/panel",
+        event: @event.reload,
+        attendance: @attendance %>
+<% end %>
