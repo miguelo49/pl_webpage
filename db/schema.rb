@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_08_29_143430) do
+ActiveRecord::Schema[7.2].define(version: 2026_08_29_143636) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -143,6 +143,25 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_29_143430) do
     t.index ["slug"], name: "index_topics_on_slug", unique: true
   end
 
+  create_table "training_categories", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_training_categories_on_name", unique: true
+  end
+
+  create_table "training_materials", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "description", null: false
+    t.string "author", null: false
+    t.date "date", null: false
+    t.bigint "training_category_id", null: false
+    t.string "tags", default: [], null: false, array: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["training_category_id"], name: "index_training_materials_on_training_category_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -178,6 +197,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_29_143430) do
   add_foreign_key "reactions", "users"
   add_foreign_key "threads", "topics"
   add_foreign_key "threads", "users"
+  add_foreign_key "training_materials", "training_categories"
   add_foreign_key "users", "communes", column: "residence_commune_id"
   add_foreign_key "users", "communes", column: "study_commune_id"
   add_foreign_key "users", "communes", column: "work_commune_id"
