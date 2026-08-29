@@ -37,4 +37,27 @@ RSpec.describe User, type: :model do
       expect(user.reload.role).to eq("sympathizer")
     end
   end
+
+  describe "onboarding status" do
+    it "is incomplete without accepted terms" do
+      user = User.new(
+        email: "test@example.com",
+        password: "password123",
+        first_name: "Ana",
+        last_name: "López"
+      )
+      expect(user.complete?).to be(false)
+    end
+
+    it "is complete with profile and terms" do
+      user = User.new(
+        email: "test@example.com",
+        password: "password123",
+        first_name: "Ana",
+        last_name: "López",
+        terms_accepted_at: Time.current
+      )
+      expect(user.complete?).to be(true)
+    end
+  end
 end

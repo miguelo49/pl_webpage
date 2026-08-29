@@ -1,0 +1,12 @@
+<% step_index = current_step == :profile ? 1 : (profile_step_required? ? 2 : 1) %>
+<% steps_total = total_steps %>
+
+<div class="text-center">
+  <p class="text-xs font-medium uppercase tracking-wide text-gray-400">Configuración inicial</p>
+  <p class="mt-1 text-sm text-gray-600">Paso <%= step_index %> de <%= steps_total %></p>
+  <div class="mx-auto mt-3 flex max-w-xs justify-center gap-2">
+    <% steps_total.times do |index| %>
+      <span class="h-1.5 flex-1 rounded-full <%= index < step_index ? "bg-blue-600" : "bg-gray-200" %>"></span>
+    <% end %>
+  </div>
+</div>

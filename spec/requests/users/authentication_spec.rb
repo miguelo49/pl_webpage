@@ -53,6 +53,8 @@ RSpec.describe "User login", type: :request do
 
   describe "POST /users/sign_in" do
     it "signs in the user" do
+      user.update!(terms_accepted_at: Time.current)
+
       post user_session_path, params: {
         user: { email: user.email, password: "password123" }
       }
@@ -65,6 +67,7 @@ RSpec.describe "User login", type: :request do
 
   describe "DELETE /users/sign_out" do
     it "signs out the user" do
+      user.update!(terms_accepted_at: Time.current)
       sign_in user
 
       delete destroy_user_session_path

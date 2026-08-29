@@ -56,32 +56,34 @@
         <%= yield %>
       </main>
 
-      <nav
-        class="sticky bottom-0 z-10 border-t border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80"
-        aria-label="Navegación principal"
-      >
-        <div class="flex h-16 items-center justify-around px-4 text-xs text-gray-400">
-          <%= link_to root_path, class: "flex flex-col items-center gap-1 hover:text-gray-600" do %>
-            <span class="h-5 w-5 rounded bg-gray-200" aria-hidden="true"></span>
-            Inicio
-          <% end %>
-          <% if user_signed_in? %>
-            <%= link_to edit_user_registration_path, class: "flex flex-col items-center gap-1 hover:text-gray-600" do %>
+      <% unless controller_name == "onboardings" %>
+        <nav
+          class="sticky bottom-0 z-10 border-t border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80"
+          aria-label="Navegación principal"
+        >
+          <div class="flex h-16 items-center justify-around px-4 text-xs text-gray-400">
+            <%= link_to root_path, class: "flex flex-col items-center gap-1 hover:text-gray-600" do %>
               <span class="h-5 w-5 rounded bg-gray-200" aria-hidden="true"></span>
-              Cuenta
+              Inicio
             <% end %>
-          <% else %>
-            <%= link_to new_user_session_path, class: "flex flex-col items-center gap-1 hover:text-gray-600" do %>
+            <% if user_signed_in? %>
+              <%= link_to edit_user_registration_path, class: "flex flex-col items-center gap-1 hover:text-gray-600" do %>
+                <span class="h-5 w-5 rounded bg-gray-200" aria-hidden="true"></span>
+                Cuenta
+              <% end %>
+            <% else %>
+              <%= link_to new_user_session_path, class: "flex flex-col items-center gap-1 hover:text-gray-600" do %>
+                <span class="h-5 w-5 rounded bg-gray-200" aria-hidden="true"></span>
+                Entrar
+              <% end %>
+            <% end %>
+            <span class="flex flex-col items-center gap-1">
               <span class="h-5 w-5 rounded bg-gray-200" aria-hidden="true"></span>
-              Entrar
-            <% end %>
-          <% end %>
-          <span class="flex flex-col items-center gap-1">
-            <span class="h-5 w-5 rounded bg-gray-200" aria-hidden="true"></span>
-            Más
-          </span>
-        </div>
-      </nav>
+              Más
+            </span>
+          </div>
+        </nav>
+      <% end %>
     </div>
   </body>
 </html>

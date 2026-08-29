@@ -1,0 +1,36 @@
+<div class="space-y-6">
+  <div>
+    <h2 class="text-xl font-semibold text-gray-900">Tu perfil</h2>
+    <p class="mt-1 text-sm text-gray-500">Indica tu nombre y apellido para continuar.</p>
+  </div>
+
+  <%= form_with model: current_user, url: onboarding_path, method: :patch, data: { turbo_frame: "onboarding_step" }, class: "space-y-4" do |form| %>
+    <% if current_user.errors.any? %>
+      <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <ul class="list-inside list-disc space-y-1">
+          <% current_user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div>
+      <%= form.label :first_name, "Nombre", class: "mb-1 block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :first_name,
+            autofocus: true,
+            autocomplete: "given-name",
+            class: "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" %>
+    </div>
+
+    <div>
+      <%= form.label :last_name, "Apellido", class: "mb-1 block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :last_name,
+            autocomplete: "family-name",
+            class: "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" %>
+    </div>
+
+    <%= form.submit "Continuar",
+          class: "w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+  <% end %>
+</div>

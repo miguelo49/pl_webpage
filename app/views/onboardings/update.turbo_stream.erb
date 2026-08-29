@@ -1,0 +1,7 @@
+<%= turbo_stream.replace "onboarding_step" do %>
+  <%= render "step", current_step: @current_step %>
+<% end %>
+
+<%= turbo_stream.replace "onboarding_progress" do %>
+  <%= render "progress", current_step: @current_step %>
+<% end %>

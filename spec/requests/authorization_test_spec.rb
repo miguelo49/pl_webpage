@@ -16,6 +16,7 @@ RSpec.describe "Authorization test access", type: :request do
   describe "GET /authorization_test" do
     it "redirects sympathizers with a flash alert" do
       user = create_user(:sympathizer)
+      user.update!(terms_accepted_at: Time.current)
       sign_in user
 
       get authorization_test_path
@@ -27,6 +28,7 @@ RSpec.describe "Authorization test access", type: :request do
 
     it "allows militants" do
       user = create_user(:militant)
+      user.update!(terms_accepted_at: Time.current)
       sign_in user
 
       get authorization_test_path

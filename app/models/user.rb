@@ -14,4 +14,18 @@ class User < ApplicationRecord
 
   validates :first_name, presence: true
   validates :last_name, presence: true
+
+  def profile_complete?
+    first_name.present? && last_name.present?
+  end
+
+  def terms_accepted?
+    terms_accepted_at.present?
+  end
+
+  def onboarding_complete?
+    profile_complete? && terms_accepted?
+  end
+
+  alias_method :complete?, :onboarding_complete?
 end
