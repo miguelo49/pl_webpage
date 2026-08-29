@@ -10,7 +10,7 @@
       <span class="text-xs text-gray-400"><%= @upcoming_events.size %></span>
     </div>
 
-    <div class="space-y-3">
+    <div class="<%= listing_grid_class(columns: 2) %>">
       <% if @upcoming_events.any? %>
         <% @upcoming_events.each do |event| %>
           <%= render "political_contexts/event_card", event: event %>
@@ -29,7 +29,7 @@
       <%= link_to "Ver todas", news_index_path, class: text_link_class + " text-xs" %>
     </div>
 
-    <div class="space-y-3">
+    <div class="<%= listing_grid_class %>">
       <% if @news_items.any? %>
         <% @news_items.each do |news_item| %>
           <%= render "news/news_card", news_item: news_item %>

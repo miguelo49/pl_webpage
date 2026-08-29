@@ -1,0 +1,43 @@
+<% minimal = local_assigns.fetch(:minimal, false) %>
+
+<header class="sticky top-0 z-30 border-b border-gray-300 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/90 <%= 'lg:hidden' unless minimal %>">
+  <div class="flex h-14 items-center justify-between gap-3 px-4">
+    <%= link_to root_path, class: "touch-target inline-flex items-center rounded-lg px-2 text-base font-semibold tracking-tight text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" do %>
+      Pl Webpage
+    <% end %>
+
+    <div class="flex items-center gap-1 text-sm">
+      <% if user_signed_in? %>
+        <span class="hidden truncate text-gray-700 sm:inline"><%= current_user.first_name %></span>
+        <%= button_to "Salir",
+              destroy_user_session_path,
+              method: :delete,
+              class: header_action_class %>
+      <% else %>
+        <%= link_to "Entrar", new_user_session_path, class: header_action_class %>
+        <%= link_to "Registro", new_user_registration_path, class: header_primary_action_class %>
+      <% end %>
+    </div>
+  </div>
+</header>
+
+<% unless minimal %>
+  <header class="fixed inset-x-0 top-0 z-40 hidden h-14 items-center justify-between gap-6 border-b border-gray-300 bg-white/95 px-6 backdrop-blur supports-[backdrop-filter]:bg-white/90 lg:flex">
+    <%= link_to root_path, class: "touch-target inline-flex shrink-0 items-center rounded-lg px-2 text-base font-semibold tracking-tight text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" do %>
+      Pl Webpage
+    <% end %>
+
+    <div class="flex items-center gap-2 text-sm">
+      <% if user_signed_in? %>
+        <span class="truncate text-gray-700"><%= current_user.first_name %></span>
+        <%= button_to "Salir",
+              destroy_user_session_path,
+              method: :delete,
+              class: header_action_class %>
+      <% else %>
+        <%= link_to "Entrar", new_user_session_path, class: header_action_class %>
+        <%= link_to "Registro", new_user_registration_path, class: header_primary_action_class %>
+      <% end %>
+    </div>
+  </header>
+<% end %>

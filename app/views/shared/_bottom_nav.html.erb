@@ -1,5 +1,5 @@
-<nav class="bottom-nav fixed inset-x-0 bottom-0 z-20 border-t border-gray-300 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/90 md:static md:inset-auto md:z-10" aria-label="Navegación principal">
-  <div class="mx-auto flex h-16 max-w-lg items-stretch justify-around px-2">
+<nav class="bottom-nav fixed inset-x-0 bottom-0 z-20 border-t border-gray-300 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/90 lg:hidden" aria-label="Navegación principal">
+  <div class="flex h-16 w-full items-stretch justify-around px-2">
     <% NavigationHelper::BOTTOM_NAV_ITEMS.each do |item| %>
       <% active = bottom_nav_active?(item) %>
       <%= link_to bottom_nav_path(item),

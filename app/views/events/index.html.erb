@@ -31,7 +31,7 @@
       <% @events_by_date.each do |date, events| %>
         <section class="space-y-3">
           <h3 class="text-sm font-semibold text-gray-900"><%= agenda_date_label(date) %></h3>
-          <div class="space-y-2">
+          <div class="<%= listing_grid_class(columns: 2) %>">
             <% events.each do |event| %>
               <%= render "events/event_row", event: event %>
             <% end %>

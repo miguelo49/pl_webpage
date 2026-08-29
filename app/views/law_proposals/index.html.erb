@@ -36,7 +36,7 @@
   </div>
 
   <% if @law_proposals.any? %>
-    <div class="space-y-3">
+    <div class="<%= listing_grid_class %>">
       <% @law_proposals.each do |law_proposal| %>
         <%= render "law_proposals/law_proposal_card", law_proposal: law_proposal %>
       <% end %>

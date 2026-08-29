@@ -11,6 +11,23 @@ module NavigationHelper
     controller_name.in?(%w[onboardings]) || controller_path.start_with?("admin/", "moderation/")
   end
 
+  def show_app_shell?
+    !hide_bottom_nav?
+  end
+
+  def listing_grid_class(columns: 3)
+    base = "grid grid-cols-1 gap-3 lg:gap-4"
+
+    case columns
+    when 2
+      "#{base} lg:grid-cols-2"
+    when 4
+      "#{base} sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+    else
+      "#{base} lg:grid-cols-2 xl:grid-cols-3"
+    end
+  end
+
   def bottom_nav_active?(item)
     if item[:key] == :home
       return current_page?(root_path) || controller_name.in?(item[:controllers])
@@ -29,6 +46,16 @@ module NavigationHelper
 
   def bottom_nav_link_class(active)
     base = "touch-target flex flex-1 flex-col items-center justify-center gap-1 rounded-lg px-2 py-2 text-xs font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+
+    if active
+      "#{base} bg-blue-50 text-blue-800"
+    else
+      "#{base} text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+    end
+  end
+
+  def sidebar_link_class(active)
+    base = "touch-target flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
 
     if active
       "#{base} bg-blue-50 text-blue-800"
@@ -56,7 +83,7 @@ module NavigationHelper
   end
 
   def filter_sticky_class
-    "sticky top-14 z-20 -mx-4 space-y-3 border-b border-gray-300 bg-gray-50/95 px-4 pb-4 backdrop-blur"
+    "sticky top-14 z-20 -mx-4 space-y-3 border-b border-gray-300 bg-gray-50/95 px-4 pb-4 backdrop-blur lg:mx-0 lg:rounded-lg lg:border lg:px-4 lg:shadow-sm"
   end
 
   def filter_label_class

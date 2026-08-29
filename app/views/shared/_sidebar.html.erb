@@ -1,0 +1,15 @@
+<aside class="fixed inset-y-0 left-0 z-30 hidden w-56 flex-col border-r border-gray-300 bg-white pt-14 lg:flex" aria-label="Navegación lateral">
+  <nav class="flex flex-1 flex-col gap-1 overflow-y-auto p-3">
+    <% NavigationHelper::BOTTOM_NAV_ITEMS.each do |item| %>
+      <% active = bottom_nav_active?(item) %>
+      <%= link_to bottom_nav_path(item),
+            class: sidebar_link_class(active),
+            aria: { current: (active ? "page" : nil) } do %>
+        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md <%= active ? 'bg-blue-700 text-white' : 'bg-gray-200 text-gray-700' %>" aria-hidden="true">
+          <%= bottom_nav_icon(item[:key]) %>
+        </span>
+        <span><%= item[:label] %></span>
+      <% end %>
+    <% end %>
+  </nav>
+</aside>

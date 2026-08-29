@@ -36,7 +36,7 @@
   </div>
 
   <% if @initiatives.any? %>
-    <div class="space-y-3">
+    <div class="<%= listing_grid_class %>">
       <% @initiatives.each do |initiative| %>
         <%= render "initiatives/initiative_card", initiative: initiative %>
       <% end %>

@@ -13,7 +13,7 @@
 
   <%= turbo_frame_tag "new_thread" %>
 
-  <div id="threads_list" class="space-y-3">
+  <div id="threads_list" class="<%= listing_grid_class %>">
     <% if @threads.any? %>
       <% @threads.each do |thread| %>
         <%= render "threads/thread_card", topic: @topic, thread: thread %>
