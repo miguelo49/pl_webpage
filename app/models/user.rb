@@ -18,6 +18,8 @@ class User < ApplicationRecord
   has_many :attendances, dependent: :destroy
   has_many :initiatives, dependent: :restrict_with_error
   has_many :initiative_state_changes, dependent: :destroy
+  has_many :law_proposals, dependent: :restrict_with_error
+  has_many :law_proposal_versions, dependent: :destroy
 
   belongs_to :residence_commune, class_name: "Commune", optional: true
   belongs_to :work_commune, class_name: "Commune", optional: true

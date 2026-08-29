@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_08_29_152542) do
+ActiveRecord::Schema[7.2].define(version: 2026_08_29_152649) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -131,6 +131,35 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_29_152542) do
     t.index ["commune_id"], name: "index_initiatives_on_commune_id"
     t.index ["status"], name: "index_initiatives_on_status"
     t.index ["user_id"], name: "index_initiatives_on_user_id"
+  end
+
+  create_table "law_proposal_versions", force: :cascade do |t|
+    t.bigint "law_proposal_id", null: false
+    t.text "text", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["law_proposal_id", "created_at"], name: "index_law_proposal_versions_on_law_proposal_id_and_created_at"
+    t.index ["law_proposal_id"], name: "index_law_proposal_versions_on_law_proposal_id"
+    t.index ["user_id"], name: "index_law_proposal_versions_on_user_id"
+  end
+
+  create_table "law_proposals", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "problem", null: false
+    t.text "rationale", null: false
+    t.text "objective", null: false
+    t.text "current_text", null: false
+    t.bigint "user_id", null: false
+    t.bigint "commune_id", null: false
+    t.string "category", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category"], name: "index_law_proposals_on_category"
+    t.index ["commune_id"], name: "index_law_proposals_on_commune_id"
+    t.index ["status"], name: "index_law_proposals_on_status"
+    t.index ["user_id"], name: "index_law_proposals_on_user_id"
   end
 
   create_table "news", force: :cascade do |t|
@@ -254,6 +283,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_29_152542) do
   add_foreign_key "initiative_state_changes", "users"
   add_foreign_key "initiatives", "communes"
   add_foreign_key "initiatives", "users"
+  add_foreign_key "law_proposal_versions", "law_proposals"
+  add_foreign_key "law_proposal_versions", "users"
+  add_foreign_key "law_proposals", "communes"
+  add_foreign_key "law_proposals", "users"
   add_foreign_key "news", "threads"
   add_foreign_key "news", "users"
   add_foreign_key "reactions", "users"
