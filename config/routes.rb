@@ -20,7 +20,11 @@ Rails.application.routes.draw do
 
   resources :political_contexts, only: [ :index ]
 
-  resources :events, only: [ :show ] do
+  resources :events, only: [ :index, :show ] do
+    member do
+      get :calendar
+    end
+
     resource :attendance, only: [ :create, :update ]
   end
 

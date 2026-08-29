@@ -1,13 +1,16 @@
 <div class="space-y-6">
-  <%= link_to "← Contexto político", political_contexts_path, class: "text-sm text-blue-600 hover:text-blue-800" %>
+  <%= link_to "← Eventos", events_path, class: "text-sm text-blue-600 hover:text-blue-800" %>
 
   <div>
-    <h2 class="text-xl font-semibold text-gray-900"><%= @event.title %></h2>
+    <div class="flex flex-wrap items-center gap-2 text-xs text-gray-400">
+      <span class="rounded-full bg-gray-100 px-2 py-0.5 font-medium text-gray-600"><%= event_type_label(@event.event_type) %></span>
+      <time datetime="<%= @event.start_at.iso8601 %>"><%= @event.start_at.to_fs(:short) %></time>
+    </div>
+    <h2 class="mt-2 text-xl font-semibold text-gray-900"><%= @event.title %></h2>
     <p class="mt-2 text-sm text-gray-600"><%= @event.description %></p>
     <div class="mt-3 space-y-1 text-xs text-gray-500">
-      <time datetime="<%= @event.start_at.iso8601 %>"><%= @event.start_at.to_fs(:short) %></time>
       <% if @event.end_at.present? %>
-        <span> · hasta <%= @event.end_at.to_fs(:short) %></span>
+        <p>Hasta <%= @event.end_at.to_fs(:short) %></p>
       <% end %>
       <% if @event.location.present? %>
         <p><%= @event.location %></p>
@@ -15,8 +18,13 @@
       <% if @event.commune.present? %>
         <p><%= @event.commune.name %></p>
       <% end %>
+      <p><%= capacity_label_for(@event) %></p>
     </div>
   </div>
+
+  <%= link_to "Agregar al calendario (.ics)",
+        calendar_event_path(@event),
+        class: "inline-flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-700 hover:border-blue-200" %>
 
   <%= render "attendances/panel", event: @event, attendance: @attendance %>
 </div>

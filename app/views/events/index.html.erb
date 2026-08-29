@@ -1,0 +1,47 @@
+<div class="space-y-6">
+  <div>
+    <h2 class="text-xl font-semibold text-gray-900">Eventos</h2>
+    <p class="mt-1 text-sm text-gray-500">Próximas actividades y encuentros.</p>
+  </div>
+
+  <div class="sticky top-14 z-[5] -mx-4 space-y-3 border-b border-gray-200 bg-gray-50/95 px-4 pb-4 backdrop-blur">
+    <%= form_with url: events_path, method: :get, html: { class: "space-y-3" } do |form| %>
+      <div>
+        <%= form.label :commune_id, "Territorio", class: "mb-1 block text-xs font-medium text-gray-600" %>
+        <%= form.select :commune_id,
+              options_from_collection_for_select(@communes, :id, :name, @selected_commune_id),
+              { include_blank: "Todas las comunas" },
+              class: "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500",
+              onchange: "this.form.requestSubmit()" %>
+      </div>
+
+      <div>
+        <%= form.label :event_type, "Tipo", class: "mb-1 block text-xs font-medium text-gray-600" %>
+        <%= form.select :event_type,
+              Event.event_types.keys.map { |key| [ event_type_label(key), key ] },
+              { include_blank: "Todos los tipos", selected: @selected_event_type },
+              class: "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500",
+              onchange: "this.form.requestSubmit()" %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @events_by_date.any? %>
+    <div class="space-y-6">
+      <% @events_by_date.each do |date, events| %>
+        <section class="space-y-3">
+          <h3 class="text-sm font-semibold text-gray-900"><%= agenda_date_label(date) %></h3>
+          <div class="space-y-2">
+            <% events.each do |event| %>
+              <%= render "events/event_row", event: event %>
+            <% end %>
+          </div>
+        </section>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="rounded-lg border border-dashed border-gray-300 bg-white p-6 text-center text-sm text-gray-500">
+      No hay eventos próximos con esos filtros.
+    </p>
+  <% end %>
+</div>

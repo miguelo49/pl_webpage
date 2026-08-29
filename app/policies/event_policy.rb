@@ -8,4 +8,8 @@ class EventPolicy < ApplicationPolicy
   def show?
     authenticated?
   end
+
+  def index?
+    show?
+  end
 end
