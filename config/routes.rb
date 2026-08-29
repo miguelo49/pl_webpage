@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   root "home#index"
 
   resource :onboarding, only: [ :show, :update ], controller: "onboardings"
+  resource :profile, only: [ :show, :update ], controller: "profiles"
 
   if Rails.env.local?
     get "authorization_test", to: "authorization_test#index"

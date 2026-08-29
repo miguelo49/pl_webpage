@@ -1,8 +1,12 @@
 class User < ApplicationRecord
   ROLES = %w[sympathizer militant board_member moderator technical_admin].freeze
 
+  ACCEPTED_AVATAR_TYPES = %w[image/jpeg image/png image/webp image/gif].freeze
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+
+  has_one_attached :avatar
 
   enum :role, {
     sympathizer: 0,
@@ -14,6 +18,7 @@ class User < ApplicationRecord
 
   validates :first_name, presence: true
   validates :last_name, presence: true
+  validate :acceptable_avatar
 
   def profile_complete?
     first_name.present? && last_name.present?
@@ -28,4 +33,18 @@ class User < ApplicationRecord
   end
 
   alias_method :complete?, :onboarding_complete?
+
+  def full_name
+    [ first_name, last_name ].compact_blank.join(" ")
+  end
+
+  private
+
+  def acceptable_avatar
+    return unless avatar.attached?
+
+    unless avatar.content_type.in?(ACCEPTED_AVATAR_TYPES)
+      errors.add(:avatar, "must be a JPEG, PNG, WebP, or GIF")
+    end
+  end
 end

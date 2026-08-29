@@ -28,7 +28,7 @@
 
           <div class="flex items-center gap-2 text-sm">
             <% if user_signed_in? %>
-              <span class="hidden truncate text-gray-600 sm:inline"><%= current_user.first_name %></span>
+              <span id="header_user_name" class="hidden truncate text-gray-600 sm:inline"><%= current_user.first_name %></span>
               <%= button_to "Salir",
                     destroy_user_session_path,
                     method: :delete,
@@ -41,16 +41,14 @@
         </div>
       </header>
 
-      <% if notice.present? || alert.present? %>
-        <div class="space-y-2 px-4 pt-3">
-          <% if notice.present? %>
-            <p class="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-800"><%= notice %></p>
-          <% end %>
-          <% if alert.present? %>
-            <p class="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"><%= alert %></p>
-          <% end %>
-        </div>
-      <% end %>
+      <div id="flash_messages" class="space-y-2 px-4 pt-3">
+        <% if notice.present? %>
+          <p class="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-800"><%= notice %></p>
+        <% end %>
+        <% if alert.present? %>
+          <p class="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"><%= alert %></p>
+        <% end %>
+      </div>
 
       <main class="flex-1 px-4 py-4">
         <%= yield %>
@@ -67,9 +65,9 @@
               Inicio
             <% end %>
             <% if user_signed_in? %>
-              <%= link_to edit_user_registration_path, class: "flex flex-col items-center gap-1 hover:text-gray-600" do %>
+              <%= link_to profile_path, class: "flex flex-col items-center gap-1 hover:text-gray-600 #{'text-blue-600' if controller_name == 'profiles'}" do %>
                 <span class="h-5 w-5 rounded bg-gray-200" aria-hidden="true"></span>
-                Cuenta
+                Perfil
               <% end %>
             <% else %>
               <%= link_to new_user_session_path, class: "flex flex-col items-center gap-1 hover:text-gray-600" do %>

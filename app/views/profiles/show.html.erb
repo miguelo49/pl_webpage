@@ -1,0 +1,10 @@
+<div class="space-y-6">
+  <div>
+    <h2 class="text-xl font-semibold text-gray-900">Mi perfil</h2>
+    <p class="mt-1 text-sm text-gray-500">Consulta y edita tus datos básicos.</p>
+  </div>
+
+  <%= turbo_frame_tag "profile" do %>
+    <%= render "profiles/profile", user: @user %>
+  <% end %>
+</div>

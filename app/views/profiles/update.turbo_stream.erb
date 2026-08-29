@@ -1,0 +1,11 @@
+<%= turbo_stream.replace "profile" do %>
+  <%= render "profiles/profile", user: @user %>
+<% end %>
+
+<%= turbo_stream.update "header_user_name" do %>
+  <%= @user.first_name %>
+<% end %>
+
+<%= turbo_stream.update "flash_messages" do %>
+  <p class="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-800">Perfil actualizado correctamente.</p>
+<% end %>

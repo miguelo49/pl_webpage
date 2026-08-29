@@ -1,0 +1,40 @@
+<%= form_with model: user,
+      url: profile_path,
+      method: :patch,
+      html: { multipart: true, data: { turbo_frame: "profile" }, class: "space-y-6" } do |form| %>
+
+  <%= render "profiles/avatar_section", user: user, form: form %>
+
+  <div class="rounded-lg border border-gray-200 bg-white p-4 space-y-4">
+    <h3 class="text-sm font-medium text-gray-900">Datos personales</h3>
+
+    <% if user.errors.any? %>
+      <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <ul class="list-inside list-disc space-y-1">
+          <% user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div>
+      <%= form.label :first_name, "Nombre", class: "mb-1 block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :first_name,
+            autocomplete: "given-name",
+            class: "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" %>
+    </div>
+
+    <div>
+      <%= form.label :last_name, "Apellido", class: "mb-1 block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :last_name,
+            autocomplete: "family-name",
+            class: "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" %>
+    </div>
+
+    <p class="text-sm text-gray-500"><%= user.email %></p>
+  </div>
+
+  <%= form.submit "Guardar cambios",
+        class: "w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+<% end %>
