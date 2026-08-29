@@ -5,6 +5,14 @@ class TrainingMaterialPolicy < ApplicationPolicy
     authenticated?
   end
 
+  def show?
+    index?
+  end
+
+  def download?
+    show?
+  end
+
   def create?
     authenticated? && (user.board_member? || user.technical_admin?)
   end

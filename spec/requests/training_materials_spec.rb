@@ -21,8 +21,8 @@ RSpec.describe "Training materials library", type: :request do
     User.create!(attrs)
   end
 
-  def create_material(category:, title:, tags: [])
-    TrainingMaterial.create!(
+  def create_material(category:, title:, tags: [], attach_pdf: false)
+    material = TrainingMaterial.create!(
       title: title,
       description: "Descripción de #{title}",
       author: "Equipo editorial",
@@ -30,6 +30,16 @@ RSpec.describe "Training materials library", type: :request do
       training_category: category,
       tags: tags
     )
+
+    if attach_pdf
+      material.pdf.attach(
+        io: File.open(Rails.root.join("spec/fixtures/files/sample.pdf")),
+        filename: "#{title.parameterize}.pdf",
+        content_type: "application/pdf"
+      )
+    end
+
+    material
   end
 
   let!(:ideology_category) { TrainingCategory.create!(name: "Ideología") }
@@ -81,6 +91,28 @@ RSpec.describe "Training materials library", type: :request do
 
       expect(response.body).to include("Leído")
       expect(response.body).not_to include("Marcar como leído")
+    end
+  end
+
+  describe "GET /training_materials/:id/download" do
+    it "responds with the attached PDF file" do
+      user = create_user(role: :sympathizer)
+      material = create_material(category: ideology_category, title: "Manual descargable", attach_pdf: true)
+
+      sign_in user
+      get download_training_material_path(material)
+
+      expect(response).to have_http_status(:found)
+      expect(response.location).to include("disposition=attachment")
+
+      follow_redirect!
+
+      if response.redirect?
+        follow_redirect!
+      end
+
+      expect(response.content_type).to eq("application/pdf")
+      expect(response.body).to start_with("%PDF")
     end
   end
 end

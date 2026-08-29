@@ -20,8 +20,9 @@ Rails.application.routes.draw do
 
   resources :political_contexts, only: [ :index ]
 
-  resources :training_materials, only: [ :index ] do
+  resources :training_materials, only: [ :index, :show ] do
     member do
+      get :download
       post :bookmark
       post :read_mark
     end

@@ -1,0 +1,62 @@
+<div class="space-y-6">
+  <%= link_to "← Biblioteca", training_materials_path, class: "text-sm text-blue-600 hover:text-blue-800" %>
+
+  <div>
+    <span class="text-xs text-gray-400"><%= @training_material.training_category.name %></span>
+    <h2 class="mt-1 text-xl font-semibold text-gray-900"><%= @training_material.title %></h2>
+    <p class="mt-2 text-sm text-gray-600"><%= @training_material.author %></p>
+    <time datetime="<%= @training_material.date.iso8601 %>" class="mt-1 block text-xs text-gray-400">
+      <%= @training_material.date.to_fs(:long) %>
+    </time>
+  </div>
+
+  <% if @training_material.tags.any? %>
+    <div class="flex flex-wrap gap-1">
+      <% @training_material.tags.each do |tag| %>
+        <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600"><%= tag %></span>
+      <% end %>
+    </div>
+  <% end %>
+
+  <p class="text-sm text-gray-700"><%= @training_material.description %></p>
+
+  <div class="flex flex-wrap gap-2">
+    <%= render "bookmarks/button",
+          bookmarkable: @training_material,
+          bookmark_path: bookmark_path_for(@training_material) %>
+    <%= render "training_materials/read_mark_button", training_material: @training_material %>
+  </div>
+
+  <% if @training_material.pdf.attached? %>
+    <section class="space-y-4">
+      <div class="grid gap-2 sm:grid-cols-2">
+        <%= link_to "Descargar PDF",
+              download_training_material_path(@training_material),
+              class: "inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-700" %>
+
+        <%= link_to "Abrir PDF",
+              rails_blob_path(@training_material.pdf, disposition: :inline),
+              target: "_blank",
+              rel: "noopener noreferrer",
+              class: "inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-700 hover:border-blue-200 md:hidden" %>
+      </div>
+
+      <p class="text-sm text-gray-500 md:hidden">
+        En móvil, descarga o abre el PDF en tu app nativa para una mejor experiencia.
+      </p>
+
+      <div class="hidden overflow-hidden rounded-lg border border-gray-200 bg-white md:block">
+        <iframe
+          src="<%= rails_blob_path(@training_material.pdf, disposition: :inline) %>"
+          title="<%= @training_material.title %> PDF"
+          class="h-[70vh] w-full"
+          loading="lazy"
+        ></iframe>
+      </div>
+    </section>
+  <% else %>
+    <p class="rounded-lg border border-dashed border-gray-300 bg-white p-6 text-center text-sm text-gray-500">
+      Este material todavía no tiene un PDF disponible.
+    </p>
+  <% end %>
+</div>

@@ -3,7 +3,7 @@ class TrainingMaterialsController < ApplicationController
   include ReadMarkHandling
 
   before_action :authenticate_user!
-  before_action :set_training_material, only: [ :bookmark, :read_mark ]
+  before_action :set_training_material, only: [ :show, :download, :bookmark, :read_mark ]
 
   def index
     authorize TrainingMaterial
@@ -19,6 +19,22 @@ class TrainingMaterialsController < ApplicationController
       .library_order
   end
 
+  def show
+    authorize @training_material
+  end
+
+  def download
+    authorize @training_material, :download?
+
+    unless @training_material.pdf.attached?
+      redirect_to training_material_path(@training_material), alert: "Este material no tiene un PDF disponible."
+      return
+    end
+
+    redirect_to rails_blob_path(@training_material.pdf, disposition: :attachment),
+                allow_other_host: true
+  end
+
   def bookmark
     authorize @training_material, :index?
     toggle_bookmark(@training_material)
@@ -32,6 +48,8 @@ class TrainingMaterialsController < ApplicationController
   private
 
   def set_training_material
-    @training_material = TrainingMaterial.find(params[:id])
+    @training_material = TrainingMaterial
+      .includes(:training_category, :bookmarks, :read_marks, pdf_attachment: :blob, cover_image_attachment: :blob)
+      .find(params[:id])
   end
 end
