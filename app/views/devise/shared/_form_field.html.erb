@@ -1,0 +1,10 @@
+<% input_class = "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" %>
+<% label_class = "mb-1 block text-sm font-medium text-gray-700" %>
+<% html_options = local_assigns.fetch(:html_options, {}) %>
+
+<div class="space-y-4">
+  <div>
+    <%= form.label field, label, class: label_class %>
+    <%= form.public_send(field_type, field, { class: input_class, autocomplete: autocomplete }.merge(html_options)) %>
+  </div>
+</div>

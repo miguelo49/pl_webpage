@@ -21,10 +21,36 @@
   <body class="min-h-dvh bg-gray-50 text-gray-900 antialiased">
     <div class="mx-auto flex min-h-dvh w-full max-w-lg flex-col">
       <header class="sticky top-0 z-10 border-b border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
-        <div class="flex h-14 items-center px-4">
-          <h1 class="text-base font-semibold tracking-tight">Pl Webpage</h1>
+        <div class="flex h-14 items-center justify-between gap-3 px-4">
+          <%= link_to root_path, class: "text-base font-semibold tracking-tight" do %>
+            Pl Webpage
+          <% end %>
+
+          <div class="flex items-center gap-2 text-sm">
+            <% if user_signed_in? %>
+              <span class="hidden truncate text-gray-600 sm:inline"><%= current_user.nombre %></span>
+              <%= button_to "Salir",
+                    destroy_user_session_path,
+                    method: :delete,
+                    class: "rounded-lg px-2 py-1 text-blue-600 hover:bg-blue-50 hover:text-blue-800" %>
+            <% else %>
+              <%= link_to "Entrar", new_user_session_path, class: "rounded-lg px-2 py-1 text-blue-600 hover:bg-blue-50 hover:text-blue-800" %>
+              <%= link_to "Registro", new_user_registration_path, class: "rounded-lg bg-blue-600 px-2 py-1 font-medium text-white hover:bg-blue-700" %>
+            <% end %>
+          </div>
         </div>
       </header>
+
+      <% if notice.present? || alert.present? %>
+        <div class="space-y-2 px-4 pt-3">
+          <% if notice.present? %>
+            <p class="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-800"><%= notice %></p>
+          <% end %>
+          <% if alert.present? %>
+            <p class="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"><%= alert %></p>
+          <% end %>
+        </div>
+      <% end %>
 
       <main class="flex-1 px-4 py-4">
         <%= yield %>
@@ -35,14 +61,21 @@
         aria-label="Navegación principal"
       >
         <div class="flex h-16 items-center justify-around px-4 text-xs text-gray-400">
-          <span class="flex flex-col items-center gap-1">
+          <%= link_to root_path, class: "flex flex-col items-center gap-1 hover:text-gray-600" do %>
             <span class="h-5 w-5 rounded bg-gray-200" aria-hidden="true"></span>
             Inicio
-          </span>
-          <span class="flex flex-col items-center gap-1">
-            <span class="h-5 w-5 rounded bg-gray-200" aria-hidden="true"></span>
-            Nav
-          </span>
+          <% end %>
+          <% if user_signed_in? %>
+            <%= link_to edit_user_registration_path, class: "flex flex-col items-center gap-1 hover:text-gray-600" do %>
+              <span class="h-5 w-5 rounded bg-gray-200" aria-hidden="true"></span>
+              Cuenta
+            <% end %>
+          <% else %>
+            <%= link_to new_user_session_path, class: "flex flex-col items-center gap-1 hover:text-gray-600" do %>
+              <span class="h-5 w-5 rounded bg-gray-200" aria-hidden="true"></span>
+              Entrar
+            <% end %>
+          <% end %>
           <span class="flex flex-col items-center gap-1">
             <span class="h-5 w-5 rounded bg-gray-200" aria-hidden="true"></span>
             Más
