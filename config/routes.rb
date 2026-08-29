@@ -60,6 +60,7 @@ Rails.application.routes.draw do
   namespace :admin do
     root to: "dashboard#index"
     resources :users, only: [ :index, :edit, :update ]
+    resources :moderators, only: [ :index, :create, :destroy ]
     resources :regions
     resources :communes
     resources :topics

@@ -1,0 +1,72 @@
+<div class="space-y-6">
+  <div>
+    <h2 class="text-xl font-semibold text-gray-900">Moderadores</h2>
+    <p class="mt-1 text-sm text-gray-500">Asigna o revoca el rol de moderador sin modificar otros datos.</p>
+  </div>
+
+  <%= render "admin/shared/nav" %>
+
+  <div class="sticky top-14 z-[5] -mx-4 border-b border-gray-200 bg-gray-50/95 px-4 pb-4 backdrop-blur">
+    <%= form_with url: admin_moderators_path, method: :get, html: { class: "space-y-3" } do |form| %>
+      <%= form.label :filter, "Mostrar", class: "mb-1 block text-xs font-medium text-gray-600" %>
+      <%= form.select :filter,
+            [
+              [ "Todos (elegibles y moderadores)", "all" ],
+              [ "Elegibles (militante o directiva)", "eligible" ],
+              [ "Moderadores actuales", "moderators" ]
+            ],
+            { selected: @selected_filter },
+            class: "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm",
+            onchange: "this.form.requestSubmit()" %>
+    <% end %>
+  </div>
+
+  <% if @users.any? %>
+    <div class="space-y-3">
+      <% @users.each do |user| %>
+        <article class="rounded-lg border border-gray-200 bg-white p-4">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="font-medium text-gray-900"><%= user.full_name %></p>
+              <p class="text-sm text-gray-500"><%= user.email %></p>
+            </div>
+            <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
+              <%= user_role_label(user.role) %>
+            </span>
+          </div>
+
+          <div class="mt-4">
+            <% if user.moderator? %>
+              <%= form_with url: admin_moderator_path(user), method: :delete, html: { class: "space-y-3" } do |form| %>
+                <div>
+                  <%= form.label :restore_role, "Restaurar como", class: "mb-1 block text-xs font-medium text-gray-600" %>
+                  <%= form.select :restore_role,
+                        [
+                          [ user_role_label("militant"), "militant" ],
+                          [ user_role_label("board_member"), "board_member" ]
+                        ],
+                        {},
+                        class: "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm" %>
+                </div>
+                <%= form.submit "Revocar moderador",
+                      class: "w-full rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-700 hover:bg-red-100",
+                      data: { turbo_confirm: "¿Revocar rol de moderador?" } %>
+              <% end %>
+            <% elsif user.militant? || user.board_member? %>
+              <%= button_to "Asignar moderador",
+                    admin_moderators_path,
+                    method: :post,
+                    params: { id: user.id, filter: @selected_filter },
+                    class: "w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700",
+                    data: { turbo_confirm: "¿Asignar rol de moderador?" } %>
+            <% end %>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="rounded-lg border border-dashed border-gray-300 bg-white p-6 text-center text-sm text-gray-500">
+      No hay usuarios con este filtro.
+    </p>
+  <% end %>
+</div>
