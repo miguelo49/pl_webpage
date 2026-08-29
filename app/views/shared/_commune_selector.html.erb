@@ -1,0 +1,38 @@
+<%# locals: (form:, commune_association:, label:, regions:) %>
+<% selected_commune = form.object.public_send(commune_association) %>
+<% selected_region_id = selected_commune&.region_id %>
+<% field_name = :"#{commune_association}_id" %>
+<% select_class = "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:bg-gray-100 disabled:text-gray-400" %>
+
+<div class="space-y-3 rounded-lg border border-gray-100 bg-gray-50 p-3"
+     data-controller="commune-selector"
+     data-commune-selector-url-value="<%= region_communes_path("REGION_ID", format: :json) %>"
+     data-commune-selector-selected-commune-value="<%= selected_commune&.id %>">
+  <p class="text-sm font-medium text-gray-900"><%= label %></p>
+
+  <div>
+    <label class="mb-1 block text-sm text-gray-700" for="<%= form.field_id(commune_association, :region) %>">Región</label>
+    <select id="<%= form.field_id(commune_association, :region) %>"
+            class="<%= select_class %>"
+            data-commune-selector-target="regionSelect"
+            data-action="change->commune-selector#regionChanged">
+      <option value="">Selecciona una región</option>
+      <% regions.each do |region| %>
+        <option value="<%= region.id %>" <%= "selected" if region.id == selected_region_id %>><%= region.name %></option>
+      <% end %>
+    </select>
+  </div>
+
+  <div>
+    <%= form.label field_name, "Comuna", class: "mb-1 block text-sm text-gray-700" %>
+    <%= form.select field_name,
+          options_for_select(
+            selected_commune ? [ [ selected_commune.name, selected_commune.id ] ] : [],
+            selected_commune&.id
+          ),
+          { include_blank: "Selecciona una comuna" },
+          class: select_class,
+          data: { commune_selector_target: "communeSelect" },
+          disabled: selected_region_id.blank? %>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<div class="rounded-lg border border-gray-200 bg-white p-4 space-y-4">
+  <h3 class="text-sm font-medium text-gray-900">Ubicación</h3>
+  <p class="text-sm text-gray-500">Selecciona región y comuna para cada caso.</p>
+
+  <%= render "shared/commune_selector",
+        form: form,
+        commune_association: :residence_commune,
+        label: "Comuna de residencia",
+        regions: regions %>
+
+  <%= render "shared/commune_selector",
+        form: form,
+        commune_association: :work_commune,
+        label: "Comuna de trabajo",
+        regions: regions %>
+
+  <%= render "shared/commune_selector",
+        form: form,
+        commune_association: :study_commune,
+        label: "Comuna de estudio",
+        regions: regions %>
+</div>

@@ -1,3 +1,4 @@
+<%# locals: (user:, regions:) %>
 <%= form_with model: user,
       url: profile_path,
       method: :patch,
@@ -34,6 +35,8 @@
 
     <p class="text-sm text-gray-500"><%= user.email %></p>
   </div>
+
+  <%= render "shared/commune_fields", form: form, regions: regions %>
 
   <%= form.submit "Guardar cambios",
         class: "w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>

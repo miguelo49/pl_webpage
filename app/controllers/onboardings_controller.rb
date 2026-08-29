@@ -1,6 +1,7 @@
 class OnboardingsController < ApplicationController
   before_action :authenticate_user!
   before_action :redirect_if_complete, only: [ :show, :update ]
+  before_action :load_regions, only: [ :show, :update ]
 
   def show
     @current_step = current_step
@@ -69,6 +70,16 @@ class OnboardingsController < ApplicationController
   end
 
   def profile_params
-    params.require(:user).permit(:first_name, :last_name)
+    params.require(:user).permit(
+      :first_name,
+      :last_name,
+      :residence_commune_id,
+      :work_commune_id,
+      :study_commune_id
+    )
+  end
+
+  def load_regions
+    @regions = Region.order(:name)
   end
 end

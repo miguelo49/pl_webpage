@@ -15,6 +15,10 @@ Rails.application.routes.draw do
   resource :onboarding, only: [ :show, :update ], controller: "onboardings"
   resource :profile, only: [ :show, :update ], controller: "profiles"
 
+  resources :regions, only: [] do
+    resources :communes, only: [ :index ], module: :regions
+  end
+
   if Rails.env.local?
     get "authorization_test", to: "authorization_test#index"
   end
