@@ -1,17 +1,29 @@
 <% if @comment.errors.any? %>
   <%= turbo_stream.replace "comment_form" do %>
     <div id="comment_form">
-      <%= render "comments/form", topic: @topic, thread: @thread, comment: @comment %>
+      <% if @initiative %>
+        <%= render "comments/form", initiative: @initiative, comment: @comment %>
+      <% else %>
+        <%= render "comments/form", topic: @topic, thread: @thread, comment: @comment %>
+      <% end %>
     </div>
   <% end %>
 <% else %>
   <%= turbo_stream.append "comments_list" do %>
-    <%= render "comments/comment", comment: @comment, topic: @topic, thread: @thread %>
+    <% if @initiative %>
+      <%= render "comments/comment", comment: @comment, initiative: @initiative %>
+    <% else %>
+      <%= render "comments/comment", comment: @comment, topic: @topic, thread: @thread %>
+    <% end %>
   <% end %>
 
   <%= turbo_stream.replace "comment_form" do %>
     <div id="comment_form">
-      <%= render "comments/form", topic: @topic, thread: @thread, comment: @thread.comments.build %>
+      <% if @initiative %>
+        <%= render "comments/form", initiative: @initiative, comment: (@initiative.comments.build) %>
+      <% else %>
+        <%= render "comments/form", topic: @topic, thread: @thread, comment: @thread.comments.build %>
+      <% end %>
     </div>
   <% end %>
 

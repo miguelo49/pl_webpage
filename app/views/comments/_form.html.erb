@@ -1,7 +1,7 @@
 <% input_class = "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" %>
 
 <%= form_with model: comment,
-      url: topic_thread_comments_path(topic, thread),
+      url: comment_form_url(initiative: local_assigns[:initiative], topic: local_assigns[:topic], thread: local_assigns[:thread]),
       html: { data: { turbo_frame: "comments" }, class: "space-y-3" } do |form| %>
   <% if comment.errors.any? %>
     <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">

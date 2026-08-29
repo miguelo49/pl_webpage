@@ -8,7 +8,7 @@
   <div class="mt-3">
     <%= render "reactions/button",
           reactable: comment,
-          react_path: react_path_for(comment, topic: topic, thread: thread) %>
+          react_path: react_path_for(comment, topic: local_assigns[:topic], thread: local_assigns[:thread], initiative: local_assigns[:initiative]) %>
   </div>
 
   <% if comment.replies.any? %>
@@ -23,7 +23,7 @@
           <div class="mt-2">
             <%= render "reactions/button",
                   reactable: reply,
-                  react_path: react_path_for(reply, topic: topic, thread: thread) %>
+                  react_path: react_path_for(reply, topic: local_assigns[:topic], thread: local_assigns[:thread], initiative: local_assigns[:initiative]) %>
           </div>
         </div>
       <% end %>

@@ -27,7 +27,13 @@ module ReactionHandling
     when ForumThread
       topic_thread_path(@topic, reactable)
     when Comment
-      topic_thread_path(@topic, @thread)
+      if @initiative
+        initiative_path(@initiative)
+      else
+        topic_thread_path(@topic, @thread)
+      end
+    when Initiative
+      initiative_path(reactable)
     else
       root_path
     end

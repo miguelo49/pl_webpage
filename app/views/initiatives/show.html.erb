@@ -1,0 +1,91 @@
+<div class="space-y-6">
+  <div>
+    <h2 class="text-xl font-semibold text-gray-900"><%= @initiative.title %></h2>
+    <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-gray-400">
+      <span class="rounded-full bg-gray-100 px-2 py-0.5 font-medium text-gray-600"><%= @initiative.category %></span>
+      <span class="rounded-full bg-blue-50 px-2 py-0.5 font-medium text-blue-700"><%= @initiative.status.humanize %></span>
+      <span><%= @initiative.user.first_name %></span>
+      <span>·</span>
+      <span><%= @initiative.commune.name %></span>
+    </div>
+  </div>
+
+  <article class="space-y-4 rounded-lg border border-gray-200 bg-white p-4">
+    <section>
+      <h3 class="text-sm font-semibold text-gray-900">Descripción</h3>
+      <p class="mt-2 text-sm text-gray-700"><%= simple_format(@initiative.description) %></p>
+    </section>
+
+    <section>
+      <h3 class="text-sm font-semibold text-gray-900">Problema</h3>
+      <p class="mt-2 text-sm text-gray-700"><%= simple_format(@initiative.problem) %></p>
+    </section>
+
+    <section>
+      <h3 class="text-sm font-semibold text-gray-900">Propuesta</h3>
+      <p class="mt-2 text-sm text-gray-700"><%= simple_format(@initiative.proposal) %></p>
+    </section>
+
+    <div class="flex flex-wrap items-center gap-2 border-t border-gray-100 pt-4">
+      <%= render "reactions/button",
+            reactable: @initiative,
+            react_path: react_path_for(@initiative),
+            label: "Apoyar" %>
+    </div>
+  </article>
+
+  <section class="space-y-4 rounded-lg border border-gray-200 bg-white p-4">
+    <h3 class="text-base font-semibold text-gray-900">Documentos</h3>
+
+    <% if @initiative.documents.attached? %>
+      <ul class="space-y-2">
+        <% @initiative.documents.each do |document| %>
+          <li>
+            <%= link_to document.filename,
+                  rails_blob_path(document, disposition: "attachment"),
+                  class: "text-sm text-blue-600 hover:text-blue-800" %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-sm text-gray-500">Aún no hay documentos adjuntos.</p>
+    <% end %>
+
+    <% if policy(@initiative).attach_documents? %>
+      <%= form_with model: @initiative,
+            url: attach_documents_initiative_path(@initiative),
+            html: { class: "space-y-3", multipart: true } do |form| %>
+        <div>
+          <%= form.label :documents, "Adjuntar documento", class: "mb-1 block text-sm font-medium text-gray-700" %>
+          <%= form.file_field :documents,
+                multiple: true,
+                accept: Initiative::ACCEPTED_DOCUMENT_TYPES.join(","),
+                class: "block w-full text-sm text-gray-600 file:mr-3 file:rounded-lg file:border-0 file:bg-blue-50 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100" %>
+        </div>
+
+        <%= form.submit "Subir documento",
+              class: "w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700" %>
+      <% end %>
+    <% end %>
+  </section>
+
+  <%= turbo_frame_tag "comments" do %>
+    <section class="space-y-4">
+      <h3 class="text-base font-semibold text-gray-900">Comentarios</h3>
+
+      <div id="comments_list" class="space-y-4">
+        <% if @comments.any? %>
+          <% @comments.each do |comment| %>
+            <%= render "comments/comment", comment: comment, initiative: @initiative %>
+          <% end %>
+        <% else %>
+          <p class="text-sm text-gray-500">Sé el primero en comentar esta iniciativa.</p>
+        <% end %>
+      </div>
+
+      <div id="comment_form">
+        <%= render "comments/form", initiative: @initiative, comment: @comment %>
+      </div>
+    </section>
+  <% end %>
+</div>

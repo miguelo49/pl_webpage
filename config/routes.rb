@@ -36,6 +36,18 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :initiatives, only: [ :show ] do
+    member do
+      post :react
+      post :attach_documents
+      post :comments, action: :create_comment
+    end
+  end
+
+  post "initiatives/:initiative_id/comments/:id/react",
+       to: "initiatives#react_comment",
+       as: :react_initiative_comment
+
   resources :topics, only: [ :index ] do
     resources :threads, only: [ :index, :show, :new, :create, :edit, :update ] do
       member do
