@@ -15,7 +15,7 @@ module Admin
       authorize :admin, :update?
 
       @user.audit_actor = current_user
-      @user.assign_attributes(user_params)
+      assign_admin_user_attributes
       ensure_commune_for_militant_role(@user)
 
       if @user.save
@@ -27,12 +27,17 @@ module Admin
 
     private
 
-    def set_user
-      @user = User.find(params[:id])
+    def assign_admin_user_attributes
+      role = params.dig(:user, :role)
+      @user.role = role if role.present? && User.roles.key?(role)
+
+      if params[:user].key?(:active)
+        @user.active = ActiveModel::Type::Boolean.new.cast(params[:user][:active])
+      end
     end
 
-    def user_params
-      params.require(:user).permit(:role, :active)
+    def set_user
+      @user = User.find(params[:id])
     end
 
     def ensure_commune_for_militant_role(user)

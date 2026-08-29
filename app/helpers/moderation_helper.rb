@@ -5,7 +5,11 @@ module ModerationHelper
     "News" => "news"
   }.freeze
 
-  INVERSE_MODERATABLE_PARAM_TYPES = MODERATABLE_PARAM_TYPES.invert.freeze
+  MODERATABLE_CLASS_BY_PARAM = {
+    "forum_thread" => ForumThread,
+    "comment" => Comment,
+    "news" => News
+  }.freeze
 
   def moderation_item_param_type(record)
     MODERATABLE_PARAM_TYPES.fetch(record.class.name)

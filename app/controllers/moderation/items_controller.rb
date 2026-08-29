@@ -42,8 +42,8 @@ module Moderation
     private
 
     def set_item
-      model = ModerationHelper::INVERSE_MODERATABLE_PARAM_TYPES.fetch(params[:type])
-      @item = model.constantize.find(params[:id])
+      model = ModerationHelper::MODERATABLE_CLASS_BY_PARAM.fetch(params[:type])
+      @item = model.find(params[:id])
     end
 
     def reject_without_reason?

@@ -10,7 +10,7 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers, type: :system
 
   config.before(:each, type: :system) do
-    driven_by :selenium, using: :headless_chrome, screen_size: [375, 812]
+    driven_by :selenium, using: :headless_chrome, screen_size: [ 375, 812 ]
   end
 
   config.after(:each, type: :system) do
