@@ -68,6 +68,7 @@ class InitiativesController < ApplicationController
     authorize @initiative, :change_status?
 
     @initiative.status_changed_by = current_user
+    @initiative.moderated_by = current_user
 
     if @initiative.update(status: status_param)
       redirect_to initiative_path(@initiative), notice: "Estado actualizado."

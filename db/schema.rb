@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_08_29_152649) do
+ActiveRecord::Schema[7.2].define(version: 2026_08_29_152923) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -162,6 +162,19 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_29_152649) do
     t.index ["user_id"], name: "index_law_proposals_on_user_id"
   end
 
+  create_table "moderation_logs", force: :cascade do |t|
+    t.bigint "moderator_id", null: false
+    t.string "moderatable_type", null: false
+    t.bigint "moderatable_id", null: false
+    t.string "action", null: false
+    t.text "rejection_reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["moderatable_type", "moderatable_id", "created_at"], name: "index_moderation_logs_on_moderatable_and_created_at"
+    t.index ["moderatable_type", "moderatable_id"], name: "index_moderation_logs_on_moderatable"
+    t.index ["moderator_id"], name: "index_moderation_logs_on_moderator_id"
+  end
+
   create_table "news", force: :cascade do |t|
     t.string "title", null: false
     t.text "summary", null: false
@@ -203,6 +216,19 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_29_152649) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_regions_on_name", unique: true
+  end
+
+  create_table "reports", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "reportable_type", null: false
+    t.bigint "reportable_id", null: false
+    t.text "reason", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reportable_type", "reportable_id"], name: "index_reports_on_reportable"
+    t.index ["reportable_type", "reportable_id"], name: "index_reports_on_reportable_type_and_reportable_id"
+    t.index ["user_id", "reportable_type", "reportable_id"], name: "index_reports_on_user_id_and_reportable_type_and_reportable_id"
+    t.index ["user_id"], name: "index_reports_on_user_id"
   end
 
   create_table "threads", force: :cascade do |t|
@@ -287,11 +313,13 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_29_152649) do
   add_foreign_key "law_proposal_versions", "users"
   add_foreign_key "law_proposals", "communes"
   add_foreign_key "law_proposals", "users"
+  add_foreign_key "moderation_logs", "users", column: "moderator_id"
   add_foreign_key "news", "threads"
   add_foreign_key "news", "users"
   add_foreign_key "reactions", "users"
   add_foreign_key "read_marks", "training_materials"
   add_foreign_key "read_marks", "users"
+  add_foreign_key "reports", "users"
   add_foreign_key "threads", "topics"
   add_foreign_key "threads", "users"
   add_foreign_key "training_materials", "training_categories"

@@ -1,4 +1,6 @@
 class Initiative < ApplicationRecord
+  include Moderatable
+
   ACCEPTED_DOCUMENT_TYPES = %w[
     application/pdf
     application/msword

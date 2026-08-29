@@ -1,4 +1,6 @@
 class ForumThread < ApplicationRecord
+  include Moderatable
+
   self.table_name = "threads"
 
   belongs_to :topic

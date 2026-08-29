@@ -1,4 +1,6 @@
 class News < ApplicationRecord
+  include Moderatable
+
   belongs_to :user
   belongs_to :thread, class_name: "ForumThread", optional: true, inverse_of: :news
 
