@@ -51,6 +51,12 @@ Rails.application.routes.draw do
 
   resources :law_proposals, only: [ :index, :show ]
 
+  namespace :moderation do
+    root to: "queue#index"
+    resources :reports, only: [ :index ]
+    patch "items/:type/:id", to: "items#update", as: :item
+  end
+
   resources :topics, only: [ :index ] do
     resources :threads, only: [ :index, :show, :new, :create, :edit, :update ] do
       member do

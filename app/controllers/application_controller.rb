@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   def onboarding_exempt?
     devise_controller? ||
       controller_name.in?(%w[onboardings authorization_test]) ||
-      controller_path.start_with?("rails/health")
+      controller_path.start_with?("rails/health", "moderation")
   end
 
   def user_not_authorized

@@ -1,0 +1,24 @@
+<div class="space-y-6">
+  <div>
+    <h2 class="text-xl font-semibold text-gray-900">Moderación</h2>
+    <p class="mt-1 text-sm text-gray-500">Revisa contenido pendiente y reportes de la comunidad.</p>
+  </div>
+
+  <%= render "moderation/shared/nav" %>
+
+  <section class="space-y-3">
+    <h3 class="text-base font-semibold text-gray-900">Cola pendiente (<%= @queue_entries.size %>)</h3>
+
+    <% if @queue_entries.any? %>
+      <div id="moderation_queue_list" class="space-y-3">
+        <% @queue_entries.each do |entry| %>
+          <%= render "moderation/items/queue_item", entry: entry %>
+        <% end %>
+      </div>
+    <% else %>
+      <p id="moderation_queue_list" class="rounded-lg border border-dashed border-gray-300 bg-white p-6 text-center text-sm text-gray-500">
+        No hay contenido pendiente de moderación.
+      </p>
+    <% end %>
+  </section>
+</div>

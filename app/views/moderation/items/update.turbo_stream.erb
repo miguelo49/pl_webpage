@@ -1,0 +1,11 @@
+<% if @error_message.present? %>
+  <%= turbo_stream.replace "moderation_queue_item_#{@item.class.name}_#{@item.id}" do %>
+    <%= render "moderation/items/queue_item", entry: @entry, error_message: @error_message %>
+  <% end %>
+<% else %>
+  <%= turbo_stream.remove "moderation_queue_item_#{@item.class.name}_#{@item.id}" %>
+
+  <%= turbo_stream.update "flash_messages" do %>
+    <p class="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-800">Contenido moderado correctamente.</p>
+  <% end %>
+<% end %>
