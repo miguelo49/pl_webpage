@@ -15,8 +15,7 @@
           autocomplete: "email",
           html_options: { autofocus: true } %>
 
-    <%= f.submit "Enviar instrucciones",
-          class: "w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+    <%= f.submit "Enviar instrucciones", class: primary_button_class %>
   <% end %>
 
   <%= render "devise/shared/links" %>

@@ -1,10 +1,8 @@
-<% input_class = "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" %>
-
 <%= form_with model: thread,
       url: thread.persisted? ? topic_thread_path(topic, thread) : topic_threads_path(topic),
       html: { data: { turbo_frame: frame_id }, class: "space-y-4" } do |form| %>
   <% if thread.errors.any? %>
-    <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+    <div class="<%= error_alert_class %>">
       <ul class="list-inside list-disc space-y-1">
         <% thread.errors.full_messages.each do |message| %>
           <li><%= message %></li>
@@ -14,15 +12,14 @@
   <% end %>
 
   <div>
-    <%= form.label :title, "Título", class: "mb-1 block text-sm font-medium text-gray-700" %>
-    <%= form.text_field :title, class: input_class, autofocus: true %>
+    <%= form.label :title, "Título", class: filter_label_class.sub("text-xs", "text-sm") %>
+    <%= form.text_field :title, class: filter_input_class, autofocus: true %>
   </div>
 
   <div>
-    <%= form.label :body, "Contenido", class: "mb-1 block text-sm font-medium text-gray-700" %>
-    <%= form.text_area :body, rows: 5, class: input_class %>
+    <%= form.label :body, "Contenido", class: filter_label_class.sub("text-xs", "text-sm") %>
+    <%= form.text_area :body, rows: 5, class: filter_input_class %>
   </div>
 
-  <%= form.submit "Publicar hilo",
-        class: "w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700" %>
+  <%= form.submit "Publicar hilo", class: primary_button_class %>
 <% end %>

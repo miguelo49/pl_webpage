@@ -1,8 +1,6 @@
-<% input_class = "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" %>
-
 <%= form_with model: @news_item, url: news_index_path, html: { multipart: true, class: "space-y-4" } do |form| %>
   <% if @news_item.errors.any? %>
-    <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+    <div class="<%= error_alert_class %>">
       <ul class="list-inside list-disc space-y-1">
         <% @news_item.errors.full_messages.each do |message| %>
           <li><%= message %></li>
@@ -12,38 +10,37 @@
   <% end %>
 
   <div>
-    <%= form.label :title, "Título", class: "mb-1 block text-sm font-medium text-gray-700" %>
-    <%= form.text_field :title, class: input_class, autofocus: true %>
+    <%= form.label :title, "Título", class: filter_label_class.sub("text-xs", "text-sm") %>
+    <%= form.text_field :title, class: filter_input_class, autofocus: true %>
   </div>
 
   <div>
-    <%= form.label :summary, "Resumen", class: "mb-1 block text-sm font-medium text-gray-700" %>
-    <%= form.text_area :summary, rows: 3, class: input_class %>
+    <%= form.label :summary, "Resumen", class: filter_label_class.sub("text-xs", "text-sm") %>
+    <%= form.text_area :summary, rows: 3, class: filter_input_class %>
   </div>
 
   <div>
-    <%= form.label :body, "Contenido", class: "mb-1 block text-sm font-medium text-gray-700" %>
-    <%= form.text_area :body, rows: 8, class: input_class %>
+    <%= form.label :body, "Contenido", class: filter_label_class.sub("text-xs", "text-sm") %>
+    <%= form.text_area :body, rows: 8, class: filter_input_class %>
   </div>
 
   <div>
-    <%= form.label :category, "Categoría", class: "mb-1 block text-sm font-medium text-gray-700" %>
+    <%= form.label :category, "Categoría", class: filter_label_class.sub("text-xs", "text-sm") %>
     <%= form.select :category,
           News.categories.keys.map { |key| [ news_category_label(key), key ] },
           { prompt: "Selecciona una categoría" },
-          class: input_class %>
+          class: filter_input_class %>
   </div>
 
   <div>
-    <%= form.label :published_at, "Fecha de publicación", class: "mb-1 block text-sm font-medium text-gray-700" %>
-    <%= form.datetime_local_field :published_at, class: input_class %>
+    <%= form.label :published_at, "Fecha de publicación", class: filter_label_class.sub("text-xs", "text-sm") %>
+    <%= form.datetime_local_field :published_at, class: filter_input_class %>
   </div>
 
   <div>
-    <%= form.label :featured_image, "Imagen destacada (opcional)", class: "mb-1 block text-sm font-medium text-gray-700" %>
-    <%= form.file_field :featured_image, accept: "image/jpeg,image/png,image/webp,image/gif", class: input_class %>
+    <%= form.label :featured_image, "Imagen destacada (opcional)", class: filter_label_class.sub("text-xs", "text-sm") %>
+    <%= form.file_field :featured_image, accept: "image/jpeg,image/png,image/webp,image/gif", class: file_input_class %>
   </div>
 
-  <%= form.submit "Publicar noticia",
-        class: "w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700" %>
+  <%= form.submit "Publicar noticia", class: primary_button_class %>
 <% end %>

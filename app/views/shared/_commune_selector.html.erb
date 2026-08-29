@@ -2,7 +2,6 @@
 <% selected_commune = form.object.public_send(commune_association) %>
 <% selected_region_id = selected_commune&.region_id %>
 <% field_name = :"#{commune_association}_id" %>
-<% select_class = "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:bg-gray-100 disabled:text-gray-400" %>
 
 <div class="space-y-3 rounded-lg border border-gray-100 bg-gray-50 p-3"
      data-controller="commune-selector"
@@ -11,9 +10,9 @@
   <p class="text-sm font-medium text-gray-900"><%= label %></p>
 
   <div>
-    <label class="mb-1 block text-sm text-gray-700" for="<%= form.field_id(commune_association, :region) %>">Región</label>
+    <label class="<%= filter_label_class.sub('text-xs', 'text-sm') %>" for="<%= form.field_id(commune_association, :region) %>">Región</label>
     <select id="<%= form.field_id(commune_association, :region) %>"
-            class="<%= select_class %>"
+            class="<%= filter_input_class %> disabled:bg-gray-100 disabled:text-gray-500"
             data-commune-selector-target="regionSelect"
             data-action="change->commune-selector#regionChanged">
       <option value="">Selecciona una región</option>
@@ -24,14 +23,14 @@
   </div>
 
   <div>
-    <%= form.label field_name, "Comuna", class: "mb-1 block text-sm text-gray-700" %>
+    <%= form.label field_name, "Comuna", class: filter_label_class.sub("text-xs", "text-sm") %>
     <%= form.select field_name,
           options_for_select(
             selected_commune ? [ [ selected_commune.name, selected_commune.id ] ] : [],
             selected_commune&.id
           ),
           { include_blank: "Selecciona una comuna" },
-          class: select_class,
+          class: "#{filter_input_class} disabled:bg-gray-100 disabled:text-gray-500",
           data: { commune_selector_target: "communeSelect" },
           disabled: selected_region_id.blank? %>
   </div>

@@ -1,0 +1,36 @@
+/* Accessibility: focus rings and touch-friendly targets */
+
+:root {
+  --focus-ring-color: #1d4ed8;
+  --focus-ring-offset: 2px;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:not([tabindex="-1"]):focus-visible {
+  outline: 2px solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.touch-target {
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+}
+
+.app-main-with-bottom-nav {
+  padding-bottom: max(5rem, calc(4rem + env(safe-area-inset-bottom, 0px)));
+}
+
+.bottom-nav {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (min-width: 768px) {
+  .app-main-with-bottom-nav {
+    padding-bottom: 1rem;
+  }
+}

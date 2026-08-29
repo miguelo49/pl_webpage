@@ -4,32 +4,32 @@
     <p class="mt-1 text-sm text-gray-500">Borradores normativos en desarrollo colaborativo.</p>
   </div>
 
-  <div class="sticky top-14 z-[5] -mx-4 space-y-3 border-b border-gray-200 bg-gray-50/95 px-4 pb-4 backdrop-blur">
+  <div class="<%= filter_sticky_class %>">
     <%= form_with url: law_proposals_path, method: :get, html: { class: "space-y-3" } do |form| %>
       <div>
-        <%= form.label :commune_id, "Territorio", class: "mb-1 block text-xs font-medium text-gray-600" %>
+        <%= form.label :commune_id, "Territorio", class: filter_label_class %>
         <%= form.select :commune_id,
               options_from_collection_for_select(@communes, :id, :name, @selected_commune_id),
               { include_blank: "Todas las comunas" },
-              class: "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500",
+              class: filter_input_class,
               onchange: "this.form.requestSubmit()" %>
       </div>
 
       <div>
-        <%= form.label :category, "Categoría", class: "mb-1 block text-xs font-medium text-gray-600" %>
+        <%= form.label :category, "Categoría", class: filter_label_class %>
         <%= form.select :category,
               @categories.map { |category| [ category, category ] },
               { include_blank: "Todas las categorías", selected: @selected_category },
-              class: "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500",
+              class: filter_input_class,
               onchange: "this.form.requestSubmit()" %>
       </div>
 
       <div>
-        <%= form.label :status, "Estado", class: "mb-1 block text-xs font-medium text-gray-600" %>
+        <%= form.label :status, "Estado", class: filter_label_class %>
         <%= form.select :status,
               LawProposal.statuses.keys.map { |key| [ law_proposal_status_label(key), key ] },
               { include_blank: "Todos los estados", selected: @selected_status },
-              class: "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500",
+              class: filter_input_class,
               onchange: "this.form.requestSubmit()" %>
       </div>
     <% end %>

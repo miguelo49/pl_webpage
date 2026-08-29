@@ -3,19 +3,19 @@
     <% if page > 1 %>
       <%= link_to "← Anterior",
             news_index_path(page: page - 1, category: selected_category),
-            class: "rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 hover:border-blue-200" %>
+            class: secondary_button_class + " px-3 py-2 text-sm" %>
     <% else %>
-      <span class="rounded-lg border border-transparent px-3 py-2 text-sm text-gray-300">← Anterior</span>
+      <span class="rounded-lg border border-transparent px-3 py-2 text-sm text-gray-400" aria-hidden="true">← Anterior</span>
     <% end %>
 
-    <span class="text-xs text-gray-500">Página <%= page %> de <%= total_pages %></span>
+    <span class="text-xs text-gray-600">Página <%= page %> de <%= total_pages %></span>
 
     <% if page < total_pages %>
       <%= link_to "Siguiente →",
             news_index_path(page: page + 1, category: selected_category),
-            class: "rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 hover:border-blue-200" %>
+            class: secondary_button_class + " px-3 py-2 text-sm" %>
     <% else %>
-      <span class="rounded-lg border border-transparent px-3 py-2 text-sm text-gray-300">Siguiente →</span>
+      <span class="rounded-lg border border-transparent px-3 py-2 text-sm text-gray-400" aria-hidden="true">Siguiente →</span>
     <% end %>
   </nav>
 <% end %>

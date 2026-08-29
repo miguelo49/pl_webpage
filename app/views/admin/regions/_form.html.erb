@@ -1,14 +1,7 @@
-<% input_class = "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm" %>
-
-<div class="space-y-6">
-  <%= link_to "← Regiones", admin_regions_path, class: "text-sm text-blue-600 hover:text-blue-800" %>
-  <%= render "admin/shared/nav" %>
-
-  <%= form_with model: [:admin, region], html: { class: "space-y-4 rounded-lg border border-gray-200 bg-white p-4" } do |form| %>
-    <div>
-      <%= form.label :name, "Nombre", class: "mb-1 block text-sm font-medium text-gray-700" %>
-      <%= form.text_field :name, class: input_class, required: true %>
-    </div>
-    <%= form.submit @region.persisted? ? "Actualizar" : "Crear", class: "w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white" %>
-  <% end %>
-</div>
+<%= form_with model: [:admin, region], html: { class: "space-y-4 rounded-lg border border-gray-200 bg-white p-4" } do |form| %>
+  <div>
+    <%= form.label :name, "Nombre", class: filter_label_class.sub("text-xs", "text-sm") %>
+    <%= form.text_field :name, class: filter_input_class, required: true %>
+  </div>
+  <%= form.submit region.persisted? ? "Actualizar" : "Crear", class: primary_button_class %>
+<% end %>

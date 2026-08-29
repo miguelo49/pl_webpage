@@ -1,9 +1,10 @@
 <% reacted = reacted_by_current_user?(reactable) %>
 <% reaction_label = local_assigns.fetch(:label, "Me parece útil") %>
+<% button_classes = reacted ? "border-blue-300 bg-blue-50 text-blue-800" : "border-gray-300 bg-white text-gray-800 hover:border-blue-300 hover:text-blue-800" %>
 <%= turbo_frame_tag dom_id(reactable, :reaction) do %>
   <%= button_to react_path,
         method: :post,
-        class: "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition #{reacted ? 'border-blue-200 bg-blue-50 text-blue-700' : 'border-gray-200 bg-white text-gray-600 hover:border-blue-200 hover:text-blue-700'}",
+        class: "touch-target inline-flex min-h-11 items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 #{button_classes}",
         form: { data: { turbo_stream: true } } do %>
     <span><%= reactable.reactions.size %></span>
     <span><%= reaction_label %></span>

@@ -1,8 +1,10 @@
 <%= turbo_frame_tag dom_id(training_material, :read_mark) do %>
+  <% read = read_by_current_user?(training_material) %>
+  <% button_classes = read ? "border-green-300 bg-green-50 text-green-900" : "border-gray-300 bg-white text-gray-800 hover:border-green-300 hover:text-green-900" %>
   <%= button_to read_mark_training_material_path(training_material),
         method: :post,
-        class: "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition #{read_by_current_user?(training_material) ? 'border-green-200 bg-green-50 text-green-800' : 'border-gray-200 bg-white text-gray-600 hover:border-green-200 hover:text-green-800'}",
+        class: "touch-target inline-flex min-h-11 items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 #{button_classes}",
         form: { data: { turbo_stream: true } } do %>
-    <span><%= read_by_current_user?(training_material) ? "Leído" : "Marcar como leído" %></span>
+    <span><%= read ? "Leído" : "Marcar como leído" %></span>
   <% end %>
 <% end %>

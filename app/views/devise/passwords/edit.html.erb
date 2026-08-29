@@ -26,8 +26,7 @@
           field_type: :password_field,
           autocomplete: "new-password" %>
 
-    <%= f.submit "Cambiar contraseña",
-          class: "w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+    <%= f.submit "Cambiar contraseña", class: primary_button_class %>
   <% end %>
 
   <%= render "devise/shared/links" %>

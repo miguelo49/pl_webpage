@@ -12,9 +12,9 @@
   </div>
 
   <div class="flex flex-1 flex-col p-3">
-    <span class="text-xs text-gray-400"><%= training_material.training_category.name %></span>
-    <%= link_to training_material_path(training_material), class: "mt-1 block" do %>
-      <h3 class="line-clamp-2 text-sm font-semibold text-gray-900 hover:text-blue-700"><%= training_material.title %></h3>
+    <span class="text-xs text-gray-500"><%= training_material.training_category.name %></span>
+    <%= link_to training_material_path(training_material), class: "mt-1 block rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" do %>
+      <h3 class="line-clamp-2 text-sm font-semibold text-gray-900 hover:text-blue-800"><%= training_material.title %></h3>
     <% end %>
     <p class="mt-1 text-xs text-gray-500"><%= training_material.author %></p>
 

@@ -1,5 +1,5 @@
 <div class="space-y-6">
-  <%= link_to "← Eventos", events_path, class: "text-sm text-blue-600 hover:text-blue-800" %>
+  <%= link_to "← Eventos", events_path, class: text_link_class %>
 
   <div>
     <div class="flex flex-wrap items-center gap-2 text-xs text-gray-400">
@@ -24,7 +24,7 @@
 
   <%= link_to "Agregar al calendario (.ics)",
         calendar_event_path(@event),
-        class: "inline-flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-700 hover:border-blue-200" %>
+        class: secondary_button_class(full_width: true) %>
 
   <%= render "attendances/panel", event: @event, attendance: @attendance %>
 </div>

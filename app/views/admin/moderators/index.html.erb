@@ -6,9 +6,9 @@
 
   <%= render "admin/shared/nav" %>
 
-  <div class="sticky top-14 z-[5] -mx-4 border-b border-gray-200 bg-gray-50/95 px-4 pb-4 backdrop-blur">
+  <div class="<%= filter_sticky_class %>">
     <%= form_with url: admin_moderators_path, method: :get, html: { class: "space-y-3" } do |form| %>
-      <%= form.label :filter, "Mostrar", class: "mb-1 block text-xs font-medium text-gray-600" %>
+      <%= form.label :filter, "Mostrar", class: filter_label_class %>
       <%= form.select :filter,
             [
               [ "Todos (elegibles y moderadores)", "all" ],
@@ -16,7 +16,7 @@
               [ "Moderadores actuales", "moderators" ]
             ],
             { selected: @selected_filter },
-            class: "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm",
+            class: filter_input_class,
             onchange: "this.form.requestSubmit()" %>
     <% end %>
   </div>
@@ -39,17 +39,17 @@
             <% if user.moderator? %>
               <%= form_with url: admin_moderator_path(user), method: :delete, html: { class: "space-y-3" } do |form| %>
                 <div>
-                  <%= form.label :restore_role, "Restaurar como", class: "mb-1 block text-xs font-medium text-gray-600" %>
+                  <%= form.label :restore_role, "Restaurar como", class: filter_label_class %>
                   <%= form.select :restore_role,
                         [
                           [ user_role_label("militant"), "militant" ],
                           [ user_role_label("board_member"), "board_member" ]
                         ],
                         {},
-                        class: "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm" %>
+                        class: filter_input_class %>
                 </div>
                 <%= form.submit "Revocar moderador",
-                      class: "w-full rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-700 hover:bg-red-100",
+                      class: danger_button_class(full_width: true),
                       data: { turbo_confirm: "¿Revocar rol de moderador?" } %>
               <% end %>
             <% elsif user.militant? || user.board_member? %>
@@ -57,7 +57,7 @@
                     admin_moderators_path,
                     method: :post,
                     params: { id: user.id, filter: @selected_filter },
-                    class: "w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700",
+                    class: primary_button_class,
                     data: { turbo_confirm: "¿Asignar rol de moderador?" } %>
             <% end %>
           </div>

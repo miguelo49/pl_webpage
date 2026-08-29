@@ -1,8 +1,9 @@
 <% saved = bookmarked_by_current_user?(bookmarkable) %>
+<% button_classes = saved ? "border-amber-300 bg-amber-50 text-amber-900" : "border-gray-300 bg-white text-gray-800 hover:border-amber-300 hover:text-amber-900" %>
 <%= turbo_frame_tag dom_id(bookmarkable, :bookmark) do %>
   <%= button_to bookmark_path,
         method: :post,
-        class: "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition #{saved ? 'border-amber-200 bg-amber-50 text-amber-800' : 'border-gray-200 bg-white text-gray-600 hover:border-amber-200 hover:text-amber-800'}",
+        class: "touch-target inline-flex min-h-11 items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 #{button_classes}",
         form: { data: { turbo_stream: true } } do %>
     <span><%= saved ? "Guardado" : "Guardar" %></span>
   <% end %>

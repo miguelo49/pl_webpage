@@ -6,7 +6,7 @@
   <p class="mt-1 text-sm text-gray-600">Paso <%= step_index %> de <%= steps_total %></p>
   <div class="mx-auto mt-3 flex max-w-xs justify-center gap-2">
     <% steps_total.times do |index| %>
-      <span class="h-1.5 flex-1 rounded-full <%= index < step_index ? "bg-blue-600" : "bg-gray-200" %>"></span>
+      <span class="h-1.5 flex-1 rounded-full <%= index < step_index ? "bg-blue-700" : "bg-gray-200" %>"></span>
     <% end %>
   </div>
 </div>

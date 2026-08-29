@@ -1,5 +1,5 @@
-<%= link_to event_path(event), class: "flex gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm transition hover:border-blue-200" do %>
-  <div class="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-lg bg-blue-50 text-blue-700">
+<%= link_to event_path(event), class: list_card_link_class do %>
+  <div class="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-lg bg-blue-50 text-blue-800">
     <span class="text-[10px] font-semibold uppercase leading-none"><%= event.start_at.strftime("%H:%M") %></span>
   </div>
 

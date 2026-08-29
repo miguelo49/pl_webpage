@@ -4,7 +4,7 @@
       <h2 class="text-xl font-semibold text-gray-900">Categorías de biblioteca</h2>
       <p class="mt-1 text-sm text-gray-500">Material de formación.</p>
     </div>
-    <%= link_to "Nueva categoría", new_admin_training_category_path, class: "rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white" %>
+    <%= link_to "Nueva categoría", new_admin_training_category_path, class: action_link_class %>
   </div>
 
   <%= render "admin/shared/nav" %>
@@ -14,8 +14,8 @@
       <div class="flex items-center justify-between gap-3 rounded-lg border border-gray-200 bg-white p-4">
         <span class="font-medium text-gray-900"><%= category.name %></span>
         <div class="flex gap-2 text-sm">
-          <%= link_to "Editar", edit_admin_training_category_path(category), class: "text-blue-600" %>
-          <%= button_to "Eliminar", admin_training_category_path(category), method: :delete, form: { data: { turbo_confirm: "¿Eliminar categoría?" } }, class: "text-red-600" %>
+          <%= link_to "Editar", edit_admin_training_category_path(category), class: text_link_class %>
+          <%= button_to "Eliminar", admin_training_category_path(category), method: :delete, form: { data: { turbo_confirm: "¿Eliminar categoría?" } }, class: text_link_class + " text-red-800 hover:text-red-900" %>
         </div>
       </div>
     <% end %>

@@ -4,23 +4,23 @@
     <p class="mt-1 text-sm text-gray-500">Próximas actividades y encuentros.</p>
   </div>
 
-  <div class="sticky top-14 z-[5] -mx-4 space-y-3 border-b border-gray-200 bg-gray-50/95 px-4 pb-4 backdrop-blur">
+  <div class="<%= filter_sticky_class %>">
     <%= form_with url: events_path, method: :get, html: { class: "space-y-3" } do |form| %>
       <div>
-        <%= form.label :commune_id, "Territorio", class: "mb-1 block text-xs font-medium text-gray-600" %>
+        <%= form.label :commune_id, "Territorio", class: filter_label_class %>
         <%= form.select :commune_id,
               options_from_collection_for_select(@communes, :id, :name, @selected_commune_id),
               { include_blank: "Todas las comunas" },
-              class: "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500",
+              class: filter_input_class,
               onchange: "this.form.requestSubmit()" %>
       </div>
 
       <div>
-        <%= form.label :event_type, "Tipo", class: "mb-1 block text-xs font-medium text-gray-600" %>
+        <%= form.label :event_type, "Tipo", class: filter_label_class %>
         <%= form.select :event_type,
               Event.event_types.keys.map { |key| [ event_type_label(key), key ] },
               { include_blank: "Todos los tipos", selected: @selected_event_type },
-              class: "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500",
+              class: filter_input_class,
               onchange: "this.form.requestSubmit()" %>
       </div>
     <% end %>

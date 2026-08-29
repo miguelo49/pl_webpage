@@ -55,8 +55,7 @@
           field_type: :password_field,
           autocomplete: "current-password" %>
 
-    <%= f.submit "Actualizar",
-          class: "w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+    <%= f.submit "Actualizar", class: primary_button_class %>
   <% end %>
 
   <div class="border-t border-gray-200 pt-4">
@@ -66,7 +65,7 @@
           registration_path(resource_name),
           method: :delete,
           data: { turbo_confirm: "¿Estás seguro?" },
-          class: "mt-3 w-full rounded-lg border border-red-300 bg-white px-4 py-2.5 text-sm font-semibold text-red-700 hover:bg-red-50" %>
+          class: danger_button_class(full_width: true) + " border-red-300 bg-white hover:bg-red-50" %>
   </div>
 
   <%= render "devise/shared/links" %>
