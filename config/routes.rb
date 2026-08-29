@@ -18,6 +18,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :political_contexts, only: [ :index ]
+
   resources :topics, only: [ :index ] do
     resources :threads, only: [ :index, :show, :new, :create, :edit, :update ] do
       member do

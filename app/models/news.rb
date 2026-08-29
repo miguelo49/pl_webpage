@@ -31,6 +31,17 @@ class News < ApplicationRecord
   scope :publicly_visible, -> { approved }
   scope :recent, -> { order(Arel.sql("COALESCE(published_at, created_at) DESC")) }
 
+  POLITICAL_CONTEXT_CATEGORIES = %w[
+    party
+    regional
+    national
+    legislative
+    analysis
+    statement
+  ].freeze
+
+  scope :for_political_context, -> { where(category: POLITICAL_CONTEXT_CATEGORIES) }
+
   has_one_attached :featured_image
   has_many :reactions, as: :reactable, dependent: :destroy
 

@@ -13,6 +13,7 @@ class User < ApplicationRecord
   has_many :reactions, dependent: :destroy
   has_many :bookmarks, dependent: :destroy
   has_many :news, dependent: :restrict_with_error
+  has_many :events, dependent: :destroy
 
   belongs_to :residence_commune, class_name: "Commune", optional: true
   belongs_to :work_commune, class_name: "Commune", optional: true
