@@ -18,6 +18,20 @@ class LawProposal < ApplicationRecord
     result: 6
   }, default: :idea
 
+  scope :by_commune, ->(commune_id) {
+    commune_id.present? ? where(commune_id: commune_id) : all
+  }
+
+  scope :by_category, ->(category) {
+    category.present? ? where(category: category) : all
+  }
+
+  scope :by_status, ->(status) {
+    status.present? && statuses.key?(status) ? where(status: status) : all
+  }
+
+  scope :recent, -> { order(updated_at: :desc) }
+
   validates :name, presence: true
   validates :problem, presence: true
   validates :rationale, presence: true

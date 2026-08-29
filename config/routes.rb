@@ -49,6 +49,8 @@ Rails.application.routes.draw do
        to: "initiatives#react_comment",
        as: :react_initiative_comment
 
+  resources :law_proposals, only: [ :index, :show ]
+
   resources :topics, only: [ :index ] do
     resources :threads, only: [ :index, :show, :new, :create, :edit, :update ] do
       member do

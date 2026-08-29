@@ -1,0 +1,42 @@
+<div class="space-y-6">
+  <%= link_to "← Propuestas de ley", law_proposals_path, class: "text-sm text-blue-600 hover:text-blue-800" %>
+
+  <div>
+    <h2 class="text-xl font-semibold text-gray-900"><%= @law_proposal.name %></h2>
+    <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-gray-400">
+      <span class="rounded-full bg-gray-100 px-2 py-0.5 font-medium text-gray-600"><%= @law_proposal.category %></span>
+      <span class="rounded-full px-2 py-0.5 font-medium <%= law_proposal_status_badge_class(@law_proposal.status) %>">
+        <%= law_proposal_status_label(@law_proposal.status) %>
+      </span>
+      <span><%= @law_proposal.user.first_name %></span>
+      <span>·</span>
+      <span><%= @law_proposal.commune.name %></span>
+    </div>
+  </div>
+
+  <%= render "law_proposals/status_timeline", law_proposal: @law_proposal %>
+
+  <article class="space-y-4 rounded-lg border border-gray-200 bg-white p-4">
+    <section>
+      <h3 class="text-sm font-semibold text-gray-900">Problema</h3>
+      <p class="mt-2 text-sm text-gray-700"><%= simple_format(@law_proposal.problem) %></p>
+    </section>
+
+    <section>
+      <h3 class="text-sm font-semibold text-gray-900">Fundamentación</h3>
+      <p class="mt-2 text-sm text-gray-700"><%= simple_format(@law_proposal.rationale) %></p>
+    </section>
+
+    <section>
+      <h3 class="text-sm font-semibold text-gray-900">Objetivo</h3>
+      <p class="mt-2 text-sm text-gray-700"><%= simple_format(@law_proposal.objective) %></p>
+    </section>
+  </article>
+
+  <%= render "law_proposals/text_panel",
+        law_proposal: @law_proposal,
+        versions: @versions,
+        displayed_text: @displayed_text,
+        viewing_historical_version: @viewing_historical_version,
+        selected_version_id: params[:version_id].to_s %>
+</div>
