@@ -1,7 +1,7 @@
 /* Accessibility: focus rings and touch-friendly targets */
 
 :root {
-  --focus-ring-color: #1d4ed8;
+  --focus-ring-color: #ff03b2;
   --focus-ring-offset: 2px;
 }
 

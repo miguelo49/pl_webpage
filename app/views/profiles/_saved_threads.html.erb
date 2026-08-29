@@ -5,9 +5,9 @@
     <div id="saved_threads_list" class="space-y-3">
       <% bookmarked_threads.each do |thread| %>
         <%= link_to topic_thread_path(thread.topic, thread),
-              class: card_link_class.sub("bg-white", "bg-gray-50") + " border-gray-100 hover:bg-blue-50/40 p-3" do %>
-          <p class="text-xs text-gray-500"><%= thread.topic.name %></p>
-          <p class="mt-1 text-sm font-semibold text-gray-900"><%= thread.title %></p>
+              class: card_link_class.sub("bg-white", "bg-gray-50") + " border-gray-100 #{card_hover_class} p-3" do %>
+          <p class="<%= card_meta_class %>"><%= thread.topic.name %></p>
+          <p class="mt-1 font-brand text-sm font-semibold text-gray-900"><%= thread.title %></p>
           <p class="mt-1 line-clamp-2 text-xs text-gray-500"><%= thread.body %></p>
         <% end %>
       <% end %>

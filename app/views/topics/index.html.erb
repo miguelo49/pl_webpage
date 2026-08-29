@@ -5,8 +5,8 @@
 
   <div class="<%= listing_grid_class %>">
     <% @topics.each do |topic| %>
-      <%= link_to topic_threads_path(topic), class: card_link_class + " hover:bg-blue-50/40" do %>
-        <h3 class="text-base font-semibold text-gray-900"><%= topic.name %></h3>
+      <%= link_to topic_threads_path(topic), class: card_link_class + " #{card_hover_class}" do %>
+        <h3 class="<%= card_title_class %>"><%= topic.name %></h3>
         <% if topic.description.present? %>
           <p class="mt-1 text-sm text-gray-500"><%= topic.description %></p>
         <% end %>

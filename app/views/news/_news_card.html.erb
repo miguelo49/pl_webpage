@@ -6,14 +6,14 @@
   <% end %>
 
   <div class="p-4">
-    <div class="flex items-center justify-between gap-2 text-xs text-gray-500">
-      <span class="rounded-full bg-gray-100 px-2 py-0.5 font-medium text-gray-700"><%= news_category_label(news_item.category) %></span>
+    <div class="flex items-center justify-between gap-2 <%= card_meta_class %>">
+      <span class="<%= category_chip_class %>"><%= news_category_label(news_item.category) %></span>
       <time datetime="<%= (news_item.published_at || news_item.created_at).iso8601 %>">
         <%= (news_item.published_at || news_item.created_at).to_fs(:short) %>
       </time>
     </div>
 
-    <h3 class="mt-2 text-base font-semibold text-gray-900"><%= news_item.title %></h3>
+    <h3 class="mt-2 <%= card_title_class %>"><%= news_item.title %></h3>
     <p class="mt-2 line-clamp-3 text-sm text-gray-700"><%= news_item.summary %></p>
   </div>
 <% end %>

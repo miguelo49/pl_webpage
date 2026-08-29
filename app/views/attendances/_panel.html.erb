@@ -5,7 +5,7 @@
     </div>
 
     <% if attendance&.persisted? && attendance.registered? %>
-      <p class="text-sm font-medium text-blue-800">Estás inscrito en este evento.</p>
+      <p class="font-brand text-sm font-medium text-accent">Estás inscrito en este evento.</p>
       <div class="flex flex-wrap gap-2">
         <%= button_to "Confirmar asistencia",
               event_attendance_path(event),

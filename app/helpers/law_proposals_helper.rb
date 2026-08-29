@@ -9,14 +9,14 @@ module LawProposalsHelper
     "result" => "Resultado"
   }.freeze
 
-  STATUS_BADGE_CLASSES = {
-    "idea" => "bg-gray-100 text-gray-700",
-    "discussion" => "bg-sky-50 text-sky-700",
-    "collaborative_development" => "bg-amber-50 text-amber-700",
-    "review" => "bg-violet-50 text-violet-700",
-    "consolidated_proposal" => "bg-indigo-50 text-indigo-700",
-    "political_review" => "bg-orange-50 text-orange-700",
-    "result" => "bg-green-50 text-green-700"
+  STATUS_BADGE_VARIANTS = {
+    "idea" => :neutral,
+    "discussion" => :pending,
+    "collaborative_development" => :progress,
+    "review" => :pending,
+    "consolidated_proposal" => :info,
+    "political_review" => :pending,
+    "result" => :approved
   }.freeze
 
   def law_proposal_status_label(status)
@@ -24,7 +24,7 @@ module LawProposalsHelper
   end
 
   def law_proposal_status_badge_class(status)
-    STATUS_BADGE_CLASSES.fetch(status.to_s, "bg-gray-100 text-gray-700")
+    status_badge_class(STATUS_BADGE_VARIANTS.fetch(status.to_s, :neutral))
   end
 
   def law_proposal_status_flow_items(law_proposal)
@@ -38,8 +38,8 @@ module LawProposalsHelper
         title_class = "text-gray-700"
         meta = "Completado"
       elsif index == current_index
-        dot_class = "border-blue-500"
-        dot_fill_class = "bg-blue-500"
+        dot_class = "border-primary"
+        dot_fill_class = "bg-primary"
         title_class = "text-gray-900"
         meta = "Estado actual"
       else

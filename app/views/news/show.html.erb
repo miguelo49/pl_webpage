@@ -9,7 +9,7 @@
 
   <div>
     <div class="flex flex-wrap items-center gap-2 text-xs text-gray-400">
-      <span class="rounded-full bg-gray-100 px-2 py-0.5 font-medium text-gray-600"><%= news_category_label(@news_item.category) %></span>
+      <span class="<%= category_chip_class %>"><%= news_category_label(@news_item.category) %></span>
       <span><%= @news_item.user.first_name %></span>
       <span>·</span>
       <time datetime="<%= (@news_item.published_at || @news_item.created_at).iso8601 %>">

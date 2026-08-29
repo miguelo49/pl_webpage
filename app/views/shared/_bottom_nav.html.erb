@@ -5,7 +5,7 @@
       <%= link_to bottom_nav_path(item),
             class: bottom_nav_link_class(active),
             aria: { current: (active ? "page" : nil) } do %>
-        <span class="flex h-6 w-6 items-center justify-center rounded-md <%= active ? 'bg-blue-700 text-white' : 'bg-gray-200 text-gray-700' %>" aria-hidden="true">
+        <span class="flex h-6 w-6 items-center justify-center rounded-md <%= nav_icon_class(active) %>" aria-hidden="true">
           <%= bottom_nav_icon(item[:key]) %>
         </span>
         <span><%= item[:label] %></span>

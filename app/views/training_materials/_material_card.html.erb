@@ -1,4 +1,4 @@
-<div id="<%= dom_id(training_material) %>" class="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+<div id="<%= dom_id(training_material) %>" class="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white font-brand shadow-sm">
   <div class="aspect-[3/4] w-full bg-gray-100">
     <% if training_material.cover_image.attached? %>
       <%= image_tag training_material.cover_image.variant(resize_to_fill: [ 400, 520 ]),
@@ -12,11 +12,11 @@
   </div>
 
   <div class="flex flex-1 flex-col p-3">
-    <span class="text-xs text-gray-500"><%= training_material.training_category.name %></span>
-    <%= link_to training_material_path(training_material), class: "mt-1 block rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" do %>
-      <h3 class="line-clamp-2 text-sm font-semibold text-gray-900 hover:text-blue-800"><%= training_material.title %></h3>
+    <span class="<%= card_meta_class %>"><%= training_material.training_category.name %></span>
+    <%= link_to training_material_path(training_material), class: "mt-1 block rounded #{focus_ring_class}" do %>
+      <h3 class="line-clamp-2 text-sm font-semibold text-gray-900 hover:text-primary"><%= training_material.title %></h3>
     <% end %>
-    <p class="mt-1 text-xs text-gray-500"><%= training_material.author %></p>
+    <p class="mt-1 <%= card_meta_class %>"><%= training_material.author %></p>
 
     <% if training_material.tags.any? %>
       <div class="mt-2 flex flex-wrap gap-1">

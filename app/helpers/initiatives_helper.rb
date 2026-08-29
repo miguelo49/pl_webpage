@@ -9,14 +9,14 @@ module InitiativesHelper
     "archived" => "Archivada"
   }.freeze
 
-  STATUS_BADGE_CLASSES = {
-    "idea" => "bg-gray-100 text-gray-700",
-    "in_discussion" => "bg-sky-50 text-sky-700",
-    "in_development" => "bg-amber-50 text-amber-700",
-    "in_review" => "bg-violet-50 text-violet-700",
-    "approved" => "bg-green-50 text-green-700",
-    "rejected" => "bg-red-50 text-red-700",
-    "archived" => "bg-stone-100 text-stone-600"
+  STATUS_BADGE_VARIANTS = {
+    "idea" => :neutral,
+    "in_discussion" => :pending,
+    "in_development" => :progress,
+    "in_review" => :pending,
+    "approved" => :approved,
+    "rejected" => :rejected,
+    "archived" => :neutral
   }.freeze
 
   def initiative_status_label(status)
@@ -24,6 +24,6 @@ module InitiativesHelper
   end
 
   def initiative_status_badge_class(status)
-    STATUS_BADGE_CLASSES.fetch(status.to_s, "bg-gray-100 text-gray-700")
+    status_badge_class(STATUS_BADGE_VARIANTS.fetch(status.to_s, :neutral))
   end
 end

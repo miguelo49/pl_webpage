@@ -45,31 +45,31 @@ module NavigationHelper
   end
 
   def bottom_nav_link_class(active)
-    base = "touch-target flex flex-1 flex-col items-center justify-center gap-1 rounded-lg px-2 py-2 text-xs font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+    base = "touch-target flex flex-1 flex-col items-center justify-center gap-1 rounded-lg px-2 py-2 font-brand text-xs font-medium transition #{focus_ring_class}"
 
     if active
-      "#{base} bg-blue-50 text-blue-800"
+      "#{base} bg-primary/10 text-primary"
     else
       "#{base} text-gray-700 hover:bg-gray-100 hover:text-gray-900"
     end
   end
 
   def sidebar_link_class(active)
-    base = "touch-target flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+    base = "touch-target flex items-center gap-3 rounded-lg px-3 py-2.5 font-brand text-sm font-medium transition #{focus_ring_class}"
 
     if active
-      "#{base} bg-blue-50 text-blue-800"
+      "#{base} bg-primary/10 text-primary"
     else
       "#{base} text-gray-700 hover:bg-gray-100 hover:text-gray-900"
     end
   end
 
   def header_action_class
-    "touch-target inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-medium text-blue-800 hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+    "touch-target inline-flex items-center justify-center rounded-lg px-3 py-2 font-brand text-sm font-medium text-accent hover:bg-primary/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
   end
 
   def header_primary_action_class
-    "touch-target inline-flex items-center justify-center rounded-lg bg-blue-700 px-3 py-2 text-sm font-medium text-white hover:bg-blue-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+    "touch-target inline-flex items-center justify-center rounded-lg bg-primary px-3 py-2 font-brand text-sm font-medium text-white hover:brightness-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
   end
 
   def page_heading_class(extra = nil)
@@ -81,12 +81,12 @@ module NavigationHelper
   end
 
   def secondary_nav_class(path)
-    base = "touch-target inline-flex items-center rounded-full px-3 py-2 text-sm font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+    base = "touch-target inline-flex items-center rounded-full px-3 py-2 font-brand text-sm font-medium #{focus_ring_class}"
 
     if current_page?(path)
-      "#{base} bg-blue-700 text-white"
+      "#{base} bg-primary text-white"
     else
-      "#{base} bg-white text-gray-700 ring-1 ring-gray-300 hover:bg-gray-50"
+      "#{base} bg-white text-gray-700 ring-1 ring-gray-300 hover:bg-primary/5 hover:ring-primary/30"
     end
   end
 
@@ -95,33 +95,33 @@ module NavigationHelper
   end
 
   def filter_label_class
-    "mb-1 block text-xs font-medium text-gray-700"
+    "mb-1 block font-brand text-xs font-medium text-gray-700"
   end
 
   def filter_input_class
-    "w-full min-h-11 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700"
+    "w-full min-h-11 rounded-lg border border-gray-300 bg-white px-3 py-2 font-brand text-sm text-gray-900 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
   end
 
   def primary_button_class(full_width: true)
     width = full_width ? "w-full " : ""
 
-    "#{width}touch-target inline-flex min-h-11 items-center justify-center rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+    "#{width}touch-target inline-flex min-h-11 items-center justify-center rounded-lg bg-primary px-4 py-2.5 font-brand text-sm font-semibold text-white hover:brightness-95 #{focus_ring_class}"
   end
 
   def secondary_button_class(full_width: false)
     width = full_width ? "w-full " : ""
 
-    "#{width}touch-target inline-flex min-h-11 items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-800 hover:border-blue-300 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+    "#{width}touch-target inline-flex min-h-11 items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 font-brand text-sm font-semibold text-gray-800 hover:border-secondary hover:bg-secondary/5 hover:text-accent #{focus_ring_class}"
   end
 
   def danger_button_class(full_width: false)
     width = full_width ? "w-full " : ""
 
-    "#{width}touch-target inline-flex min-h-11 items-center justify-center rounded-lg border border-red-300 bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-800 hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700"
+    "#{width}touch-target inline-flex min-h-11 items-center justify-center rounded-lg border border-red-300 bg-red-50 px-4 py-2.5 font-brand text-sm font-semibold text-red-800 hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700"
   end
 
   def disabled_button_class
-    "touch-target inline-flex w-full min-h-11 cursor-not-allowed items-center justify-center rounded-lg bg-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-600"
+    "touch-target inline-flex w-full min-h-11 cursor-not-allowed items-center justify-center rounded-lg bg-gray-200 px-4 py-2.5 font-brand text-sm font-semibold text-gray-600"
   end
 
   def action_link_class
@@ -129,24 +129,46 @@ module NavigationHelper
   end
 
   def card_link_class
-    "block rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:border-blue-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+    "block rounded-lg border border-gray-200 bg-white p-4 font-brand shadow-sm transition hover:border-primary/30 hover:shadow-md #{focus_ring_class}"
   end
 
   def list_card_link_class
-    "flex gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm transition hover:border-blue-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+    "flex gap-3 rounded-lg border border-gray-200 bg-white p-3 font-brand shadow-sm transition hover:border-primary/30 hover:shadow-md #{focus_ring_class}"
+  end
+
+  def card_title_class
+    "font-brand text-base font-semibold text-gray-900"
+  end
+
+  def card_meta_class
+    "text-xs text-gray-500"
+  end
+
+  def category_chip_class(size: :default)
+    size_class = size == :sm ? "text-[10px]" : "text-xs"
+
+    "rounded-full bg-primary/10 px-2 py-0.5 #{size_class} font-medium text-primary"
+  end
+
+  def date_badge_class
+    "flex shrink-0 flex-col items-center justify-center rounded-lg bg-secondary/15 font-brand text-secondary"
+  end
+
+  def card_hover_class
+    "hover:bg-primary/5"
   end
 
   def text_link_class
-    "inline-flex items-center rounded text-sm font-medium text-blue-800 underline-offset-2 hover:text-blue-900 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+    "inline-flex items-center rounded font-brand text-sm font-medium text-accent underline-offset-2 hover:text-primary hover:underline #{focus_ring_class}"
   end
 
   def chip_filter_class(active:)
-    base = "touch-target inline-flex shrink-0 items-center rounded-full border px-3 py-2 text-xs font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+    base = "touch-target inline-flex shrink-0 items-center rounded-full border px-3 py-2 font-brand text-xs font-medium #{focus_ring_class}"
 
     if active
-      "#{base} border-blue-300 bg-blue-50 text-blue-900"
+      "#{base} border-primary/30 bg-primary/10 text-primary"
     else
-      "#{base} border-gray-300 bg-white text-gray-700 hover:border-blue-300"
+      "#{base} border-gray-300 bg-white text-gray-700 hover:border-primary/30 hover:text-primary"
     end
   end
 
@@ -155,7 +177,27 @@ module NavigationHelper
   end
 
   def file_input_class
-    "block w-full text-sm text-gray-700 file:mr-3 file:rounded-lg file:border-0 file:bg-blue-50 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-blue-800 hover:file:bg-blue-100"
+    "block w-full font-brand text-sm text-gray-700 file:mr-3 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:font-brand file:text-sm file:font-semibold file:text-primary hover:file:bg-primary/15"
+  end
+
+  def focus_ring_class
+    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+  end
+
+  def pill_button_class(active:, active_style: :primary)
+    base = "touch-target inline-flex min-h-11 items-center gap-1.5 rounded-full border px-4 py-2 font-brand text-xs font-medium transition #{focus_ring_class}"
+    active_styles = {
+      primary: "border-primary/30 bg-primary/10 text-primary",
+      secondary: "border-secondary/40 bg-secondary/10 text-accent",
+      success: "border-green-300 bg-green-50 text-green-900"
+    }
+    inactive = "border-gray-300 bg-white text-gray-800 hover:border-primary/30 hover:text-primary"
+
+    active ? "#{base} #{active_styles.fetch(active_style)}" : "#{base} #{inactive}"
+  end
+
+  def nav_icon_class(active)
+    active ? "bg-primary text-white" : "bg-gray-200 text-gray-700"
   end
 
   def bottom_nav_icon(key)

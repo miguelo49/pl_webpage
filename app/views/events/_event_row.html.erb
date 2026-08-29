@@ -1,18 +1,18 @@
 <%= link_to event_path(event), class: list_card_link_class do %>
-  <div class="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-lg bg-blue-50 text-blue-800">
+  <div class="h-12 w-12 <%= date_badge_class %>">
     <span class="text-[10px] font-semibold uppercase leading-none"><%= event.start_at.strftime("%H:%M") %></span>
   </div>
 
   <div class="min-w-0 flex-1">
     <div class="flex flex-wrap items-center gap-2 text-[10px] text-gray-400">
-      <span class="rounded-full bg-gray-100 px-2 py-0.5 font-medium text-gray-600"><%= event_type_label(event.event_type) %></span>
+      <span class="<%= category_chip_class(size: :sm) %>"><%= event_type_label(event.event_type) %></span>
       <% if event.commune.present? %>
         <span><%= event.commune.name %></span>
       <% end %>
     </div>
     <h3 class="mt-1 text-sm font-semibold text-gray-900"><%= event.title %></h3>
     <% if event.location.present? %>
-      <p class="mt-1 truncate text-xs text-gray-500"><%= event.location %></p>
+      <p class="mt-1 truncate <%= card_meta_class %>"><%= event.location %></p>
     <% end %>
   </div>
 <% end %>
