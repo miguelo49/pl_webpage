@@ -1,0 +1,5 @@
+<%= turbo_stream.replace dom_id(@reactable, :reaction) do %>
+  <%= render "reactions/button",
+        reactable: @reactable,
+        react_path: react_path_for(@reactable, topic: @topic, thread: @thread) %>
+<% end %>

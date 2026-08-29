@@ -6,7 +6,7 @@
   <% end %>
 <% else %>
   <%= turbo_stream.append "comments_list" do %>
-    <%= render "comments/comment", comment: @comment %>
+    <%= render "comments/comment", comment: @comment, topic: @topic, thread: @thread %>
   <% end %>
 
   <%= turbo_stream.replace "comment_form" do %>

@@ -1,7 +1,10 @@
 class CommentsController < ApplicationController
+  include ReactionHandling
+
   before_action :authenticate_user!
   before_action :set_topic
   before_action :set_thread
+  before_action :set_comment, only: [ :react ]
 
   def create
     @comment = @thread.comments.build(comment_params.merge(user: current_user))
@@ -21,6 +24,11 @@ class CommentsController < ApplicationController
     end
   end
 
+  def react
+    authorize @thread, :show?
+    toggle_reaction(@comment)
+  end
+
   private
 
   def set_topic
@@ -32,12 +40,18 @@ class CommentsController < ApplicationController
     authorize @thread, :show?
   end
 
+  def set_comment
+    @comment = @thread.comments.find(params[:id])
+  end
+
   def comment_params
     params.require(:comment).permit(:body, :parent_id)
   end
 
   def visible_comments
-    comments = @thread.comments.top_level.includes(:user, :replies, replies: :user).order(created_at: :asc)
+    comments = @thread.comments.top_level
+      .includes(:user, :reactions, :replies, replies: [ :user, :reactions ])
+      .order(created_at: :asc)
 
     return comments if current_user.board_member? || current_user.moderator? || current_user.technical_admin?
 

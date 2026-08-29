@@ -13,6 +13,11 @@
     <div class="prose prose-sm max-w-none text-gray-700">
       <%= simple_format(@thread.body) %>
     </div>
+    <div class="mt-4">
+      <%= render "reactions/button",
+            reactable: @thread,
+            react_path: react_path_for(@thread, topic: @topic, thread: @thread) %>
+    </div>
   </article>
 
   <% if policy(@thread).update? %>
@@ -28,7 +33,7 @@
       <div id="comments_list" class="space-y-4">
         <% if @comments.any? %>
           <% @comments.each do |comment| %>
-            <%= render "comments/comment", comment: comment %>
+            <%= render "comments/comment", comment: comment, topic: @topic, thread: @thread %>
           <% end %>
         <% else %>
           <p class="text-sm text-gray-500">Sé el primero en comentar.</p>

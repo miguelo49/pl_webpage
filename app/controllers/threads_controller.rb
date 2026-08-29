@@ -1,13 +1,15 @@
 class ThreadsController < ApplicationController
+  include ReactionHandling
+
   before_action :authenticate_user!
   before_action :set_topic
-  before_action :set_thread, only: [ :show, :edit, :update ]
+  before_action :set_thread, only: [ :show, :edit, :update, :react ]
 
   def index
     authorize ForumThread, :index?
     @threads = policy_scope(ForumThread)
       .where(topic: @topic)
-      .includes(:user)
+      .includes(:user, :reactions)
       .order(created_at: :desc)
     @thread = @topic.threads.build
   end
@@ -17,6 +19,11 @@ class ThreadsController < ApplicationController
     @comments = visible_comments
     @comment = @thread.comments.build
     authorize @comment
+  end
+
+  def react
+    authorize @thread, :show?
+    toggle_reaction(@thread)
   end
 
   def new
@@ -59,7 +66,7 @@ class ThreadsController < ApplicationController
   end
 
   def set_thread
-    @thread = @topic.threads.find(params[:id])
+    @thread = @topic.threads.includes(:reactions).find(params[:id])
   end
 
   def thread_params
@@ -67,7 +74,9 @@ class ThreadsController < ApplicationController
   end
 
   def visible_comments
-    comments = @thread.comments.top_level.includes(:user, :replies, replies: :user).order(created_at: :asc)
+    comments = @thread.comments.top_level
+      .includes(:user, :reactions, :replies, replies: [ :user, :reactions ])
+      .order(created_at: :asc)
 
     return comments if current_user.board_member? || current_user.moderator? || current_user.technical_admin?
 

@@ -22,6 +22,8 @@ class Comment < ApplicationRecord
   scope :top_level, -> { where(parent_id: nil) }
   scope :publicly_visible, -> { approved }
 
+  has_many :reactions, as: :reactable, dependent: :destroy
+
   def reply?
     parent_id.present?
   end

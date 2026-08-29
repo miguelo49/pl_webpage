@@ -14,7 +14,15 @@ Rails.application.routes.draw do
 
   resources :topics, only: [ :index ] do
     resources :threads, only: [ :index, :show, :new, :create, :edit, :update ] do
-      resources :comments, only: [ :create ]
+      member do
+        post :react
+      end
+
+      resources :comments, only: [ :create ] do
+        member do
+          post :react
+        end
+      end
     end
   end
 

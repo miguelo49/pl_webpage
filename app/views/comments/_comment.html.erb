@@ -5,6 +5,12 @@
   </div>
   <p class="mt-2 text-sm text-gray-700"><%= comment.body %></p>
 
+  <div class="mt-3">
+    <%= render "reactions/button",
+          reactable: comment,
+          react_path: react_path_for(comment, topic: topic, thread: thread) %>
+  </div>
+
   <% if comment.replies.any? %>
     <div class="mt-4 space-y-3 border-l-2 border-gray-100 pl-4">
       <% comment.replies.each do |reply| %>
@@ -14,6 +20,11 @@
             <time datetime="<%= reply.created_at.iso8601 %>"><%= reply.created_at.to_fs(:short) %></time>
           </div>
           <p class="mt-1 text-sm text-gray-700"><%= reply.body %></p>
+          <div class="mt-2">
+            <%= render "reactions/button",
+                  reactable: reply,
+                  react_path: react_path_for(reply, topic: topic, thread: thread) %>
+          </div>
         </div>
       <% end %>
     </div>
