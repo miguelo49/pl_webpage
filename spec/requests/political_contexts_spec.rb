@@ -47,16 +47,18 @@ RSpec.describe "Political context", type: :request do
       Event.create!(
         title: "Asamblea regional",
         description: "Encuentro con militantes",
+        event_type: :assembly,
         location: "Valparaíso",
-        starts_at: 2.days.from_now,
-        user: author
+        start_at: 2.days.from_now,
+        organizer: author
       )
 
       Event.create!(
         title: "Evento pasado",
         description: "Ya ocurrió",
-        starts_at: 2.days.ago,
-        user: author
+        event_type: :meeting,
+        start_at: 2.days.ago,
+        organizer: author
       )
 
       sign_in viewer
