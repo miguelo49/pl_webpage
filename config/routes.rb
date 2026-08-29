@@ -11,4 +11,8 @@ Rails.application.routes.draw do
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
   root "home#index"
+
+  if Rails.env.local?
+    get "authorization_test", to: "authorization_test#index"
+  end
 end

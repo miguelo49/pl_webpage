@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "User registration", type: :request do
   describe "POST /users" do
-    it "creates a user with default simpatizante role" do
+    it "creates a user with default sympathizer role" do
       expect {
         post user_registration_path, params: {
           user: {
@@ -19,7 +19,7 @@ RSpec.describe "User registration", type: :request do
       expect(user).to be_present
       expect(user.nombre).to eq("María")
       expect(user.apellido).to eq("García")
-      expect(user.role).to eq("simpatizante")
+      expect(user.role).to eq("sympathizer")
       expect(user.activo).to be(true)
       expect(response).to redirect_to(root_path)
     end

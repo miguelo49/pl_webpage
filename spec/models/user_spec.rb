@@ -16,25 +16,25 @@ RSpec.describe User, type: :model do
   end
 
   describe "role enum" do
-    it "defines expected roles" do
+    it "defines expected roles in English" do
       expect(User.roles.keys).to contain_exactly(
-        "simpatizante", "militante", "directiva", "moderador", "admin_tecnico"
+        "sympathizer", "militant", "board_member", "moderator", "technical_admin"
       )
     end
 
-    it "defaults new users to simpatizante" do
+    it "defaults new users to sympathizer" do
       user = User.new(email: "new@example.com", password: "password123", nombre: "Ana", apellido: "López")
-      expect(user.role).to eq("simpatizante")
+      expect(user.role).to eq("sympathizer")
     end
 
-    it "persists simpatizante as default on create" do
+    it "persists sympathizer as default on create" do
       user = User.create!(
         email: "default@example.com",
         password: "password123",
         nombre: "Carlos",
         apellido: "Ruiz"
       )
-      expect(user.reload.role).to eq("simpatizante")
+      expect(user.reload.role).to eq("sympathizer")
     end
   end
 end

@@ -50,4 +50,34 @@ class ApplicationPolicy
 
     attr_reader :user, :scope
   end
+
+  private
+
+  def militant_or_above?
+    authenticated? && role_rank >= role_rank_for("militant")
+  end
+
+  def board_or_above?
+    authenticated? && role_rank >= role_rank_for("board_member")
+  end
+
+  def moderator?
+    authenticated? && role_rank >= role_rank_for("moderator")
+  end
+
+  def admin?
+    authenticated? && user.technical_admin?
+  end
+
+  def authenticated?
+    user.present?
+  end
+
+  def role_rank
+    User::ROLES.index(user.role)
+  end
+
+  def role_rank_for(role_name)
+    User::ROLES.index(role_name)
+  end
 end
