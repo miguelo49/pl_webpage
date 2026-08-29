@@ -38,6 +38,56 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe "commune references" do
+    let(:region) { Region.create!(name: "Región de Valparaíso") }
+    let(:commune) { Commune.create!(name: "Valparaíso", region: region) }
+
+    def build_user(role:, residence_commune: nil)
+      User.new(
+        email: "#{role}@example.com",
+        password: "password123",
+        first_name: "Ana",
+        last_name: "López",
+        role: role,
+        residence_commune: residence_commune
+      )
+    end
+
+    it "allows a sympathizer without a residence commune" do
+      user = build_user(role: :sympathizer)
+
+      expect(user).to be_valid
+    end
+
+    it "requires a residence commune for a militant" do
+      user = build_user(role: :militant)
+
+      expect(user).not_to be_valid
+      expect(user.errors[:residence_commune]).to include("can't be blank")
+    end
+
+    it "allows a militant with a residence commune" do
+      user = build_user(role: :militant, residence_commune: commune)
+
+      expect(user).to be_valid
+    end
+
+    it "requires a residence commune for board_member and above" do
+      user = build_user(role: :board_member)
+
+      expect(user).not_to be_valid
+      expect(user.errors[:residence_commune]).to include("can't be blank")
+    end
+
+    it "does not require work or study communes for a militant" do
+      user = build_user(role: :militant, residence_commune: commune)
+
+      expect(user.work_commune).to be_nil
+      expect(user.study_commune).to be_nil
+      expect(user).to be_valid
+    end
+  end
+
   describe "onboarding status" do
     it "is incomplete without accepted terms" do
       user = User.new(

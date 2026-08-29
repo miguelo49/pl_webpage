@@ -8,6 +8,10 @@ class User < ApplicationRecord
 
   has_one_attached :avatar
 
+  belongs_to :residence_commune, class_name: "Commune", optional: true
+  belongs_to :work_commune, class_name: "Commune", optional: true
+  belongs_to :study_commune, class_name: "Commune", optional: true
+
   enum :role, {
     sympathizer: 0,
     militant: 1,
@@ -18,6 +22,7 @@ class User < ApplicationRecord
 
   validates :first_name, presence: true
   validates :last_name, presence: true
+  validates :residence_commune, presence: true, if: :militant_or_above?
   validate :acceptable_avatar
 
   def profile_complete?
@@ -36,6 +41,10 @@ class User < ApplicationRecord
 
   def full_name
     [ first_name, last_name ].compact_blank.join(" ")
+  end
+
+  def militant_or_above?
+    ROLES.index(role) >= ROLES.index("militant")
   end
 
   private

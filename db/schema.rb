@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_08_29_135928) do
+ActiveRecord::Schema[7.2].define(version: 2026_08_29_140049) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -71,11 +71,20 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_29_135928) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "terms_accepted_at"
+    t.bigint "residence_commune_id"
+    t.bigint "work_commune_id"
+    t.bigint "study_commune_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["residence_commune_id"], name: "index_users_on_residence_commune_id"
+    t.index ["study_commune_id"], name: "index_users_on_study_commune_id"
+    t.index ["work_commune_id"], name: "index_users_on_work_commune_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "communes", "regions"
+  add_foreign_key "users", "communes", column: "residence_commune_id"
+  add_foreign_key "users", "communes", column: "study_commune_id"
+  add_foreign_key "users", "communes", column: "work_commune_id"
 end

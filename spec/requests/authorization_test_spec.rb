@@ -3,14 +3,20 @@ require "rails_helper"
 RSpec.describe "Authorization test access", type: :request do
   let(:password) { "password123" }
 
+  let(:region) { Region.create!(name: "Región de Valparaíso") }
+  let(:commune) { Commune.create!(name: "Valparaíso", region: region) }
+
   def create_user(role)
-    User.create!(
+    attrs = {
       email: "#{role}@example.com",
       password: password,
       first_name: "Test",
       last_name: "User",
       role: role
-    )
+    }
+    attrs[:residence_commune] = commune if User.new(role: role).militant_or_above?
+
+    User.create!(attrs)
   end
 
   describe "GET /authorization_test" do
