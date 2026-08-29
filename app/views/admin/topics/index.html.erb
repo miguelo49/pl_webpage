@@ -1,0 +1,26 @@
+<div class="space-y-6">
+  <div class="flex items-center justify-between gap-3">
+    <div>
+      <h2 class="text-xl font-semibold text-gray-900">Tópicos</h2>
+      <p class="mt-1 text-sm text-gray-500">Secciones del foro comunitario.</p>
+    </div>
+    <%= link_to "Nuevo tópico", new_admin_topic_path, class: "rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white" %>
+  </div>
+
+  <%= render "admin/shared/nav" %>
+
+  <div class="space-y-2">
+    <% @topics.each do |topic| %>
+      <div class="flex items-center justify-between gap-3 rounded-lg border border-gray-200 bg-white p-4">
+        <div>
+          <p class="font-medium text-gray-900"><%= topic.name %></p>
+          <p class="text-sm text-gray-500"><%= topic.slug %> · posición <%= topic.position %></p>
+        </div>
+        <div class="flex gap-2 text-sm">
+          <%= link_to "Editar", edit_admin_topic_path(topic), class: "text-blue-600" %>
+          <%= button_to "Eliminar", admin_topic_path(topic), method: :delete, form: { data: { turbo_confirm: "¿Eliminar tópico?" } }, class: "text-red-600" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -57,6 +57,15 @@ Rails.application.routes.draw do
     patch "items/:type/:id", to: "items#update", as: :item
   end
 
+  namespace :admin do
+    root to: "dashboard#index"
+    resources :users, only: [ :index, :edit, :update ]
+    resources :regions
+    resources :communes
+    resources :topics
+    resources :training_categories
+  end
+
   resources :topics, only: [ :index ] do
     resources :threads, only: [ :index, :show, :new, :create, :edit, :update ] do
       member do

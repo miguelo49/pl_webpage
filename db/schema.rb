@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_08_29_152923) do
+ActiveRecord::Schema[7.2].define(version: 2026_08_29_153240) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -51,6 +51,19 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_29_152923) do
     t.index ["event_id"], name: "index_attendances_on_event_id"
     t.index ["user_id", "event_id"], name: "index_attendances_on_user_and_event", unique: true
     t.index ["user_id"], name: "index_attendances_on_user_id"
+  end
+
+  create_table "audit_logs", force: :cascade do |t|
+    t.bigint "actor_id", null: false
+    t.string "auditable_type", null: false
+    t.bigint "auditable_id", null: false
+    t.string "action", null: false
+    t.text "change_details"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["actor_id"], name: "index_audit_logs_on_actor_id"
+    t.index ["auditable_type", "auditable_id", "created_at"], name: "idx_on_auditable_type_auditable_id_created_at_32105c5b9d"
+    t.index ["auditable_type", "auditable_id"], name: "index_audit_logs_on_auditable"
   end
 
   create_table "bookmarks", force: :cascade do |t|
@@ -299,6 +312,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_29_152923) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "attendances", "events"
   add_foreign_key "attendances", "users"
+  add_foreign_key "audit_logs", "users", column: "actor_id"
   add_foreign_key "bookmarks", "users"
   add_foreign_key "comments", "comments", column: "parent_id"
   add_foreign_key "comments", "users"

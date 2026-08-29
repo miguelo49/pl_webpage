@@ -1,0 +1,6 @@
+<div class="space-y-6">
+  <%= link_to "← Categorías", admin_training_categories_path, class: "text-sm text-blue-600 hover:text-blue-800" %>
+  <h2 class="text-xl font-semibold text-gray-900">Nueva categoría</h2>
+  <%= render "admin/shared/nav" %>
+  <%= render "form", training_category: @training_category %>
+</div>

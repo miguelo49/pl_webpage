@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  include AuditableAdminChanges
+
   ROLES = %w[sympathizer militant board_member moderator technical_admin].freeze
 
   ACCEPTED_AVATAR_TYPES = %w[image/jpeg image/png image/webp image/gif].freeze
@@ -22,6 +24,7 @@ class User < ApplicationRecord
   has_many :law_proposal_versions, dependent: :destroy
   has_many :reports, dependent: :destroy
   has_many :moderation_logs, foreign_key: :moderator_id, dependent: :destroy, inverse_of: :moderator
+  has_many :admin_audit_logs, class_name: "AuditLog", foreign_key: :actor_id, dependent: :destroy, inverse_of: :actor
 
   belongs_to :residence_commune, class_name: "Commune", optional: true
   belongs_to :work_commune, class_name: "Commune", optional: true
@@ -60,6 +63,14 @@ class User < ApplicationRecord
 
   def militant_or_above?
     ROLES.index(role) >= ROLES.index("militant")
+  end
+
+  def active_for_authentication?
+    super && active?
+  end
+
+  def inactive_message
+    :account_inactive
   end
 
   private

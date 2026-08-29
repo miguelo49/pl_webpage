@@ -1,0 +1,26 @@
+<div class="space-y-6">
+  <div class="flex items-center justify-between gap-3">
+    <div>
+      <h2 class="text-xl font-semibold text-gray-900">Comunas</h2>
+      <p class="mt-1 text-sm text-gray-500">Comunas asociadas a regiones.</p>
+    </div>
+    <%= link_to "Nueva comuna", new_admin_commune_path, class: "rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white" %>
+  </div>
+
+  <%= render "admin/shared/nav" %>
+
+  <div class="space-y-2">
+    <% @communes.each do |commune| %>
+      <div class="flex items-center justify-between gap-3 rounded-lg border border-gray-200 bg-white p-4">
+        <div>
+          <p class="font-medium text-gray-900"><%= commune.name %></p>
+          <p class="text-sm text-gray-500"><%= commune.region.name %></p>
+        </div>
+        <div class="flex gap-2 text-sm">
+          <%= link_to "Editar", edit_admin_commune_path(commune), class: "text-blue-600" %>
+          <%= button_to "Eliminar", admin_commune_path(commune), method: :delete, form: { data: { turbo_confirm: "¿Eliminar comuna?" } }, class: "text-red-600" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
