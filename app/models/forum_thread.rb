@@ -19,6 +19,8 @@ class ForumThread < ApplicationRecord
 
   scope :publicly_visible, -> { approved }
 
+  has_many :comments, as: :commentable, dependent: :destroy
+
   def self.policy_class
     ThreadPolicy
   end

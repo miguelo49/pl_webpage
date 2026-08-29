@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_one_attached :avatar
 
   has_many :threads, class_name: "ForumThread", dependent: :restrict_with_error
+  has_many :comments, dependent: :destroy
 
   belongs_to :residence_commune, class_name: "Commune", optional: true
   belongs_to :work_commune, class_name: "Commune", optional: true
