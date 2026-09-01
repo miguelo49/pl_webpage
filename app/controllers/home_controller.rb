@@ -5,7 +5,7 @@ class HomeController < ApplicationController
 
   def index
     authorize News, :index?
-    @feed = HomeFeedQuery.new(user: current_user, page: current_page, per_page: PER_PAGE)
+    @feed = ::HomeFeedQuery.new(user: current_user, page: current_page, per_page: PER_PAGE)
 
     respond_to do |format|
       format.html
