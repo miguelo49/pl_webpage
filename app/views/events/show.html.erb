@@ -4,6 +4,11 @@
   <div>
     <div class="flex flex-wrap items-center gap-2 text-xs text-gray-400">
       <%= render "events/event_type_chip", event_type: @event.event_type %>
+      <% unless @event.approved? %>
+        <span class="rounded-full px-2 py-0.5 font-medium <%= event_status_badge_class(@event.status) %>">
+          <%= event_status_label(@event.status) %>
+        </span>
+      <% end %>
       <time datetime="<%= @event.start_at.iso8601 %>"><%= @event.start_at.to_fs(:short) %></time>
     </div>
     <%= render "shared/page_heading",
@@ -24,9 +29,15 @@
     </div>
   </div>
 
-  <%= link_to "Agregar al calendario (.ics)",
-        calendar_event_path(@event),
-        class: secondary_button_class(full_width: true) %>
+  <% if @event.approved? %>
+    <%= link_to "Agregar al calendario (.ics)",
+          calendar_event_path(@event),
+          class: secondary_button_class(full_width: true) %>
 
-  <%= render "attendances/panel", event: @event, attendance: @attendance %>
+    <%= render "attendances/panel", event: @event, attendance: @attendance %>
+  <% elsif @event.pending? %>
+    <p class="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+      Este evento está pendiente de moderación. La inscripción estará disponible cuando sea aprobado.
+    </p>
+  <% end %>
 </div>

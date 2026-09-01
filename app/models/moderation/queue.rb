@@ -5,7 +5,8 @@ module Moderation
     SOURCES = [
       { type: ForumThread, kind: "Hilo", includes: [ :user, :topic ] },
       { type: Comment, kind: "Comentario", includes: [ :user, :commentable ] },
-      { type: News, kind: "Noticia", includes: [ :user ] }
+      { type: News, kind: "Noticia", includes: [ :user ] },
+      { type: Event, kind: "Evento", includes: [ :organizer ] }
     ].freeze
 
     def self.pending
@@ -25,7 +26,7 @@ module Moderation
         kind: kind,
         title: title_for(record),
         excerpt: excerpt_for(record),
-        author: record.user,
+        author: author_for(record),
         created_at: record.created_at
       )
     end
@@ -40,6 +41,7 @@ module Moderation
       when ForumThread then record.title
       when Comment then "Comentario en #{commentable_label(record.commentable)}"
       when News then record.title
+      when Event then record.title
       else record.to_s
       end
     end
@@ -49,7 +51,15 @@ module Moderation
       when ForumThread then record.body
       when Comment then record.body
       when News then record.summary
+      when Event then record.description
       else ""
+      end
+    end
+
+    def self.author_for(record)
+      case record
+      when Event then record.organizer
+      else record.user
       end
     end
 

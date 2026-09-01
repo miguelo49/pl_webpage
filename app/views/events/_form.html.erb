@@ -1,0 +1,59 @@
+<%= form_with model: @event, url: events_path, html: { class: "space-y-4" } do |form| %>
+  <% if @event.errors.any? %>
+    <div class="<%= error_alert_class %>">
+      <ul class="list-inside list-disc space-y-1">
+        <% @event.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title, "Título", class: form_label_class %>
+    <%= form.text_field :title, class: filter_input_class, autofocus: true %>
+  </div>
+
+  <div>
+    <%= form.label :description, "Descripción", class: form_label_class %>
+    <%= form.text_area :description, rows: 5, class: filter_input_class %>
+  </div>
+
+  <div>
+    <%= form.label :event_type, "Tipo", class: form_label_class %>
+    <%= form.select :event_type,
+          Event.event_types.keys.map { |key| [ event_type_label(key), key ] },
+          { prompt: "Selecciona un tipo" },
+          class: filter_input_class %>
+  </div>
+
+  <div>
+    <%= form.label :start_at, "Inicio", class: form_label_class %>
+    <%= form.datetime_local_field :start_at, class: filter_input_class %>
+  </div>
+
+  <div>
+    <%= form.label :end_at, "Término (opcional)", class: form_label_class %>
+    <%= form.datetime_local_field :end_at, class: filter_input_class %>
+  </div>
+
+  <div>
+    <%= form.label :commune_id, "Comuna (opcional)", class: form_label_class %>
+    <%= form.select :commune_id,
+          options_from_collection_for_select(@communes, :id, :name, @event.commune_id),
+          { include_blank: "Sin comuna específica" },
+          class: filter_input_class %>
+  </div>
+
+  <div>
+    <%= form.label :location, "Ubicación (opcional)", class: form_label_class %>
+    <%= form.text_field :location, class: filter_input_class %>
+  </div>
+
+  <div>
+    <%= form.label :capacity, "Capacidad (opcional)", class: form_label_class %>
+    <%= form.number_field :capacity, min: 1, class: filter_input_class, placeholder: "Dejar vacío para cupos ilimitados" %>
+  </div>
+
+  <%= form.submit "Publicar evento", class: primary_button_class %>
+<% end %>

@@ -2,13 +2,15 @@ module ModerationHelper
   MODERATABLE_PARAM_TYPES = {
     "ForumThread" => "forum_thread",
     "Comment" => "comment",
-    "News" => "news"
+    "News" => "news",
+    "Event" => "event"
   }.freeze
 
   MODERATABLE_CLASS_BY_PARAM = {
     "forum_thread" => ForumThread,
     "comment" => Comment,
-    "news" => News
+    "news" => News,
+    "event" => Event
   }.freeze
 
   def moderation_item_param_type(record)

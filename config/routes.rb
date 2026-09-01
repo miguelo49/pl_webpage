@@ -20,7 +20,7 @@ Rails.application.routes.draw do
 
   get "political_contexts", to: redirect("/")
 
-  resources :events, only: [ :index, :show ] do
+  resources :events, only: [ :index, :show, :new, :create ] do
     member do
       get :calendar
     end
@@ -28,7 +28,7 @@ Rails.application.routes.draw do
     resource :attendance, only: [ :create, :update ]
   end
 
-  resources :training_materials, only: [ :index, :show ] do
+  resources :training_materials, only: [ :index, :show, :new, :create ] do
     member do
       get :download
       post :bookmark

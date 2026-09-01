@@ -39,9 +39,8 @@ class HomeFeedQuery
     news = news_scope.select(
       "id AS record_id, 'News' AS record_type, COALESCE(published_at, created_at) AS feed_at"
     )
-    events = Event.upcoming.select(
-      "id AS record_id, 'Event' AS record_type, created_at AS feed_at"
-    )
+    events = Event.upcoming.publicly_visible
+      .select("id AS record_id, 'Event' AS record_type, created_at AS feed_at")
 
     Arel::Nodes::TableAlias.new(
       Arel::Nodes::UnionAll.new(news.arel, events.arel),

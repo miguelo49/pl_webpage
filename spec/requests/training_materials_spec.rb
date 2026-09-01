@@ -115,4 +115,44 @@ RSpec.describe "Training materials library", type: :request do
       expect(response.body).to start_with("%PDF")
     end
   end
+
+  describe "POST /training_materials" do
+    let(:material_params) do
+      {
+        training_material: {
+          title: "Nuevo manual",
+          description: "Contenido de formación",
+          author: "Escuela de formación",
+          date: Date.current,
+          training_category_id: ideology_category.id,
+          tags: "ideología, formación",
+          pdf: fixture_file_upload("sample.pdf", "application/pdf")
+        }
+      }
+    end
+
+    it "allows board members to create materials" do
+      board_member = create_user(role: :board_member)
+
+      sign_in board_member
+      expect {
+        post training_materials_path, params: material_params
+      }.to change(TrainingMaterial, :count).by(1)
+
+      material = TrainingMaterial.order(:created_at).last
+      expect(response).to redirect_to(training_material_path(material))
+
+      sign_in create_user(role: :sympathizer, email: "reader-#{SecureRandom.hex(4)}@example.com")
+      get training_materials_path
+      expect(response.body).to include(material.title)
+    end
+
+    it "forbids militants from creating materials" do
+      militant = create_user(role: :militant)
+
+      sign_in militant
+      get new_training_material_path
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
 end

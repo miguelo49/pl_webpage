@@ -1,4 +1,6 @@
 class Event < ApplicationRecord
+  include Moderatable
+
   belongs_to :organizer, class_name: "User"
   belongs_to :commune, optional: true
 
@@ -15,6 +17,14 @@ class Event < ApplicationRecord
     online: 7
   }
 
+  enum :status, {
+    pending: 0,
+    approved: 1,
+    rejected: 2,
+    reported: 3,
+    hidden: 4
+  }, default: :approved
+
   validates :title, presence: true
   validates :description, presence: true
   validates :event_type, presence: true
@@ -24,6 +34,8 @@ class Event < ApplicationRecord
   validate :end_at_after_start_at
 
   scope :upcoming, -> { where("start_at >= ?", Time.current).order(:start_at) }
+
+  scope :publicly_visible, -> { approved }
 
   scope :by_commune, ->(commune_id) {
     commune_id.present? ? where(commune_id: commune_id) : all
@@ -55,6 +67,10 @@ class Event < ApplicationRecord
 
   def self.policy_class
     EventPolicy
+  end
+
+  def publicly_visible?
+    approved?
   end
 
   def unlimited_capacity?

@@ -23,6 +23,24 @@ class TrainingMaterialsController < ApplicationController
     authorize @training_material
   end
 
+  def new
+    @training_material = TrainingMaterial.new(date: Date.current)
+    authorize @training_material
+    @training_categories = TrainingCategory.order(:name)
+  end
+
+  def create
+    @training_material = TrainingMaterial.new(training_material_params)
+    authorize @training_material
+    @training_categories = TrainingCategory.order(:name)
+
+    if @training_material.save
+      redirect_to training_material_path(@training_material), notice: "Material publicado correctamente."
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
   def download
     authorize @training_material, :download?
 
@@ -51,5 +69,26 @@ class TrainingMaterialsController < ApplicationController
     @training_material = TrainingMaterial
       .includes(:training_category, :bookmarks, :read_marks, pdf_attachment: :blob, cover_image_attachment: :blob)
       .find(params[:id])
+  end
+
+  def training_material_params
+    permitted = params.require(:training_material).permit(
+      :title,
+      :description,
+      :author,
+      :date,
+      :training_category_id,
+      :tags,
+      :pdf,
+      :cover_image
+    )
+
+    if permitted[:tags].present?
+      permitted[:tags] = permitted[:tags].split(",").map(&:strip).reject(&:blank?)
+    else
+      permitted[:tags] = []
+    end
+
+    permitted
   end
 end

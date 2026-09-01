@@ -1,0 +1,60 @@
+<%= form_with model: @training_material, url: training_materials_path, html: { multipart: true, class: "space-y-4" } do |form| %>
+  <% if @training_material.errors.any? %>
+    <div class="<%= error_alert_class %>">
+      <ul class="list-inside list-disc space-y-1">
+        <% @training_material.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title, "Título", class: form_label_class %>
+    <%= form.text_field :title, class: filter_input_class, autofocus: true %>
+  </div>
+
+  <div>
+    <%= form.label :description, "Descripción", class: form_label_class %>
+    <%= form.text_area :description, rows: 4, class: filter_input_class %>
+  </div>
+
+  <div>
+    <%= form.label :author, "Autor", class: form_label_class %>
+    <%= form.text_field :author, class: filter_input_class %>
+  </div>
+
+  <div>
+    <%= form.label :date, "Fecha", class: form_label_class %>
+    <%= form.date_field :date, class: filter_input_class %>
+  </div>
+
+  <div>
+    <%= form.label :training_category_id, "Categoría", class: form_label_class %>
+    <%= form.select :training_category_id,
+          options_from_collection_for_select(@training_categories, :id, :name, @training_material.training_category_id),
+          { prompt: "Selecciona una categoría" },
+          class: filter_input_class %>
+  </div>
+
+  <div>
+    <%= form.label :tags, "Tags (opcional)", class: form_label_class %>
+    <%= form.text_field :tags,
+          value: @training_material.tags&.join(", "),
+          class: filter_input_class,
+          placeholder: "territorio, militancia" %>
+    <p class="mt-1 text-xs text-gray-500">Separados por comas.</p>
+  </div>
+
+  <div>
+    <%= form.label :pdf, "PDF", class: form_label_class %>
+    <%= form.file_field :pdf, accept: "application/pdf", class: file_input_class %>
+  </div>
+
+  <div>
+    <%= form.label :cover_image, "Portada (opcional)", class: form_label_class %>
+    <%= form.file_field :cover_image, accept: "image/jpeg,image/png,image/webp,image/gif", class: file_input_class %>
+  </div>
+
+  <%= form.submit "Publicar material", class: primary_button_class %>
+<% end %>

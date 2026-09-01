@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_08_29_153240) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_01_011816) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -112,6 +112,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_29_153240) do
     t.integer "event_type", default: 0, null: false
     t.bigint "commune_id"
     t.integer "capacity"
+    t.integer "status", default: 1, null: false
     t.index ["commune_id"], name: "index_events_on_commune_id"
     t.index ["organizer_id"], name: "index_events_on_organizer_id"
     t.index ["start_at"], name: "index_events_on_start_at"

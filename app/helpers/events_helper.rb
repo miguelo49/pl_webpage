@@ -32,8 +32,32 @@ module EventsHelper
     "online" => "text-primary"
   }.freeze
 
+  STATUS_LABELS = {
+    "pending" => "Pendiente",
+    "approved" => "Aprobado",
+    "rejected" => "Rechazado",
+    "reported" => "Reportado",
+    "hidden" => "Oculto"
+  }.freeze
+
+  STATUS_BADGE_VARIANTS = {
+    "pending" => :pending,
+    "approved" => :approved,
+    "rejected" => :rejected,
+    "reported" => :pending,
+    "hidden" => :neutral
+  }.freeze
+
   def event_type_label(event_type)
     EVENT_TYPE_LABELS.fetch(event_type.to_s, event_type.to_s.humanize)
+  end
+
+  def event_status_label(status)
+    STATUS_LABELS.fetch(status.to_s, status.to_s.humanize)
+  end
+
+  def event_status_badge_class(status)
+    status_badge_class(STATUS_BADGE_VARIANTS.fetch(status.to_s, :neutral))
   end
 
   def event_type_icon(event_type, size: :sm)

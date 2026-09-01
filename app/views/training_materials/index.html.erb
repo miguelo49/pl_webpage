@@ -1,8 +1,16 @@
 <div class="space-y-6">
-  <%= render "shared/page_heading",
-        title: "Biblioteca",
-        liberal: true,
-        subtitle: "Material de formación en PDF." %>
+  <div class="flex items-start justify-between gap-3">
+    <div>
+      <%= render "shared/page_heading",
+            title: "Biblioteca",
+            liberal: true,
+            subtitle: "Material de formación en PDF." %>
+    </div>
+
+    <% if policy(TrainingMaterial.new).create? %>
+      <%= link_to "Agregar material", new_training_material_path, class: action_link_class %>
+    <% end %>
+  </div>
 
   <div class="<%= filter_sticky_class %>">
     <%= form_with url: training_materials_path, method: :get, html: { class: "space-y-3" } do |form| %>
