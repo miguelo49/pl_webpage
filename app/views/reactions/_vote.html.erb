@@ -5,13 +5,20 @@
           method: :post,
           class: vote_button_class(active: reacted),
           form: { data: { turbo_stream: true }, class: "inline" } do %>
-      <svg viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5" aria-hidden="true">
-        <path d="M12 4l-8 8h5v8h6v-8h5L12 4z" />
-      </svg>
-      <span class="sr-only"><%= reacted ? "Quitar voto" : "Votar" %></span>
+      <% if reacted %>
+        <svg viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5" aria-hidden="true">
+          <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z" />
+        </svg>
+      <% else %>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-5 w-5" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.25c.806 0 1.533-.545 1.633-1.348.129-.921-.527-1.748-1.333-1.748-1.133 0-2.066 1.067-1.866 2.251.167 1.037 1.007 1.958 2.087 2.358 2.179.771 4.718-.287 5.875-2.695M6.633 10.25H4.875c-.621 0-1.125.504-1.125 1.125v4.286c0 .621.504 1.125 1.125 1.125h2.258c.806 0 1.466-.545 1.633-1.348.129-.921-.527-1.748-1.333-1.748-1.133 0-2.066 1.067-1.866 2.251.167 1.037 1.007 1.958 2.087 2.358 2.179.771 4.718-.287 5.875-2.695" />
+        </svg>
+      <% end %>
+      <span class="sr-only"><%= reacted ? "Quitar apoyo" : "Apoyar" %></span>
     <% end %>
     <span class="text-xs font-semibold leading-none <%= reacted ? 'text-primary' : 'text-gray-600' %>">
       <%= reactable.reactions.size %>
     </span>
+    <span class="text-[10px] font-medium leading-none text-gray-500">Apoyar</span>
   </div>
 <% end %>

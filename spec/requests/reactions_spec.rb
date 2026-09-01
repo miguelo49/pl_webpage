@@ -47,7 +47,7 @@ RSpec.describe "Reactions", type: :request do
 
       expect(response).to have_http_status(:ok)
       expect(response.media_type).to eq("text/vnd.turbo-stream.html")
-      expect(response.body).to include("Quitar voto")
+      expect(response.body).to include("Quitar apoyo")
       expect(response.body).to include("text-primary")
 
       expect {
@@ -56,7 +56,7 @@ RSpec.describe "Reactions", type: :request do
       }.to change(Reaction, :count).by(-1)
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("Votar")
+      expect(response.body).to include("Apoyar")
     end
 
     it "does not allow duplicate reactions without toggling off" do
@@ -90,13 +90,13 @@ RSpec.describe "Reactions", type: :request do
            headers: { "Accept" => "text/vnd.turbo-stream.html" }
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("Quitar voto")
+      expect(response.body).to include("Quitar apoyo")
 
       post react_topic_thread_comment_path(topic, thread, comment),
            headers: { "Accept" => "text/vnd.turbo-stream.html" }
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("Votar")
+      expect(response.body).to include("Apoyar")
       expect(Reaction.where(reactable: comment, user: reactor)).not_to exist
     end
   end

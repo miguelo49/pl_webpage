@@ -6,9 +6,12 @@ class ThreadsController < ApplicationController
   before_action :set_topic, except: [ :index ]
   before_action :set_thread, only: [ :show, :edit, :update, :react, :bookmark ]
 
+  PER_PAGE = 10
+
   def index
     authorize ForumThread, :index?
     @topics = Topic.ordered
+    @selected_topic_ids = selected_topic_ids
     @threads = policy_scope(ForumThread)
       .includes(:user, :topic, :reactions, :comments)
       .left_joins(:comments)
@@ -16,9 +19,15 @@ class ThreadsController < ApplicationController
       .select("threads.*, GREATEST(threads.created_at, COALESCE(MAX(comments.created_at), threads.created_at)) AS last_activity_at")
       .order("last_activity_at DESC")
 
-    if params[:topic_id].present?
-      @threads = @threads.where(topic_id: params[:topic_id])
+    if @selected_topic_ids.any?
+      @threads = @threads.where(topic_id: @selected_topic_ids)
     end
+
+    @total_count = @threads.except(:select, :group, :order).count
+    @page = current_page
+    @total_pages = [ (@total_count / PER_PAGE.to_f).ceil, 1 ].max
+    @page = [ @page, @total_pages ].min
+    @threads = @threads.offset((@page - 1) * PER_PAGE).limit(PER_PAGE)
   end
 
   def show
@@ -72,6 +81,14 @@ class ThreadsController < ApplicationController
   end
 
   private
+
+  def selected_topic_ids
+    Array(params[:topic_ids]).reject(&:blank?).map(&:to_i)
+  end
+
+  def current_page
+    [ params[:page].to_i, 1 ].max
+  end
 
   def set_topic
     @topic = Topic.find(params[:topic_id])

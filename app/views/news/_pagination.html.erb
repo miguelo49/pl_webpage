@@ -1,21 +1,5 @@
-<% if total_pages > 1 %>
-  <nav class="flex items-center justify-between gap-3 pt-2" aria-label="Paginación">
-    <% if page > 1 %>
-      <%= link_to "← Anterior",
-            news_index_path(page: page - 1, category: selected_category),
-            class: secondary_button_class + " px-3 py-2 text-sm" %>
-    <% else %>
-      <span class="rounded-lg border border-transparent px-3 py-2 text-sm text-gray-400" aria-hidden="true">← Anterior</span>
-    <% end %>
-
-    <span class="text-xs text-gray-600">Página <%= page %> de <%= total_pages %></span>
-
-    <% if page < total_pages %>
-      <%= link_to "Siguiente →",
-            news_index_path(page: page + 1, category: selected_category),
-            class: secondary_button_class + " px-3 py-2 text-sm" %>
-    <% else %>
-      <span class="rounded-lg border border-transparent px-3 py-2 text-sm text-gray-400" aria-hidden="true">Siguiente →</span>
-    <% end %>
-  </nav>
-<% end %>
+<%= render "shared/pagination",
+      page: page,
+      total_pages: total_pages,
+      path: :news_index_path,
+      extra_params: { category: selected_category } %>

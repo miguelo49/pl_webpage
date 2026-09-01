@@ -53,7 +53,7 @@ RSpec.describe "Community threads and comments", type: :request do
       expect(response.body).not_to include("Hilo pendiente")
     end
 
-    it "filters threads by topic" do
+    it "filters threads by a single topic" do
       other_topic = Topic.create!(name: "Debate", slug: "debate", description: "Discusión", position: 2)
       viewer = create_user(role: :sympathizer)
       author = create_user(role: :sympathizer)
@@ -61,11 +61,51 @@ RSpec.describe "Community threads and comments", type: :request do
       debate_thread = create_thread(author: author, title: "Hilo de debate", status: :approved, topic_for: other_topic)
 
       sign_in viewer
-      get threads_path(topic_id: topic.id)
+      get threads_path(topic_ids: [ topic.id ])
 
       expect(response).to have_http_status(:ok)
       expect(response.body).to include(ideas_thread.title)
       expect(response.body).not_to include(debate_thread.title)
+    end
+
+    it "filters threads by multiple topics" do
+      other_topic = Topic.create!(name: "Debate", slug: "debate", description: "Discusión", position: 2)
+      third_topic = Topic.create!(name: "Avisos", slug: "avisos", description: "Avisos", position: 3)
+      viewer = create_user(role: :sympathizer)
+      author = create_user(role: :sympathizer)
+      ideas_thread = create_thread(author: author, title: "Hilo de ideas", status: :approved, topic_for: topic)
+      debate_thread = create_thread(author: author, title: "Hilo de debate", status: :approved, topic_for: other_topic)
+      avisos_thread = create_thread(author: author, title: "Hilo de avisos", status: :approved, topic_for: third_topic)
+
+      sign_in viewer
+      get threads_path(topic_ids: [ topic.id, other_topic.id ])
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(ideas_thread.title)
+      expect(response.body).to include(debate_thread.title)
+      expect(response.body).not_to include(avisos_thread.title)
+    end
+
+    it "paginates threads" do
+      viewer = create_user(role: :sympathizer)
+      author = create_user(role: :sympathizer)
+      11.times do |i|
+        create_thread(author: author, title: "Hilo paginado #{i}", status: :approved)
+      end
+
+      sign_in viewer
+      get threads_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Hilo paginado 10")
+      expect(response.body).not_to include("Hilo paginado 0")
+      expect(response.body).to include("Página 1 de 2")
+
+      get threads_path(page: 2)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Hilo paginado 0")
+      expect(response.body).not_to include("Hilo paginado 10")
     end
   end
 

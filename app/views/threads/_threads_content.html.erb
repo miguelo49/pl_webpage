@@ -1,0 +1,39 @@
+<%= turbo_frame_tag "threads_content" do %>
+  <div data-controller="page-enter" class="animate-fade-in-up space-y-4">
+    <div id="threads_list" class="space-y-2">
+      <% if @threads.any? %>
+        <% @threads.each do |thread| %>
+          <%= render "threads/thread_card", thread: thread %>
+        <% end %>
+      <% else %>
+        <div class="rounded-lg border border-dashed border-gray-300 bg-white p-8 text-center">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6" aria-hidden="true">
+              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-4 12H8v-2h8v2zm0-4H8V8h8v2z" />
+            </svg>
+          </div>
+          <% if @selected_topic_ids.any? %>
+            <p class="mt-4 text-sm font-medium text-gray-900">No hay hilos con esos filtros</p>
+            <p class="mt-1 text-sm text-gray-500">Prueba seleccionando otros tópicos.</p>
+          <% else %>
+            <p class="mt-4 text-sm font-medium text-gray-900">Todavía no hay hilos en el foro</p>
+            <p class="mt-1 text-sm text-gray-500">Sé el primero en abrir una conversación.</p>
+            <% if @topics.one? %>
+              <%= link_to "Crear el primer hilo",
+                    new_topic_thread_path(@topics.first),
+                    class: "#{primary_button_class(full_width: false)} mt-4",
+                    data: { turbo_frame: "new_thread" } %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <%= render "shared/pagination",
+          page: @page,
+          total_pages: @total_pages,
+          path: :threads_path,
+          extra_params: { topic_ids: @selected_topic_ids },
+          turbo_frame: "threads_content" %>
+  </div>
+<% end %>
