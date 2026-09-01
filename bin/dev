@@ -5,6 +5,59 @@ if ! gem list foreman -i --silent; then
   gem install foreman
 fi
 
+if ! command -v docker >/dev/null 2>&1; then
+  echo "Error: Docker is not installed or not in PATH."
+  echo "Install Docker and enable the daemon: sudo systemctl enable --now docker"
+  exit 1
+fi
+
+if ! docker compose version >/dev/null 2>&1; then
+  echo "Error: docker compose is not available."
+  exit 1
+fi
+
+compose_up() {
+  docker compose up -d db
+}
+
+if ! compose_up 2>/dev/null; then
+  echo "docker compose failed (permission denied?). Retrying with sudo..."
+  if ! sudo docker compose up -d db; then
+    echo "Error: could not start PostgreSQL via Docker Compose."
+    echo "Try: sudo usermod -aG docker \"\$USER\" && newgrp docker"
+    exit 1
+  fi
+  DOCKER="sudo docker"
+else
+  DOCKER="docker"
+fi
+
+PGHOST="${PGHOST:-127.0.0.1}"
+PGPORT="${PGPORT:-5432}"
+PGUSER="${PGUSER:-postgres}"
+
+echo "Waiting for PostgreSQL at ${PGHOST}:${PGPORT}..."
+ready=0
+i=0
+while [ "$i" -lt 30 ]; do
+  if $DOCKER compose exec -T db pg_isready -U "$PGUSER" >/dev/null 2>&1; then
+    ready=1
+    break
+  fi
+  i=$((i + 1))
+  sleep 1
+done
+
+if [ "$ready" -ne 1 ]; then
+  echo "Error: PostgreSQL did not become ready within 30 seconds."
+  echo "Check logs: docker compose logs db"
+  exit 1
+fi
+
+if ! $DOCKER compose exec -T db psql -U "$PGUSER" -lqt 2>/dev/null | cut -d \| -f 1 | grep -qw pl_webpage_development; then
+  echo "Note: database pl_webpage_development not found. Run: bin/setup"
+fi
+
 # Default to port 3000 if not specified
 export PORT="${PORT:-3000}"
 

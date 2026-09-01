@@ -23,6 +23,11 @@ FileUtils.chdir APP_ROOT do
   # end
 
   puts "\n== Preparing database =="
+  unless system("docker compose up -d db")
+    puts "Warning: could not start PostgreSQL via docker compose."
+    puts "Ensure Docker is running, then: docker compose up -d db"
+  end
+
   system! "bin/rails db:prepare"
 
   puts "\n== Removing old logs and tempfiles =="
