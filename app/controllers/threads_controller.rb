@@ -4,15 +4,18 @@ class ThreadsController < ApplicationController
 
   before_action :authenticate_user!
   before_action :set_topic, except: [ :index ]
+  before_action :reject_news_topic_threads, only: [ :new, :create ]
   before_action :set_thread, only: [ :show, :edit, :update, :react, :bookmark ]
 
   PER_PAGE = 10
 
   def index
     authorize ForumThread, :index?
-    @topics = Topic.ordered
+    @topics = Topic.for_forum.ordered
     @selected_topic_ids = selected_topic_ids
     @threads = policy_scope(ForumThread)
+      .left_joins(:news)
+      .where(news: { id: nil })
       .includes(:user, :topic, :reactions, :comments)
       .left_joins(:comments)
       .group("threads.id")
@@ -83,7 +86,8 @@ class ThreadsController < ApplicationController
   private
 
   def selected_topic_ids
-    Array(params[:topic_ids]).reject(&:blank?).map(&:to_i)
+    forum_topic_ids = Topic.for_forum.pluck(:id)
+    Array(params[:topic_ids]).reject(&:blank?).map(&:to_i) & forum_topic_ids
   end
 
   def current_page
@@ -95,7 +99,7 @@ class ThreadsController < ApplicationController
   end
 
   def set_thread
-    @thread = @topic.threads.includes(:reactions, :bookmarks).find(params[:id])
+    @thread = @topic.threads.includes(:reactions, :bookmarks, :news).find(params[:id])
   end
 
   def thread_params
@@ -118,5 +122,11 @@ class ThreadsController < ApplicationController
     else
       redirect_to topic_thread_path(@topic, @thread), notice: "Hilo publicado correctamente."
     end
+  end
+
+  def reject_news_topic_threads
+    return unless @topic.news_topic?
+
+    redirect_to threads_path, alert: "Las noticias se publican desde la sección Noticias.", status: :see_other
   end
 end

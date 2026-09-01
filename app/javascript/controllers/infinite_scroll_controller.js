@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import * as Turbo from "@hotwired/turbo"
+import { Turbo } from "@hotwired/turbo-rails"
 
 export default class extends Controller {
   static targets = ["sentinel"]
@@ -19,11 +19,18 @@ export default class extends Controller {
       { rootMargin: "200px" }
     )
 
-    this.observer.observe(this.sentinelTarget)
+    this.observeSentinel()
   }
 
   disconnect() {
     this.observer?.disconnect()
+  }
+
+  observeSentinel() {
+    if (!this.observer || !this.hasSentinelTarget) return
+
+    this.observer.disconnect()
+    this.observer.observe(this.sentinelTarget)
   }
 
   async handleIntersection(entries) {
@@ -34,6 +41,8 @@ export default class extends Controller {
   }
 
   async loadNextPage() {
+    if (this.loadingValue || !this.hasMoreValue) return
+
     this.loadingValue = true
     const nextPage = this.pageValue + 1
     const url = new URL(this.urlValue, window.location.origin)
@@ -68,9 +77,24 @@ export default class extends Controller {
 
       if (!this.hasSentinelTarget) {
         this.hasMoreValue = false
+      } else {
+        this.observeSentinel()
       }
     } finally {
       this.loadingValue = false
+
+      if (this.hasMoreValue && this.hasSentinelTarget) {
+        this.loadIfSentinelVisible()
+      }
+    }
+  }
+
+  loadIfSentinelVisible() {
+    const rect = this.sentinelTarget.getBoundingClientRect()
+    const visible = rect.top <= window.innerHeight + 200
+
+    if (visible) {
+      this.loadNextPage()
     }
   }
 

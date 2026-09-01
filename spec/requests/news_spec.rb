@@ -189,4 +189,121 @@ RSpec.describe "News", type: :request do
       expect(response.body).to include("Comentario desde la noticia")
     end
   end
+
+  describe "PATCH /news/:id" do
+    it "allows a board member to update news and sync the discussion thread" do
+      author = create_user(role: :board_member)
+      news_item = create_news_item(author: author, title: "Título original")
+
+      sign_in author
+      patch news_path(news_item), params: {
+        news: {
+          title: "Título actualizado",
+          summary: "Resumen actualizado",
+          body: "Contenido actualizado",
+          category: "party"
+        }
+      }
+
+      expect(response).to redirect_to(news_path(news_item))
+      news_item.reload
+      expect(news_item.title).to eq("Título actualizado")
+      expect(news_item.thread.title).to eq("Título actualizado")
+      expect(news_item.thread.body).to include("Resumen actualizado")
+    end
+
+    it "denies a militant from updating news" do
+      author = create_user(role: :board_member)
+      militant = create_user(role: :militant)
+      news_item = create_news_item(author: author)
+
+      sign_in militant
+      patch news_path(news_item), params: {
+        news: { title: "Intento de edición", summary: "X", body: "Y", category: "party" }
+      }
+
+      expect(response).to redirect_to(root_path)
+      expect(news_item.reload.title).to eq("Noticia de prueba")
+    end
+
+    it "allows a board member to remove the featured image" do
+      author = create_user(role: :board_member)
+      news_item = create_news_item(author: author)
+      news_item.featured_image.attach(
+        io: File.open(Rails.root.join("spec/fixtures/files/avatar.png")),
+        filename: "avatar.png",
+        content_type: "image/png"
+      )
+
+      sign_in author
+      patch news_path(news_item), params: {
+        news: {
+          title: news_item.title,
+          summary: news_item.summary,
+          body: news_item.body,
+          category: "party",
+          remove_featured_image: "1"
+        }
+      }
+
+      expect(response).to redirect_to(news_path(news_item))
+      expect(news_item.reload.featured_image).not_to be_attached
+    end
+  end
+
+  describe "DELETE /news/:id" do
+    it "allows a board member to destroy news and its discussion thread" do
+      author = create_user(role: :board_member)
+      news_item = create_news_item(author: author)
+      thread = news_item.thread
+
+      sign_in author
+
+      expect {
+        delete news_path(news_item)
+      }.to change(News, :count).by(-1).and change(ForumThread, :count).by(-1)
+
+      expect(response).to redirect_to(news_index_path)
+      expect { thread.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "denies a militant from destroying news" do
+      author = create_user(role: :board_member)
+      militant = create_user(role: :militant)
+      news_item = create_news_item(author: author)
+
+      sign_in militant
+
+      expect {
+        delete news_path(news_item)
+      }.not_to change(News, :count)
+
+      expect(response).to redirect_to(root_path)
+    end
+  end
+
+  describe "GET /news/:id/edit" do
+    it "allows a board member to access the edit form" do
+      author = create_user(role: :board_member)
+      news_item = create_news_item(author: author)
+
+      sign_in author
+      get edit_news_path(news_item)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Editar noticia")
+      expect(response.body).to include("Guardar cambios")
+    end
+
+    it "denies a militant access to the edit form" do
+      author = create_user(role: :board_member)
+      militant = create_user(role: :militant)
+      news_item = create_news_item(author: author)
+
+      sign_in militant
+      get edit_news_path(news_item)
+
+      expect(response).to redirect_to(root_path)
+    end
+  end
 end

@@ -6,8 +6,17 @@ class Topic < ApplicationRecord
   validates :position, presence: true, numericality: { only_integer: true }
 
   scope :ordered, -> { order(:position, :name) }
+  scope :for_forum, -> { where.not(slug: NEWS_SLUG) }
 
   has_many :threads, class_name: "ForumThread", dependent: :restrict_with_error
+
+  def news_topic?
+    slug == NEWS_SLUG
+  end
+
+  def system_topic?
+    news_topic?
+  end
 
   def self.news_topic
     find_or_create_by!(slug: NEWS_SLUG) do |topic|

@@ -7,7 +7,10 @@
 
   <div class="p-4">
     <div class="flex items-center justify-between gap-2 <%= card_meta_class %>">
-      <span class="<%= category_chip_class %>"><%= news_category_label(news_item.category) %></span>
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="<%= news_chip_class(size: :sm) %>">Noticia</span>
+        <span class="<%= category_chip_class(size: :sm) %>"><%= news_category_label(news_item.category) %></span>
+      </div>
       <time datetime="<%= (news_item.published_at || news_item.created_at).iso8601 %>">
         <%= (news_item.published_at || news_item.created_at).to_fs(:short) %>
       </time>

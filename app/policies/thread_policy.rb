@@ -2,7 +2,10 @@
 
 class ThreadPolicy < ApplicationPolicy
   def create?
-    authenticated?
+    return false unless authenticated?
+    return false if record.topic&.news_topic?
+
+    true
   end
 
   def update?

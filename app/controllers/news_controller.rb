@@ -2,7 +2,7 @@ class NewsController < ApplicationController
   include ReactionHandling
 
   before_action :authenticate_user!
-  before_action :set_news_item, only: [ :show, :react ]
+  before_action :set_news_item, only: [ :show, :edit, :update, :destroy, :react ]
 
   PER_PAGE = 10
 
@@ -46,6 +46,30 @@ class NewsController < ApplicationController
     end
   end
 
+  def edit
+    authorize @news_item
+  end
+
+  def update
+    authorize @news_item
+
+    remove_image = remove_featured_image?
+
+    if @news_item.update(news_params.except(:remove_featured_image))
+      @news_item.featured_image.purge if remove_image
+      redirect_to news_path(@news_item), notice: "Noticia actualizada correctamente."
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    authorize @news_item
+    @news_item.destroy!
+
+    redirect_to news_index_path, notice: "Noticia eliminada correctamente."
+  end
+
   private
 
   def set_news_item
@@ -73,7 +97,11 @@ class NewsController < ApplicationController
   end
 
   def news_params
-    params.require(:news).permit(:title, :summary, :body, :category, :published_at, :featured_image)
+    params.require(:news).permit(:title, :summary, :body, :category, :published_at, :featured_image, :remove_featured_image)
+  end
+
+  def remove_featured_image?
+    ActiveModel::Type::Boolean.new.cast(news_params[:remove_featured_image])
   end
 
   def filter_by_category(scope)

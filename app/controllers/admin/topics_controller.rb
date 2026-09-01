@@ -4,7 +4,7 @@ module Admin
 
     def index
       authorize :admin, :index?
-      @topics = Topic.ordered
+      @topics = Topic.for_forum.ordered
     end
 
     def new

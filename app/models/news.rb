@@ -5,6 +5,8 @@ class News < ApplicationRecord
   belongs_to :thread, class_name: "ForumThread", optional: true, inverse_of: :news
 
   after_create :create_discussion_thread!
+  after_update :sync_discussion_thread!
+  before_destroy :destroy_discussion_thread!
 
   enum :category, {
     party: 0,
@@ -77,5 +79,15 @@ class News < ApplicationRecord
 
   def discussion_thread_body
     [ summary, "", "Comenta esta noticia abajo." ].join("\n")
+  end
+
+  def sync_discussion_thread!
+    return unless thread
+
+    thread.update!(title: title, body: discussion_thread_body)
+  end
+
+  def destroy_discussion_thread!
+    thread&.destroy
   end
 end

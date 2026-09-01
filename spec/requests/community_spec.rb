@@ -107,6 +107,26 @@ RSpec.describe "Community threads and comments", type: :request do
       expect(response.body).to include("Hilo paginado 0")
       expect(response.body).not_to include("Hilo paginado 10")
     end
+
+    it "does not list news discussion threads in the forum" do
+      author = create_user(role: :board_member)
+      viewer = create_user(role: :sympathizer)
+      news_item = News.create!(
+        title: "Noticia con hilo interno",
+        summary: "Resumen",
+        body: "Contenido",
+        category: :party,
+        user: author,
+        published_at: Time.current
+      )
+
+      sign_in viewer
+      get threads_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).not_to include(news_item.thread.title)
+      expect(response.body).not_to include("data-topic-id=\"#{news_item.thread.topic_id}\"")
+    end
   end
 
   describe "POST /topics/:topic_id/threads" do
@@ -123,6 +143,23 @@ RSpec.describe "Community threads and comments", type: :request do
       thread = ForumThread.last
       expect(thread.status).to eq("approved")
       expect(response).to redirect_to(topic_thread_path(topic, thread))
+    end
+
+    it "rejects thread creation in the internal Noticias topic" do
+      news_topic = Topic.news_topic
+      militant = create_user(role: :militant)
+
+      sign_in militant
+
+      expect {
+        post topic_threads_path(news_topic), params: {
+          forum_thread: { title: "Intento de noticia", body: "Contenido" }
+        }
+      }.not_to change(ForumThread, :count)
+
+      expect(response).to redirect_to(threads_path)
+      follow_redirect!
+      expect(response.body).to include("Las noticias se publican desde la sección Noticias.")
     end
   end
 

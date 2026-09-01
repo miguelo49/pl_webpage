@@ -1,7 +1,8 @@
 module NavigationHelper
   BOTTOM_NAV_ITEMS = [
     { key: :home, label: "Inicio", path_helper: :root_path, controllers: %w[home] },
-    { key: :community, label: "Foro", path_helper: :threads_path, controllers: %w[topics threads comments news initiatives law_proposals] },
+    { key: :news, label: "Noticias", path_helper: :news_index_path, controllers: %w[news] },
+    { key: :community, label: "Foro", path_helper: :threads_path, controllers: %w[topics threads comments initiatives law_proposals] },
     { key: :events, label: "Eventos", path_helper: :events_path, controllers: %w[events attendances] },
     { key: :training, label: "Formación", path_helper: :training_materials_path, controllers: %w[training_materials] },
     { key: :profile, label: "Perfil", path_helper: :profile_path, controllers: %w[profiles], signed_in_only: true, signed_out_path_helper: :new_user_session_path }
@@ -252,6 +253,8 @@ module NavigationHelper
     case key
     when :home
       nav_svg("M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z")
+    when :news
+      nav_svg("M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z")
     when :community
       nav_svg("M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z")
     when :events

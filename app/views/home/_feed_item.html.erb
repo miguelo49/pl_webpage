@@ -1,5 +1,5 @@
 <div id="feed_item_<%= entry.record_type.downcase %>_<%= entry.record_id %>" class="space-y-2">
-  <span class="<%= category_chip_class(size: :sm) %>">
+  <span class="<%= entry.record_type == "News" ? news_chip_class(size: :sm) : category_chip_class(size: :sm) %>">
     <%= entry.record_type == "News" ? "Noticia" : "Evento" %>
   </span>
 

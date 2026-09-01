@@ -50,4 +50,32 @@ RSpec.describe NewsPolicy, type: :policy do
       it { expect(policy.create?).to be true }
     end
   end
+
+  describe "#update?" do
+    context "when user is a militant" do
+      let(:user) { build_user(:militant) }
+
+      it { expect(policy.update?).to be false }
+    end
+
+    context "when user is a board member" do
+      let(:user) { build_user(:board_member) }
+
+      it { expect(policy.update?).to be true }
+    end
+  end
+
+  describe "#destroy?" do
+    context "when user is a militant" do
+      let(:user) { build_user(:militant) }
+
+      it { expect(policy.destroy?).to be false }
+    end
+
+    context "when user is a board member" do
+      let(:user) { build_user(:board_member) }
+
+      it { expect(policy.destroy?).to be true }
+    end
+  end
 end

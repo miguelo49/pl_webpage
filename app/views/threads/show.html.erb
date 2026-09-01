@@ -1,6 +1,14 @@
 <div class="space-y-6">
   <div>
-    <%= link_to "← Foro", threads_path, class: text_link_class %>
+    <% if @thread.news.present? %>
+      <%= link_to "← Ver noticia", news_path(@thread.news), class: text_link_class %>
+      <div class="mt-2 flex flex-wrap items-center gap-2">
+        <span class="<%= news_chip_class(size: :sm) %>">Noticia</span>
+      </div>
+    <% else %>
+      <%= link_to "← Foro", threads_path, class: text_link_class %>
+    <% end %>
+
     <%= render "shared/page_heading",
           title: @thread.title,
           heading_class: "mt-2" %>
@@ -24,7 +32,7 @@
         <%= render "bookmarks/button",
               bookmarkable: @thread,
               bookmark_path: bookmark_path_for(@thread, topic: @topic) %>
-        <% if policy(@thread).update? %>
+        <% if policy(@thread).update? && @thread.news.blank? %>
           <%= link_to "Editar", edit_topic_thread_path(@topic, @thread), class: discussion_action_class %>
         <% end %>
       </div>
