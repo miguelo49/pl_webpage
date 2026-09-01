@@ -11,7 +11,7 @@ class InitiativesController < ApplicationController
     @selected_commune_id = params[:commune_id]
     @selected_category = params[:category].presence
     @selected_status = selected_status_param
-    @communes = Commune.where(id: Initiative.select(:commune_id)).order(:name)
+    @communes = Commune.in_territory
     @categories = Initiative.distinct.order(:category).pluck(:category)
     @initiatives = filtered_initiatives
   end

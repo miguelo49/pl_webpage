@@ -8,7 +8,7 @@ class LawProposalsController < ApplicationController
     @selected_commune_id = params[:commune_id]
     @selected_category = params[:category].presence
     @selected_status = selected_status_param
-    @communes = Commune.where(id: LawProposal.select(:commune_id)).order(:name)
+    @communes = Commune.in_territory
     @categories = LawProposal.distinct.order(:category).pluck(:category)
     @law_proposals = filtered_law_proposals
   end

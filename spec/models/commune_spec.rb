@@ -11,6 +11,19 @@ RSpec.describe Commune, type: :model do
     end
   end
 
+  describe "scopes" do
+    let(:region) { Region.create!(name: "Región de Valparaíso") }
+    let(:other_region) { Region.create!(name: "Región Metropolitana") }
+
+    it "returns communes from the territory region ordered by name" do
+      valparaiso = Commune.create!(name: "Valparaíso", region: region)
+      vina = Commune.create!(name: "Viña del Mar", region: region)
+      Commune.create!(name: "Santiago", region: other_region)
+
+      expect(Commune.in_territory).to eq([ valparaiso, vina ])
+    end
+  end
+
   describe "validations" do
     let(:region) { Region.create!(name: "Región de Valparaíso") }
 

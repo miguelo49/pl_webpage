@@ -7,9 +7,7 @@ class EventsController < ApplicationController
 
     @selected_commune_id = params[:commune_id]
     @selected_event_type = selected_event_type_param
-    @communes = Commune
-      .where(id: Event.upcoming.select(:commune_id))
-      .order(:name)
+    @communes = Commune.in_territory
     @events = filtered_events
     @events_by_date = @events.group_by { |event| event.start_at.to_date }
   end
