@@ -1,1 +1,33 @@
-<%# Página de inicio vacía — el layout base define la estructura mobile-first. %>
+<div class="space-y-6">
+  <%= render "shared/page_heading",
+        title: "Inicio",
+        liberal: true,
+        subtitle: "Noticias y eventos del partido, ordenados por fecha de publicación." %>
+
+  <% if @feed.items.any? %>
+    <div
+      id="home_feed"
+      data-controller="infinite-scroll"
+      data-infinite-scroll-url-value="<%= root_path %>"
+      data-infinite-scroll-page-value="<%= @feed.page %>"
+      data-infinite-scroll-has-more-value="<%= @feed.has_more? %>">
+      <div id="home_feed_list" class="space-y-4">
+        <%= render partial: "feed_item", collection: @feed.items, as: :entry %>
+      </div>
+
+      <% if @feed.has_more? %>
+        <div
+          id="home_feed_sentinel"
+          data-infinite-scroll-target="sentinel"
+          class="flex items-center justify-center py-6"
+          aria-hidden="true">
+          <span class="text-sm text-gray-400">Cargando más...</span>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="rounded-lg border border-dashed border-gray-300 bg-white p-6 text-center text-sm text-gray-500">
+      Todavía no hay noticias ni eventos publicados.
+    </p>
+  <% end %>
+</div>

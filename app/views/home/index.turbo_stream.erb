@@ -1,0 +1,17 @@
+<%= turbo_stream.append "home_feed_list" do %>
+  <%= render partial: "feed_item", collection: @feed.items, as: :entry %>
+<% end %>
+
+<% if @feed.has_more? %>
+  <%= turbo_stream.replace "home_feed_sentinel" do %>
+    <div
+      id="home_feed_sentinel"
+      data-infinite-scroll-target="sentinel"
+      class="flex items-center justify-center py-6"
+      aria-hidden="true">
+      <span class="text-sm text-gray-400">Cargando más...</span>
+    </div>
+  <% end %>
+<% else %>
+  <%= turbo_stream.remove "home_feed_sentinel" %>
+<% end %>

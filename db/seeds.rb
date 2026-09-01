@@ -143,6 +143,54 @@ def seed_approved_thread(topic:, user:, title:, body:)
   thread
 end
 
+def seed_news(title:, summary:, body:, category:, user:, published_at:, status: :approved)
+  news = News.find_or_create_by!(title: title) do |record|
+    record.summary = summary
+    record.body = body
+    record.category = category
+    record.user = user
+    record.published_at = published_at
+    record.status = status
+  end
+
+  news.update!(
+    summary: summary,
+    body: body,
+    category: category,
+    user: user,
+    published_at: published_at,
+    status: status
+  )
+  news.update_columns(created_at: published_at, updated_at: published_at) if published_at.present?
+  news
+end
+
+def seed_event(title:, description:, event_type:, start_at:, end_at:, location:, commune:, organizer:, capacity:, posted_at:)
+  event = Event.find_or_create_by!(title: title) do |record|
+    record.description = description
+    record.event_type = event_type
+    record.start_at = start_at
+    record.end_at = end_at
+    record.location = location
+    record.commune = commune
+    record.organizer = organizer
+    record.capacity = capacity
+  end
+
+  event.update!(
+    description: description,
+    event_type: event_type,
+    start_at: start_at,
+    end_at: end_at,
+    location: location,
+    commune: commune,
+    organizer: organizer,
+    capacity: capacity
+  )
+  event.update_columns(created_at: posted_at, updated_at: posted_at)
+  event
+end
+
 puts "Seeding territories..."
 
 region = Region.find_or_create_by!(name: "Región de Valparaíso")
@@ -235,6 +283,7 @@ featured_news.update!(
   published_at: 2.days.ago,
   status: :approved
 )
+featured_news.update_columns(created_at: 2.days.ago, updated_at: 2.days.ago)
 
 party_news = News.find_or_create_by!(title: "Declaración sobre elecciones municipales") do |record|
   record.summary = "Posicionamiento oficial del partido frente al proceso comunal."
@@ -245,6 +294,7 @@ party_news = News.find_or_create_by!(title: "Declaración sobre elecciones munic
   record.status = :approved
 end
 party_news.update!(status: :approved, user: board_member, published_at: 5.days.ago)
+party_news.update_columns(created_at: 5.days.ago, updated_at: 5.days.ago)
 
 pending_news = News.find_or_create_by!(title: "Borrador: balance de gestión comunal") do |record|
   record.summary = "Documento en revisión antes de su publicación."
@@ -268,21 +318,163 @@ end
 
 Reaction.find_or_create_by!(user: sympathizer, reactable: featured_news)
 
+ADDITIONAL_NEWS = [
+  {
+    title: "Análisis: panorama legislativo del segundo semestre",
+    summary: "Balance de los proyectos en tramitación y prioridades del partido.",
+    body: "La directiva nacional revisó el calendario legislativo y definió ejes de seguimiento para comisiones clave.",
+    category: :analysis,
+    published_at: 1.day.ago
+  },
+  {
+    title: "Declaración sobre reforma previsional",
+    summary: "Posición del partido frente al debate en el Congreso.",
+    body: "Reafirmamos la necesidad de un sistema más solidario, con mayor transparencia y participación ciudadana.",
+    category: :statement,
+    published_at: 3.days.ago
+  },
+  {
+    title: "Campaña de afiliación en comunas del litoral",
+    summary: "Jornadas de puerta a puerta en Valparaíso y Viña del Mar.",
+    body: "Durante dos semanas, equipos territoriales recorrerán barrios para conversar con vecinos y difundir propuestas.",
+    category: :activity,
+    published_at: 4.days.ago
+  },
+  {
+    title: "Propuesta nacional de modernización del Estado",
+    summary: "Documento base para el debate interno del partido.",
+    body: "El texto propone simplificar trámites, fortalecer la digitalización y mejorar la rendición de cuentas.",
+    category: :national,
+    published_at: 6.days.ago
+  },
+  {
+    title: "Informe territorial: avances en Quilpué",
+    summary: "Resumen de actividades y contactos con organizaciones locales.",
+    body: "El equipo de Quilpué reportó reuniones con juntas de vecinos y avances en la agenda de seguridad barrial.",
+    category: :regional,
+    published_at: 7.days.ago
+  },
+  {
+    title: "Proyecto de ley sobre transparencia municipal",
+    summary: "Iniciativa impulsada por la bancada liberal.",
+    body: "La propuesta exige publicar contratos y audiencias públicas obligatorias para obras mayores.",
+    category: :legislative,
+    published_at: 8.days.ago
+  },
+  {
+    title: "Comunicado: elecciones internas de directivas",
+    summary: "Calendario y reglas para el proceso de renovación.",
+    body: "Las elecciones se realizarán en asambleas territoriales durante el mes de octubre.",
+    category: :party,
+    published_at: 9.days.ago
+  },
+  {
+    title: "Encuentro con emprendedores locales",
+    summary: "Actividad de vinculación con el sector productivo regional.",
+    body: "Participaron más de 40 emprendedores en un diálogo sobre simplificación regulatoria y acceso a financiamiento.",
+    category: :activity,
+    published_at: 10.days.ago
+  },
+  {
+    title: "Opinión: descentralización y autonomía regional",
+    summary: "Columna de la directiva regional publicada en medios locales.",
+    body: "Argumentamos que más competencias para gobiernos regionales permiten respuestas más ágiles a problemas territoriales.",
+    category: :analysis,
+    published_at: 12.days.ago
+  },
+  {
+    title: "Nota de prensa: apoyo a proyecto de vivienda social",
+    summary: "El partido respalda iniciativa para ampliar subsidios.",
+    body: "La propuesta busca reducir listas de espera y priorizar familias en situación de vulnerabilidad habitacional.",
+    category: :national,
+    published_at: 14.days.ago
+  },
+  {
+    title: "Jornada de formación para nuevos militantes",
+    summary: "Programa introductorio sobre historia y principios liberales.",
+    body: "La escuela de formación abrirá inscripciones para módulos presenciales y online durante septiembre.",
+    category: :party,
+    published_at: 16.days.ago
+  },
+  {
+    title: "Balance de gestión: primer semestre regional",
+    summary: "Informe de actividades y metas cumplidas en la región.",
+    body: "Se destacan las mesas de trabajo por comuna, la participación en concejos comunales y la campaña de afiliación.",
+    category: :regional,
+    published_at: 18.days.ago
+  },
+  {
+    title: "Mesa redonda: seguridad ciudadana en barrios",
+    summary: "Diálogo con vecinos y autoridades locales en Valparaíso.",
+    body: "Participaron concejales y representantes de juntas de vecinos para abordar iluminación, patrullaje y prevención.",
+    category: :activity,
+    published_at: 20.days.ago
+  },
+  {
+    title: "Carta abierta a candidatos independientes",
+    summary: "Invitación a construir acuerdos programáticos locales.",
+    body: "El partido ofrece dialogar con candidaturas que compartan valores de libertad, transparencia y participación.",
+    category: :statement,
+    published_at: 22.days.ago
+  },
+  {
+    title: "Seminario: financiamiento de campañas locales",
+    summary: "Capacitación para tesoreros de comunas.",
+    body: "Se revisaron normas del SERVEL, plazos de rendición y buenas prácticas de control interno.",
+    category: :legislative,
+    published_at: 24.days.ago
+  },
+  {
+    title: "Alianza con fundación educativa regional",
+    summary: "Convenio para talleres de ciudadanía en liceos.",
+    body: "El acuerdo permitirá llegar a estudiantes de cuarto medio en diez establecimientos de la región.",
+    category: :regional,
+    published_at: 26.days.ago
+  },
+  {
+    title: "Informe: participación en elecciones primarias",
+    summary: "Cifras de votación y lecciones para el proceso interno.",
+    body: "La directiva analizó la participación por comuna y propuso ajustes al calendario de difusión.",
+    category: :party,
+    published_at: 28.days.ago
+  }
+].freeze
+
+ADDITIONAL_NEWS.each do |attrs|
+  seed_news(
+    title: attrs[:title],
+    summary: attrs[:summary],
+    body: attrs[:body],
+    category: attrs[:category],
+    user: board_member,
+    published_at: attrs[:published_at]
+  )
+end
+
+commented_news = News.find_by!(title: "Declaración sobre reforma previsional")
+if commented_news.thread.present?
+  Comment.find_or_create_by!(
+    commentable: commented_news.thread,
+    user: sympathizer,
+    body: "Me parece una posición equilibrada, gracias por compartirla."
+  ) do |comment|
+    comment.status = :approved
+  end.update_column(:status, Comment.statuses[:approved])
+end
+
+Reaction.find_or_create_by!(user: militant, reactable: commented_news)
+
 puts "  #{News.count} news items"
 
 puts "Seeding events and attendances..."
 
-assembly_event = Event.find_or_create_by!(title: DEMO_EVENT_TITLE) do |record|
-  record.description = "Encuentro abierto para coordinar prioridades territoriales y definir próximas actividades."
-  record.event_type = :assembly
-  record.start_at = 10.days.from_now.change(hour: 18, min: 30)
-  record.end_at = 10.days.from_now.change(hour: 20, min: 30)
-  record.location = "Centro comunitario Valparaíso"
-  record.commune = valparaiso
-  record.organizer = board_member
-  record.capacity = 40
-end
-assembly_event.update!(
+Event.where(title: "Charla: participación digital en campañas").destroy_all
+
+september_talk_start = Time.zone.local(Time.current.year, 9, 5, 19, 0)
+september_talk_end = Time.zone.local(Time.current.year, 9, 5, 21, 0)
+
+assembly_event = seed_event(
+  title: DEMO_EVENT_TITLE,
   description: "Encuentro abierto para coordinar prioridades territoriales y definir próximas actividades.",
   event_type: :assembly,
   start_at: 10.days.from_now.change(hour: 18, min: 30),
@@ -290,20 +482,74 @@ assembly_event.update!(
   location: "Centro comunitario Valparaíso",
   commune: valparaiso,
   organizer: board_member,
-  capacity: 40
+  capacity: 40,
+  posted_at: 1.day.ago
 )
 
-talk_event = Event.find_or_create_by!(title: "Charla: participación digital en campañas") do |record|
-  record.description = "Taller introductorio sobre herramientas digitales para militantes."
-  record.event_type = :talk
-  record.start_at = 5.days.from_now.change(hour: 19)
-  record.end_at = 5.days.from_now.change(hour: 21)
-  record.location = "Sede Viña del Mar"
-  record.commune = vina
-  record.organizer = board_member
-  record.capacity = 25
-end
-talk_event.update!(organizer: board_member, commune: vina, capacity: 25)
+talk_event = seed_event(
+  title: "Charla: participación ciudadana — 5 de septiembre",
+  description: "Espacio abierto para conversar sobre mecanismos de participación y organización comunitaria.",
+  event_type: :talk,
+  start_at: september_talk_start,
+  end_at: september_talk_end,
+  location: "Sede Viña del Mar",
+  commune: vina,
+  organizer: board_member,
+  capacity: 25,
+  posted_at: 3.hours.ago
+)
+
+seed_event(
+  title: "Curso: herramientas de campaña digital",
+  description: "Taller práctico sobre redes sociales, mensajes y coordinación online.",
+  event_type: :course,
+  start_at: 14.days.from_now.change(hour: 18),
+  end_at: 14.days.from_now.change(hour: 20, min: 30),
+  location: "Sala de capacitación Valparaíso",
+  commune: valparaiso,
+  organizer: board_member,
+  capacity: 30,
+  posted_at: 2.days.ago
+)
+
+seed_event(
+  title: "Actividad local: limpieza de playa en Concón",
+  description: "Convocatoria abierta para militantes y simpatizantes del litoral norte.",
+  event_type: :local_activity,
+  start_at: 7.days.from_now.change(hour: 10),
+  end_at: 7.days.from_now.change(hour: 13),
+  location: "Playa Concón",
+  commune: Commune.find_by!(name: "Concón", region: region),
+  organizer: board_member,
+  capacity: nil,
+  posted_at: 4.days.ago
+)
+
+seed_event(
+  title: "Webinar: marco legal para candidaturas",
+  description: "Sesión online sobre requisitos, plazos y obligaciones de reporte.",
+  event_type: :online,
+  start_at: 20.days.from_now.change(hour: 19),
+  end_at: 20.days.from_now.change(hour: 20, min: 30),
+  location: "Zoom",
+  commune: nil,
+  organizer: board_member,
+  capacity: 100,
+  posted_at: 5.days.ago
+)
+
+seed_event(
+  title: "Encuentro regional de directivas comunales",
+  description: "Coordinación entre equipos de distintas comunas de la región.",
+  event_type: :regional_event,
+  start_at: 25.days.from_now.change(hour: 17),
+  end_at: 25.days.from_now.change(hour: 20),
+  location: "Hotel Seminario Viña del Mar",
+  commune: vina,
+  organizer: board_member,
+  capacity: 60,
+  posted_at: 6.days.ago
+)
 
 Attendance.find_or_create_by!(user: militant, event: assembly_event) do |record|
   record.status = :confirmed

@@ -18,7 +18,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :political_contexts, only: [ :index ]
+  get "political_contexts", to: redirect("/")
 
   resources :events, only: [ :index, :show ] do
     member do

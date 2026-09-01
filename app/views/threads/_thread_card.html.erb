@@ -5,7 +5,9 @@
           react_path: react_path_for(thread, topic: thread.topic, thread: thread) %>
   </div>
 
-  <%= link_to topic_thread_path(thread.topic, thread), class: "min-w-0 flex-1 p-3 #{focus_ring_class}" do %>
+  <%= link_to topic_thread_path(thread.topic, thread),
+        class: "min-w-0 flex-1 p-3 #{focus_ring_class}",
+        data: { turbo_frame: "_top" } do %>
     <div class="flex flex-wrap items-center gap-2 text-xs text-gray-500">
       <span class="<%= category_chip_class(size: :sm) %>"><%= thread.topic.name %></span>
       <span><%= thread.user.first_name %></span>
