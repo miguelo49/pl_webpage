@@ -162,7 +162,10 @@ RSpec.describe "Events", type: :request do
 
       sign_in sympathizer
       get new_event_path
-      expect(response).to have_http_status(:forbidden)
+
+      expect(response).to redirect_to(root_path)
+      follow_redirect!
+      expect(response.body).to include("No tienes permiso para realizar esta acción.")
     end
   end
 

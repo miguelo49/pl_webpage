@@ -10,7 +10,7 @@ class EventPolicy < ApplicationPolicy
 
     return true if record.approved?
 
-    record.organizer_id == user.id || user.moderator? || user.technical_admin?
+    record.organizer == user || user.moderator? || user.technical_admin?
   end
 
   def index?

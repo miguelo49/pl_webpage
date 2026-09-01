@@ -152,7 +152,10 @@ RSpec.describe "Training materials library", type: :request do
 
       sign_in militant
       get new_training_material_path
-      expect(response).to have_http_status(:forbidden)
+
+      expect(response).to redirect_to(root_path)
+      follow_redirect!
+      expect(response.body).to include("No tienes permiso para realizar esta acción.")
     end
   end
 end
