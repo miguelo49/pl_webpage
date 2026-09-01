@@ -98,8 +98,20 @@ module NavigationHelper
     "mb-1 block font-brand text-xs font-medium text-gray-700"
   end
 
+  def form_label_class
+    "mb-1 block font-brand text-sm font-medium text-gray-700"
+  end
+
   def filter_input_class
-    "w-full min-h-11 rounded-lg border border-gray-300 bg-white px-3 py-2 font-brand text-sm text-gray-900 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+    "w-full min-h-11 rounded-lg border border-gray-300 bg-white px-4 py-2.5 font-brand text-sm text-gray-900 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+  end
+
+  def compact_input_class
+    "w-full rounded-md border border-gray-300 bg-white px-3 py-2 font-brand text-sm text-gray-900 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+  end
+
+  def checkbox_class
+    "h-4 w-4 rounded border-gray-300 text-primary focus:ring-2 focus:ring-primary/30"
   end
 
   def primary_button_class(full_width: true)
@@ -173,7 +185,43 @@ module NavigationHelper
   end
 
   def error_alert_class
-    "rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-900"
+    "rounded-lg border border-red-300 bg-red-50 px-4 py-2.5 text-sm text-red-900"
+  end
+
+  def flash_notice_class
+    "rounded-lg border border-green-300 bg-green-50 px-4 py-2.5 text-sm text-green-900"
+  end
+
+  def flash_warning_class
+    "rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-800"
+  end
+
+  def flash_alert_class
+    "rounded-lg border border-red-300 bg-red-50 px-4 py-2.5 text-sm text-red-900"
+  end
+
+  def discussion_post_class
+    "rounded-md border border-gray-200 bg-white font-brand shadow-sm"
+  end
+
+  def discussion_comment_class
+    "rounded-md border border-gray-200 bg-white font-brand"
+  end
+
+  def discussion_reply_class
+    "rounded-md border border-gray-100 bg-gray-50/80 font-brand"
+  end
+
+  def discussion_feed_item_class
+    "flex gap-2 rounded-md border border-gray-200 bg-white font-brand shadow-sm transition hover:border-primary/20 hover:shadow-md"
+  end
+
+  def discussion_action_class
+    "touch-target inline-flex items-center rounded px-2 py-1 font-brand text-xs font-semibold text-gray-500 hover:bg-gray-100 hover:text-primary #{focus_ring_class}"
+  end
+
+  def discussion_section_class
+    "rounded-lg bg-gray-50/50 p-4"
   end
 
   def file_input_class

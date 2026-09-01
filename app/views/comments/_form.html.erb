@@ -1,6 +1,15 @@
+<% compact = local_assigns.fetch(:compact, false) %>
+<% parent = local_assigns[:parent] %>
+
 <%= form_with model: comment,
       url: comment_form_url(initiative: local_assigns[:initiative], topic: local_assigns[:topic], thread: local_assigns[:thread]),
-      html: { data: { turbo_frame: "comments" }, class: "space-y-3" } do |form| %>
+      html: {
+        data: {
+          turbo_frame: parent ? dom_id(parent, :reply) : "comments",
+          action: (parent ? "turbo:submit-end->reply-toggle#hide" : nil)
+        }.compact,
+        class: compact ? "space-y-2" : "space-y-3"
+      } do |form| %>
   <% if comment.errors.any? %>
     <div class="<%= error_alert_class %>">
       <ul class="list-inside list-disc space-y-1">
@@ -11,10 +20,20 @@
     </div>
   <% end %>
 
+  <% if parent %>
+    <%= form.hidden_field :parent_id, value: parent.id %>
+  <% end %>
+
   <div>
-    <%= form.label :body, "Tu comentario", class: filter_label_class.sub("text-xs", "text-sm") %>
-    <%= form.text_area :body, rows: 3, class: filter_input_class, placeholder: "Escribe un comentario..." %>
+    <% unless compact %>
+      <%= form.label :body, "Tu comentario", class: form_label_class %>
+    <% end %>
+    <%= form.text_area :body,
+          rows: compact ? 2 : 3,
+          class: compact ? compact_input_class : filter_input_class,
+          placeholder: compact ? "Escribe una respuesta..." : "Escribe un comentario..." %>
   </div>
 
-  <%= form.submit "Comentar", class: primary_button_class %>
+  <%= form.submit compact ? "Responder" : "Comentar",
+        class: compact ? secondary_button_class(full_width: false) : primary_button_class %>
 <% end %>

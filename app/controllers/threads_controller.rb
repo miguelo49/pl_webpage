@@ -10,18 +10,22 @@ class ThreadsController < ApplicationController
     authorize ForumThread, :index?
     @topics = Topic.ordered
     @threads = policy_scope(ForumThread)
-      .includes(:user, :topic, :reactions)
+      .includes(:user, :topic, :reactions, :comments)
       .left_joins(:comments)
       .group("threads.id")
       .select("threads.*, GREATEST(threads.created_at, COALESCE(MAX(comments.created_at), threads.created_at)) AS last_activity_at")
       .order("last_activity_at DESC")
+
+    if params[:topic_id].present?
+      @threads = @threads.where(topic_id: params[:topic_id])
+    end
   end
 
   def show
     authorize @thread
     @comments = visible_comments
     @comment = @thread.comments.build
-    authorize @comment
+    authorize @comment, :create?
   end
 
   def react

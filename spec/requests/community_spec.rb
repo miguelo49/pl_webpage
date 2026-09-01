@@ -52,6 +52,21 @@ RSpec.describe "Community threads and comments", type: :request do
       expect(response.body).to include(other_topic.name)
       expect(response.body).not_to include("Hilo pendiente")
     end
+
+    it "filters threads by topic" do
+      other_topic = Topic.create!(name: "Debate", slug: "debate", description: "Discusión", position: 2)
+      viewer = create_user(role: :sympathizer)
+      author = create_user(role: :sympathizer)
+      ideas_thread = create_thread(author: author, title: "Hilo de ideas", status: :approved, topic_for: topic)
+      debate_thread = create_thread(author: author, title: "Hilo de debate", status: :approved, topic_for: other_topic)
+
+      sign_in viewer
+      get threads_path(topic_id: topic.id)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(ideas_thread.title)
+      expect(response.body).not_to include(debate_thread.title)
+    end
   end
 
   describe "POST /topics/:topic_id/threads" do
@@ -68,6 +83,21 @@ RSpec.describe "Community threads and comments", type: :request do
       thread = ForumThread.last
       expect(thread.status).to eq("approved")
       expect(response).to redirect_to(topic_thread_path(topic, thread))
+    end
+  end
+
+  describe "GET /topics/:topic_id/threads/:id" do
+    it "allows a sympathizer to view an approved thread" do
+      author = create_user(role: :sympathizer)
+      viewer = create_user(role: :sympathizer)
+      thread = create_thread(author: author, title: "Hilo público", status: :approved)
+
+      sign_in viewer
+      get topic_thread_path(topic, thread)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Hilo público")
+      expect(response.body).not_to include("No tienes permiso")
     end
   end
 
@@ -90,6 +120,27 @@ RSpec.describe "Community threads and comments", type: :request do
       expect(response.body).to include("Mi comentario")
       expect(Comment.last.commentable).to eq(thread)
       expect(Comment.last.status).to eq("approved")
+    end
+
+    it "creates a reply to a top-level comment" do
+      author = create_user(role: :board_member)
+      commenter = create_user(role: :sympathizer)
+      thread = create_thread(author: author, status: :approved)
+      parent_comment = thread.comments.create!(body: "Comentario padre", user: author)
+
+      sign_in commenter
+
+      expect {
+        post topic_thread_comments_path(topic, thread),
+             params: { comment: { body: "Mi respuesta", parent_id: parent_comment.id } },
+             headers: { "Accept" => "text/vnd.turbo-stream.html" }
+      }.to change(Comment, :count).by(1)
+
+      reply = Comment.last
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Mi respuesta")
+      expect(reply.parent).to eq(parent_comment)
+      expect(reply.reply?).to be(true)
     end
   end
 end

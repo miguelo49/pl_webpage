@@ -10,7 +10,7 @@
   <p class="text-sm font-medium text-gray-900"><%= label %></p>
 
   <div>
-    <label class="<%= filter_label_class.sub('text-xs', 'text-sm') %>" for="<%= form.field_id(commune_association, :region) %>">Región</label>
+    <label class="<%= form_label_class %>" for="<%= form.field_id(commune_association, :region) %>">Región</label>
     <select id="<%= form.field_id(commune_association, :region) %>"
             class="<%= filter_input_class %> disabled:bg-gray-100 disabled:text-gray-500"
             data-commune-selector-target="regionSelect"
@@ -23,7 +23,7 @@
   </div>
 
   <div>
-    <%= form.label field_name, "Comuna", class: filter_label_class.sub("text-xs", "text-sm") %>
+    <%= form.label field_name, "Comuna", class: form_label_class %>
     <%= form.select field_name,
           options_for_select(
             selected_commune ? [ [ selected_commune.name, selected_commune.id ] ] : [],

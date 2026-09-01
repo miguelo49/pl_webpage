@@ -51,21 +51,26 @@
 
   <% if @thread.present? %>
     <%= turbo_frame_tag "comments" do %>
-      <section class="space-y-4">
-        <h3 class="text-base font-semibold text-gray-900">Discusión</h3>
+      <section class="<%= discussion_section_class %> space-y-4">
+        <h3 class="border-b border-gray-200 pb-2 text-base font-semibold text-gray-900">
+          Discusión (<%= @comments.size %>)
+        </h3>
 
-        <div id="comments_list" class="space-y-4">
+        <div id="comment_form">
+          <%= render "comments/form", topic: @topic, thread: @thread, comment: @comment %>
+        </div>
+
+        <div id="comments_list" class="space-y-3">
           <% if @comments.any? %>
             <% @comments.each do |comment| %>
               <%= render "comments/comment", comment: comment, topic: @topic, thread: @thread %>
             <% end %>
           <% else %>
-            <p class="text-sm text-gray-500">Sé el primero en comentar esta noticia.</p>
+            <div class="rounded-md border border-dashed border-gray-300 bg-white p-6 text-center">
+              <p class="text-sm font-medium text-gray-700">Sé el primero en comentar esta noticia</p>
+              <p class="mt-1 text-xs text-gray-500">Inicia la conversación sobre este artículo.</p>
+            </div>
           <% end %>
-        </div>
-
-        <div id="comment_form">
-          <%= render "comments/form", topic: @topic, thread: @thread, comment: @comment %>
         </div>
       </section>
     <% end %>

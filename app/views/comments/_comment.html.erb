@@ -1,42 +1,49 @@
-<div id="<%= dom_id(comment) %>" class="rounded-lg border border-gray-200 bg-white p-4 font-brand">
-  <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-gray-500">
-    <div class="flex flex-wrap items-center gap-2">
-      <span class="font-medium text-gray-700"><%= comment.user.first_name %></span>
-      <span class="rounded-full px-2 py-0.5 font-medium <%= user_role_badge_class(comment.user.role) %>">
-        <%= user_role_label(comment.user.role) %>
-      </span>
-    </div>
-    <time datetime="<%= comment.created_at.iso8601 %>"><%= comment.created_at.to_fs(:short) %></time>
-  </div>
-  <p class="mt-2 text-sm text-gray-700"><%= comment.body %></p>
+<% reply = local_assigns.fetch(:reply, comment.reply?) %>
+<% wrapper_class = reply ? discussion_reply_class : discussion_comment_class %>
+<% avatar_size = reply ? :sm : :md %>
 
-  <div class="mt-3">
-    <%= render "reactions/button",
+<div id="<%= dom_id(comment) %>"
+     class="<%= wrapper_class %> flex overflow-hidden"
+     data-controller="reply-toggle">
+  <div class="shrink-0 border-r border-gray-100 py-2">
+    <%= render "reactions/vote",
           reactable: comment,
           react_path: react_path_for(comment, topic: local_assigns[:topic], thread: local_assigns[:thread], initiative: local_assigns[:initiative]) %>
   </div>
 
-  <% if comment.replies.any? %>
-    <div class="mt-4 space-y-3 border-l-2 border-gray-100 pl-4">
-      <% comment.replies.each do |reply| %>
-        <div id="<%= dom_id(reply) %>" class="rounded-lg bg-gray-50 p-3">
-          <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-gray-500">
-            <div class="flex flex-wrap items-center gap-2">
-              <span class="font-medium text-gray-700"><%= reply.user.first_name %></span>
-              <span class="rounded-full px-2 py-0.5 font-medium <%= user_role_badge_class(reply.user.role) %>">
-                <%= user_role_label(reply.user.role) %>
-              </span>
-            </div>
-            <time datetime="<%= reply.created_at.iso8601 %>"><%= reply.created_at.to_fs(:short) %></time>
-          </div>
-          <p class="mt-1 text-sm text-gray-700"><%= reply.body %></p>
-          <div class="mt-2">
-            <%= render "reactions/button",
-                  reactable: reply,
-                  react_path: react_path_for(reply, topic: local_assigns[:topic], thread: local_assigns[:thread], initiative: local_assigns[:initiative]) %>
-          </div>
-        </div>
+  <div class="min-w-0 flex-1 p-3">
+    <%= render "shared/author_meta", user: comment.user, created_at: comment.created_at, avatar_size: avatar_size %>
+
+    <p class="mt-2 text-sm leading-relaxed text-gray-800"><%= comment.body %></p>
+
+  <% unless reply %>
+    <div class="mt-2 flex flex-wrap items-center gap-1">
+      <button type="button"
+            class="<%= discussion_action_class %>"
+            data-action="click->reply-toggle#toggle">
+        Responder
+      </button>
+    </div>
+
+    <div class="mt-3 hidden" data-reply-toggle-target="form">
+      <%= render "comments/reply_form",
+            comment: comment.commentable.comments.build(parent: comment),
+            parent: comment,
+            topic: local_assigns[:topic],
+            thread: local_assigns[:thread],
+            initiative: local_assigns[:initiative] %>
+    </div>
+
+    <div id="replies_<%= comment.id %>" class="mt-3 space-y-2 border-l-2 border-primary/15 pl-3">
+      <% comment.replies.each do |reply_comment| %>
+        <%= render "comments/comment",
+              comment: reply_comment,
+              reply: true,
+              topic: local_assigns[:topic],
+              thread: local_assigns[:thread],
+              initiative: local_assigns[:initiative] %>
       <% end %>
     </div>
   <% end %>
+  </div>
 </div>

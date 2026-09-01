@@ -1,37 +1,66 @@
 <% if @comment.errors.any? %>
-  <%= turbo_stream.replace "comment_form" do %>
-    <div id="comment_form">
-      <% if @initiative %>
-        <%= render "comments/form", initiative: @initiative, comment: @comment %>
-      <% else %>
-        <%= render "comments/form", topic: @topic, thread: @thread, comment: @comment %>
-      <% end %>
-    </div>
-  <% end %>
-<% else %>
-  <%= turbo_stream.append "comments_list" do %>
-    <% if @initiative %>
-      <%= render "comments/comment", comment: @comment, initiative: @initiative %>
+  <% frame_id = @comment.parent_id.present? ? dom_id(@comment.parent, :reply) : "comment_form" %>
+  <%= turbo_stream.replace frame_id do %>
+    <% if @comment.parent_id.present? %>
+      <%= render "comments/reply_form",
+            comment: @comment,
+            parent: @comment.parent,
+            topic: @topic,
+            thread: @thread,
+            initiative: @initiative %>
     <% else %>
-      <%= render "comments/comment", comment: @comment, topic: @topic, thread: @thread %>
+      <div id="comment_form">
+        <% if @initiative %>
+          <%= render "comments/form", initiative: @initiative, comment: @comment %>
+        <% else %>
+          <%= render "comments/form", topic: @topic, thread: @thread, comment: @comment %>
+        <% end %>
+      </div>
     <% end %>
   <% end %>
-
-  <%= turbo_stream.replace "comment_form" do %>
-    <div id="comment_form">
+<% else %>
+  <% if @comment.parent_id.present? %>
+    <%= turbo_stream.append "replies_#{@comment.parent_id}" do %>
       <% if @initiative %>
-        <%= render "comments/form", initiative: @initiative, comment: (@initiative.comments.build) %>
+        <%= render "comments/comment", comment: @comment, reply: true, initiative: @initiative %>
       <% else %>
-        <%= render "comments/form", topic: @topic, thread: @thread, comment: @thread.comments.build %>
+        <%= render "comments/comment", comment: @comment, reply: true, topic: @topic, thread: @thread %>
       <% end %>
-    </div>
+    <% end %>
+
+    <%= turbo_stream.replace dom_id(@comment.parent, :reply) do %>
+      <%= render "comments/reply_form",
+            comment: @comment.parent.commentable.comments.build(parent: @comment.parent),
+            parent: @comment.parent,
+            topic: @topic,
+            thread: @thread,
+            initiative: @initiative %>
+    <% end %>
+  <% else %>
+    <%= turbo_stream.append "comments_list" do %>
+      <% if @initiative %>
+        <%= render "comments/comment", comment: @comment, initiative: @initiative %>
+      <% else %>
+        <%= render "comments/comment", comment: @comment, topic: @topic, thread: @thread %>
+      <% end %>
+    <% end %>
+
+    <%= turbo_stream.replace "comment_form" do %>
+      <div id="comment_form">
+        <% if @initiative %>
+          <%= render "comments/form", initiative: @initiative, comment: (@initiative.comments.build) %>
+        <% else %>
+          <%= render "comments/form", topic: @topic, thread: @thread, comment: @thread.comments.build %>
+        <% end %>
+      </div>
+    <% end %>
   <% end %>
 
   <%= turbo_stream.update "flash_messages" do %>
     <% if @comment.pending? %>
-      <p class="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">Tu comentario fue enviado y está pendiente de aprobación.</p>
+      <p class="<%= flash_warning_class %>">Tu comentario fue enviado y está pendiente de aprobación.</p>
     <% else %>
-      <p class="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-800">Comentario publicado.</p>
+      <p class="<%= flash_notice_class %>">Comentario publicado.</p>
     <% end %>
   <% end %>
 <% end %>

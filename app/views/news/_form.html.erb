@@ -10,22 +10,22 @@
   <% end %>
 
   <div>
-    <%= form.label :title, "Título", class: filter_label_class.sub("text-xs", "text-sm") %>
+    <%= form.label :title, "Título", class: form_label_class %>
     <%= form.text_field :title, class: filter_input_class, autofocus: true %>
   </div>
 
   <div>
-    <%= form.label :summary, "Resumen", class: filter_label_class.sub("text-xs", "text-sm") %>
+    <%= form.label :summary, "Resumen", class: form_label_class %>
     <%= form.text_area :summary, rows: 3, class: filter_input_class %>
   </div>
 
   <div>
-    <%= form.label :body, "Contenido", class: filter_label_class.sub("text-xs", "text-sm") %>
+    <%= form.label :body, "Contenido", class: form_label_class %>
     <%= form.text_area :body, rows: 8, class: filter_input_class %>
   </div>
 
   <div>
-    <%= form.label :category, "Categoría", class: filter_label_class.sub("text-xs", "text-sm") %>
+    <%= form.label :category, "Categoría", class: form_label_class %>
     <%= form.select :category,
           News.categories.keys.map { |key| [ news_category_label(key), key ] },
           { prompt: "Selecciona una categoría" },
@@ -33,12 +33,12 @@
   </div>
 
   <div>
-    <%= form.label :published_at, "Fecha de publicación", class: filter_label_class.sub("text-xs", "text-sm") %>
+    <%= form.label :published_at, "Fecha de publicación", class: form_label_class %>
     <%= form.datetime_local_field :published_at, class: filter_input_class %>
   </div>
 
   <div>
-    <%= form.label :featured_image, "Imagen destacada (opcional)", class: filter_label_class.sub("text-xs", "text-sm") %>
+    <%= form.label :featured_image, "Imagen destacada (opcional)", class: form_label_class %>
     <%= form.file_field :featured_image, accept: "image/jpeg,image/png,image/webp,image/gif", class: file_input_class %>
   </div>
 

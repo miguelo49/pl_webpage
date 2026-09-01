@@ -1,0 +1,17 @@
+<% reacted = reacted_by_current_user?(reactable) %>
+<%= turbo_frame_tag dom_id(reactable, :reaction) do %>
+  <div class="flex flex-col items-center gap-0.5 px-1">
+    <%= button_to react_path,
+          method: :post,
+          class: vote_button_class(active: reacted),
+          form: { data: { turbo_stream: true }, class: "inline" } do %>
+      <svg viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5" aria-hidden="true">
+        <path d="M12 4l-8 8h5v8h6v-8h5L12 4z" />
+      </svg>
+      <span class="sr-only"><%= reacted ? "Quitar voto" : "Votar" %></span>
+    <% end %>
+    <span class="text-xs font-semibold leading-none <%= reacted ? 'text-primary' : 'text-gray-600' %>">
+      <%= reactable.reactions.size %>
+    </span>
+  </div>
+<% end %>

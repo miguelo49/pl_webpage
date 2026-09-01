@@ -23,4 +23,14 @@ module ReactionsHelper
 
     reactable.reactions.any? { |reaction| reaction.user_id == current_user.id }
   end
+
+  def vote_button_class(active:)
+    base = "touch-target inline-flex items-center justify-center rounded p-1 transition #{focus_ring_class}"
+
+    if active
+      "#{base} bg-primary/10 text-primary"
+    else
+      "#{base} text-gray-400 hover:bg-gray-100 hover:text-primary"
+    end
+  end
 end

@@ -19,7 +19,7 @@
           url: change_status_initiative_path(@initiative),
           method: :patch,
           html: { class: "rounded-lg border border-gray-200 bg-white p-4 space-y-3" } do |form| %>
-      <%= form.label :status, "Actualizar estado", class: filter_label_class.sub("text-xs", "text-sm") %>
+      <%= form.label :status, "Actualizar estado", class: form_label_class %>
       <%= form.select :status,
             Initiative.statuses.keys.map { |key| [ initiative_status_label(key), key ] },
             {},
@@ -76,7 +76,7 @@
             url: attach_documents_initiative_path(@initiative),
             html: { class: "space-y-3", multipart: true } do |form| %>
         <div>
-          <%= form.label :documents, "Adjuntar documento", class: filter_label_class.sub("text-xs", "text-sm") %>
+          <%= form.label :documents, "Adjuntar documento", class: form_label_class %>
           <%= form.file_field :documents,
                 multiple: true,
                 accept: Initiative::ACCEPTED_DOCUMENT_TYPES.join(","),
@@ -89,21 +89,26 @@
   </section>
 
   <%= turbo_frame_tag "comments" do %>
-    <section class="space-y-4">
-      <h3 class="text-base font-semibold text-gray-900">Comentarios</h3>
+    <section class="<%= discussion_section_class %> space-y-4">
+      <h3 class="border-b border-gray-200 pb-2 text-base font-semibold text-gray-900">
+        Comentarios (<%= @comments.size %>)
+      </h3>
 
-      <div id="comments_list" class="space-y-4">
+      <div id="comment_form">
+        <%= render "comments/form", initiative: @initiative, comment: @comment %>
+      </div>
+
+      <div id="comments_list" class="space-y-3">
         <% if @comments.any? %>
           <% @comments.each do |comment| %>
             <%= render "comments/comment", comment: comment, initiative: @initiative %>
           <% end %>
         <% else %>
-          <p class="text-sm text-gray-600">Sé el primero en comentar esta iniciativa.</p>
+          <div class="rounded-md border border-dashed border-gray-300 bg-white p-6 text-center">
+            <p class="text-sm font-medium text-gray-700">Sé el primero en comentar esta iniciativa</p>
+            <p class="mt-1 text-xs text-gray-500">Comparte tu opinión o pregunta sobre la propuesta.</p>
+          </div>
         <% end %>
-      </div>
-
-      <div id="comment_form">
-        <%= render "comments/form", initiative: @initiative, comment: @comment %>
       </div>
     </section>
   <% end %>

@@ -1,0 +1,16 @@
+<%# locals: (user:, created_at:, avatar_size: :md) %>
+<div class="flex min-w-0 items-center gap-2">
+  <%= user_avatar(user, size: avatar_size) %>
+  <div class="min-w-0">
+    <div class="flex flex-wrap items-center gap-1.5 text-xs">
+      <span class="font-semibold text-gray-900"><%= user.first_name %></span>
+      <span class="rounded-full px-2 py-0.5 font-medium <%= user_role_badge_class(user.role) %>">
+        <%= user_role_label(user.role) %>
+      </span>
+      <span class="text-gray-400">·</span>
+      <time class="text-gray-500" datetime="<%= created_at.iso8601 %>" title="<%= created_at.to_fs(:long) %>">
+        <%= relative_time_ago(created_at) %>
+      </time>
+    </div>
+  </div>
+</div>

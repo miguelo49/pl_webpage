@@ -16,8 +16,8 @@
 
 <%= turbo_stream.update "flash_messages" do %>
   <% if @thread.pending? %>
-    <p class="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">Tu hilo fue creado y está pendiente de aprobación.</p>
+    <p class="<%= flash_warning_class %>">Tu hilo fue creado y está pendiente de aprobación.</p>
   <% else %>
-    <p class="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-800">Hilo publicado correctamente.</p>
+    <p class="<%= flash_notice_class %>">Hilo publicado correctamente.</p>
   <% end %>
 <% end %>

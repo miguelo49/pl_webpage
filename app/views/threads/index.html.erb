@@ -17,7 +17,7 @@
             <% @topics.each do |topic| %>
               <%= link_to topic.name,
                     new_topic_thread_path(topic),
-                    class: "block px-3 py-2 text-sm text-gray-800 hover:bg-primary/5 hover:text-primary",
+                    class: "block px-4 py-2.5 text-sm text-gray-800 hover:bg-primary/5 hover:text-primary",
                     data: { turbo_frame: "new_thread" } %>
             <% end %>
           </div>
@@ -26,17 +26,42 @@
     <% end %>
   </div>
 
+  <% if @topics.many? %>
+    <div class="flex flex-wrap gap-2">
+      <%= link_to "Todos",
+            threads_path,
+            class: chip_filter_class(active: params[:topic_id].blank?) %>
+      <% @topics.each do |topic| %>
+        <%= link_to topic.name,
+              threads_path(topic_id: topic.id),
+              class: chip_filter_class(active: params[:topic_id].to_s == topic.id.to_s) %>
+      <% end %>
+    </div>
+  <% end %>
+
   <%= turbo_frame_tag "new_thread" %>
 
-  <div id="threads_list" class="<%= listing_grid_class %>">
+  <div id="threads_list" class="space-y-2">
     <% if @threads.any? %>
       <% @threads.each do |thread| %>
         <%= render "threads/thread_card", thread: thread %>
       <% end %>
     <% else %>
-      <p class="col-span-full rounded-lg border border-dashed border-gray-300 bg-white p-6 text-center text-sm text-gray-500">
-        Todavía no hay hilos aprobados en el foro.
-      </p>
+      <div class="rounded-lg border border-dashed border-gray-300 bg-white p-8 text-center">
+        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6" aria-hidden="true">
+            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-4 12H8v-2h8v2zm0-4H8V8h8v2z" />
+          </svg>
+        </div>
+        <p class="mt-4 text-sm font-medium text-gray-900">Todavía no hay hilos en el foro</p>
+        <p class="mt-1 text-sm text-gray-500">Sé el primero en abrir una conversación.</p>
+        <% if @topics.one? %>
+          <%= link_to "Crear el primer hilo",
+                new_topic_thread_path(@topics.first),
+                class: "#{primary_button_class(full_width: false)} mt-4",
+                data: { turbo_frame: "new_thread" } %>
+        <% end %>
+      </div>
     <% end %>
   </div>
 </div>

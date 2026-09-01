@@ -1,17 +1,34 @@
-<%= link_to topic_thread_path(thread.topic, thread), class: card_link_class do %>
-  <span class="inline-flex rounded-full px-2 py-0.5 text-xs font-medium <%= status_badge_class(:info) %>">
-    <%= thread.topic.name %>
-  </span>
+<div class="<%= discussion_feed_item_class %> overflow-hidden">
+  <div class="shrink-0 border-r border-gray-100 py-2" onclick="event.stopPropagation()">
+    <%= render "reactions/vote",
+          reactable: thread,
+          react_path: react_path_for(thread, topic: thread.topic, thread: thread) %>
+  </div>
 
-  <h3 class="mt-2 <%= card_title_class %>"><%= thread.title %></h3>
-  <p class="mt-2 line-clamp-2 text-sm text-gray-700"><%= thread.body %></p>
-  <div class="mt-3 flex flex-wrap items-center justify-between gap-2 <%= card_meta_class %>">
-    <div class="flex flex-wrap items-center gap-2">
+  <%= link_to topic_thread_path(thread.topic, thread), class: "min-w-0 flex-1 p-3 #{focus_ring_class}" do %>
+    <div class="flex flex-wrap items-center gap-2 text-xs text-gray-500">
+      <span class="<%= category_chip_class(size: :sm) %>"><%= thread.topic.name %></span>
       <span><%= thread.user.first_name %></span>
-      <span class="rounded-full px-2 py-0.5 font-medium <%= user_role_badge_class(thread.user.role) %>">
-        <%= user_role_label(thread.user.role) %>
+      <span>·</span>
+      <time datetime="<%= thread.created_at.iso8601 %>"><%= relative_time_ago(thread.created_at) %></time>
+    </div>
+
+    <h3 class="mt-1 font-brand text-base font-semibold text-gray-900"><%= thread.title %></h3>
+    <p class="mt-1 line-clamp-1 text-sm text-gray-600"><%= thread.body %></p>
+
+    <div class="mt-2 flex flex-wrap items-center gap-3 text-xs font-medium text-gray-500">
+      <span class="inline-flex items-center gap-1">
+        <svg viewBox="0 0 24 24" fill="currentColor" class="h-3.5 w-3.5" aria-hidden="true">
+          <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-4 12H8v-2h8v2zm0-4H8V8h8v2z" />
+        </svg>
+        <%= thread.comments.size %> <%= thread.comments.size == 1 ? "comentario" : "comentarios" %>
+      </span>
+      <span class="inline-flex items-center gap-1">
+        <svg viewBox="0 0 24 24" fill="currentColor" class="h-3.5 w-3.5" aria-hidden="true">
+          <path d="M12 4l-8 8h5v8h6v-8h5L12 4z" />
+        </svg>
+        <%= thread.reactions.size %> útiles
       </span>
     </div>
-    <time datetime="<%= thread.created_at.iso8601 %>"><%= thread.created_at.to_fs(:short) %></time>
-  </div>
-<% end %>
+  <% end %>
+</div>

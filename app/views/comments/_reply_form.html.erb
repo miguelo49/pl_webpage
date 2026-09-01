@@ -1,0 +1,9 @@
+<%= turbo_frame_tag dom_id(parent, :reply) do %>
+  <%= render "comments/form",
+        comment: comment,
+        parent: parent,
+        compact: true,
+        topic: local_assigns[:topic],
+        thread: local_assigns[:thread],
+        initiative: local_assigns[:initiative] %>
+<% end %>

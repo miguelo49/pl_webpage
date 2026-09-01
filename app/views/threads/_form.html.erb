@@ -12,12 +12,12 @@
   <% end %>
 
   <div>
-    <%= form.label :title, "Título", class: filter_label_class.sub("text-xs", "text-sm") %>
+    <%= form.label :title, "Título", class: form_label_class %>
     <%= form.text_field :title, class: filter_input_class, autofocus: true %>
   </div>
 
   <div>
-    <%= form.label :body, "Contenido", class: filter_label_class.sub("text-xs", "text-sm") %>
+    <%= form.label :body, "Contenido", class: form_label_class %>
     <%= form.text_area :body, rows: 5, class: filter_input_class %>
   </div>
 
