@@ -1,4 +1,6 @@
 module ApplicationHelper
+  APP_NAME = "Partido Liberal"
+
   USER_ROLE_LABELS = {
     "sympathizer" => "Simpatizante",
     "militant" => "Militante",
@@ -15,6 +17,14 @@ module ApplicationHelper
     rejected: "bg-red-50 text-red-800 ring-1 ring-red-200",
     info: "bg-sky-50 text-sky-800 ring-1 ring-sky-200"
   }.freeze
+
+  def app_name
+    APP_NAME
+  end
+
+  def liberal_section_title(name, plural: false)
+    "#{name} #{plural ? 'Liberales' : 'Liberal'}"
+  end
 
   def status_badge_class(variant = :neutral)
     STATUS_BADGE_VARIANTS.fetch(variant, STATUS_BADGE_VARIANTS[:neutral])

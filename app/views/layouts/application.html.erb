@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    <title><%= content_for(:title) || "Pl Webpage" %></title>
+    <title><%= content_for(:title) || app_name %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
@@ -18,7 +18,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="min-h-dvh bg-gray-50 text-gray-900 antialiased">
+  <body class="min-h-dvh bg-gradient-to-br from-primary/[0.04] via-gray-50 to-secondary/[0.06] text-gray-900 antialiased">
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-blue-800 focus:shadow">
       Saltar al contenido
     </a>
@@ -43,7 +43,9 @@
         </div>
 
         <main id="main-content" class="mx-auto w-full max-w-7xl flex-1 px-4 py-4 lg:px-8 lg:py-6 <%= 'app-main-with-bottom-nav' unless hide_bottom_nav? %>">
-          <%= yield %>
+          <div data-controller="page-enter" class="animate-fade-in-up">
+            <%= yield %>
+          </div>
         </main>
 
         <%= render "shared/bottom_nav" unless hide_bottom_nav? %>

@@ -6,7 +6,8 @@
     </div>
 
     <div class="min-w-0 flex-1">
-      <time datetime="<%= event.start_at.iso8601 %>" class="<%= card_meta_class %>">
+      <%= render "events/event_type_chip", event_type: event.event_type, size: :sm %>
+      <time datetime="<%= event.start_at.iso8601 %>" class="mt-2 block <%= card_meta_class %>">
         <%= event.start_at.to_fs(:short) %>
       </time>
       <h3 class="mt-1 <%= card_title_class %>">

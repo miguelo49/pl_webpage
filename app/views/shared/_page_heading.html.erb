@@ -1,5 +1,6 @@
 <div>
-  <h1 class="<%= page_heading_class(local_assigns[:heading_class]) %>"><%= title %></h1>
+  <% heading_title = local_assigns[:liberal] ? liberal_section_title(title, plural: local_assigns[:liberal_plural]) : title %>
+  <h1 class="<%= page_heading_class(local_assigns[:heading_class]) %>"><%= heading_title %></h1>
   <% if local_assigns[:subtitle].present? %>
     <p class="<%= page_subtitle_class %>"><%= subtitle %></p>
   <% end %>

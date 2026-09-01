@@ -3,7 +3,7 @@
 
   <div>
     <div class="flex flex-wrap items-center gap-2 text-xs text-gray-400">
-      <span class="<%= category_chip_class %>"><%= event_type_label(@event.event_type) %></span>
+      <%= render "events/event_type_chip", event_type: @event.event_type %>
       <time datetime="<%= @event.start_at.iso8601 %>"><%= @event.start_at.to_fs(:short) %></time>
     </div>
     <%= render "shared/page_heading",

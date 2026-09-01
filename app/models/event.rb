@@ -37,11 +37,11 @@ class Event < ApplicationRecord
     lines = [
       "BEGIN:VCALENDAR",
       "VERSION:2.0",
-      "PRODID:-//Pl Webpage//Events//ES",
+      "PRODID:-//Partido Liberal//Events//ES",
       "CALSCALE:GREGORIAN",
       "METHOD:PUBLISH",
       "BEGIN:VEVENT",
-      "UID:event-#{id}@pl-webpage",
+      "UID:event-#{id}@partido-liberal",
       "DTSTAMP:#{ics_timestamp(Time.current)}",
       "DTSTART:#{ics_timestamp(start_at)}",
       "DTEND:#{ics_timestamp(end_at || start_at + 1.hour)}",

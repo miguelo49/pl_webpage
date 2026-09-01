@@ -91,7 +91,7 @@ module NavigationHelper
   end
 
   def filter_sticky_class
-    "sticky top-14 z-20 -mx-4 space-y-3 border-b border-gray-300 bg-gray-50/95 px-4 py-4 backdrop-blur lg:mx-0 lg:rounded-lg lg:border lg:px-4 lg:shadow-sm"
+    "sticky top-14 z-20 -mx-4 space-y-3 border-b border-gray-300 bg-white/80 px-4 py-4 backdrop-blur lg:mx-0 lg:rounded-lg lg:border lg:px-4 lg:shadow-sm"
   end
 
   def filter_label_class
