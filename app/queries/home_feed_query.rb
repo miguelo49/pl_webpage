@@ -35,32 +35,35 @@ class HomeFeedQuery
     NewsPolicy::Scope.new(user, News).resolve
   end
 
-  def union_sql
-    news_sql = news_scope
-      .select("id AS record_id, 'News' AS record_type, COALESCE(published_at, created_at) AS feed_at")
-      .to_sql
+  def feed_subquery
+    news = news_scope.select(
+      "id AS record_id, 'News' AS record_type, COALESCE(published_at, created_at) AS feed_at"
+    )
+    events = Event.upcoming.select(
+      "id AS record_id, 'Event' AS record_type, created_at AS feed_at"
+    )
 
-    events_sql = Event.upcoming
-      .select("id AS record_id, 'Event' AS record_type, created_at AS feed_at")
-      .to_sql
-
-    "(#{news_sql}) UNION ALL (#{events_sql})"
+    Arel::Nodes::TableAlias.new(
+      Arel::Nodes::UnionAll.new(news.arel, events.arel),
+      "feed_items"
+    )
   end
 
   def paginated_rows
     offset = (page - 1) * per_page
-    sql = <<~SQL.squish
-      SELECT record_id, record_type, feed_at
-      FROM (#{union_sql}) AS feed_items
-      ORDER BY feed_at DESC
-      LIMIT #{per_page.to_i} OFFSET #{offset.to_i}
-    SQL
+    sql = News.unscoped
+      .select("feed_items.record_id, feed_items.record_type, feed_items.feed_at")
+      .from(feed_subquery)
+      .order("feed_at DESC")
+      .limit(per_page)
+      .offset(offset)
+      .to_sql
 
     ActiveRecord::Base.connection.select_all(sql).to_a
   end
 
   def count_rows
-    sql = "SELECT COUNT(*) AS count FROM (#{union_sql}) AS feed_items"
+    sql = News.unscoped.select("COUNT(*)").from(feed_subquery).to_sql
     ActiveRecord::Base.connection.select_value(sql).to_i
   end
 
