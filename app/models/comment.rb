@@ -41,7 +41,7 @@ class Comment < ApplicationRecord
   end
 
   def auto_approved_on_create?
-    user.board_member? || user.moderator?
+    true
   end
 
   def parent_must_be_top_level

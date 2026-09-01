@@ -1,4 +1,12 @@
 module ApplicationHelper
+  USER_ROLE_LABELS = {
+    "sympathizer" => "Simpatizante",
+    "militant" => "Militante",
+    "board_member" => "Directiva",
+    "moderator" => "Moderador",
+    "technical_admin" => "Admin técnico"
+  }.freeze
+
   STATUS_BADGE_VARIANTS = {
     neutral: "bg-gray-100 text-gray-700 ring-1 ring-gray-200",
     pending: "bg-amber-50 text-amber-800 ring-1 ring-amber-200",
@@ -10,5 +18,13 @@ module ApplicationHelper
 
   def status_badge_class(variant = :neutral)
     STATUS_BADGE_VARIANTS.fetch(variant, STATUS_BADGE_VARIANTS[:neutral])
+  end
+
+  def user_role_label(role)
+    USER_ROLE_LABELS.fetch(role.to_s, role.to_s.humanize)
+  end
+
+  def user_role_badge_class(_role = nil)
+    status_badge_class(:neutral)
   end
 end

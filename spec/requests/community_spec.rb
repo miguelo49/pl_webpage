@@ -55,7 +55,7 @@ RSpec.describe "Community threads and comments", type: :request do
   end
 
   describe "POST /topics/:topic_id/threads" do
-    it "creates a pending thread for a sympathizer" do
+    it "creates an approved thread for a sympathizer" do
       user = create_user(role: :sympathizer)
       sign_in user
 
@@ -66,8 +66,8 @@ RSpec.describe "Community threads and comments", type: :request do
       }.to change(ForumThread, :count).by(1)
 
       thread = ForumThread.last
-      expect(thread.status).to eq("pending")
-      expect(response).to redirect_to(threads_path)
+      expect(thread.status).to eq("approved")
+      expect(response).to redirect_to(topic_thread_path(topic, thread))
     end
   end
 
@@ -89,6 +89,7 @@ RSpec.describe "Community threads and comments", type: :request do
       expect(response.media_type).to eq("text/vnd.turbo-stream.html")
       expect(response.body).to include("Mi comentario")
       expect(Comment.last.commentable).to eq(thread)
+      expect(Comment.last.status).to eq("approved")
     end
   end
 end

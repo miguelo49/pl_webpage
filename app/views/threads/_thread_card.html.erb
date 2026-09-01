@@ -5,8 +5,13 @@
 
   <h3 class="mt-2 <%= card_title_class %>"><%= thread.title %></h3>
   <p class="mt-2 line-clamp-2 text-sm text-gray-700"><%= thread.body %></p>
-  <div class="mt-3 flex items-center justify-between <%= card_meta_class %>">
-    <span><%= thread.user.first_name %></span>
+  <div class="mt-3 flex flex-wrap items-center justify-between gap-2 <%= card_meta_class %>">
+    <div class="flex flex-wrap items-center gap-2">
+      <span><%= thread.user.first_name %></span>
+      <span class="rounded-full px-2 py-0.5 font-medium <%= user_role_badge_class(thread.user.role) %>">
+        <%= user_role_label(thread.user.role) %>
+      </span>
+    </div>
     <time datetime="<%= thread.created_at.iso8601 %>"><%= thread.created_at.to_fs(:short) %></time>
   </div>
 <% end %>

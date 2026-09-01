@@ -4,8 +4,11 @@
     <%= render "shared/page_heading",
           title: @thread.title,
           heading_class: "mt-2" %>
-    <div class="mt-2 flex items-center gap-2 text-xs text-gray-500">
+    <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-gray-500">
       <span><%= @thread.user.first_name %></span>
+      <span class="rounded-full px-2 py-0.5 font-medium <%= user_role_badge_class(@thread.user.role) %>">
+        <%= user_role_label(@thread.user.role) %>
+      </span>
       <span>·</span>
       <time datetime="<%= @thread.created_at.iso8601 %>"><%= @thread.created_at.to_fs(:short) %></time>
     </div>

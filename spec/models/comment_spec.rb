@@ -20,6 +20,21 @@ RSpec.describe Comment, type: :model do
     )
   end
 
+  describe "initial status" do
+    it "sets approved for a sympathizer author" do
+      comment = described_class.new(
+        body: "Comentario visible",
+        user: author,
+        commentable: thread
+      )
+
+      comment.valid?
+
+      expect(comment.status).to eq("approved")
+      expect(comment.publicly_visible?).to be(true)
+    end
+  end
+
   describe "nested replies" do
     let!(:top_level_comment) do
       described_class.create!(

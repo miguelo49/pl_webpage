@@ -29,21 +29,22 @@ RSpec.describe ForumThread, type: :model do
   end
 
   describe "initial status by author role" do
-    it "sets pending for a sympathizer author" do
+    it "sets approved for a sympathizer author" do
       thread = build_thread(create_author(:sympathizer))
 
       thread.valid?
 
-      expect(thread.status).to eq("pending")
-      expect(thread.publicly_visible?).to be(false)
+      expect(thread.status).to eq("approved")
+      expect(thread.publicly_visible?).to be(true)
     end
 
-    it "sets pending for a militant author" do
+    it "sets approved for a militant author" do
       thread = build_thread(create_author(:militant))
 
       thread.valid?
 
-      expect(thread.status).to eq("pending")
+      expect(thread.status).to eq("approved")
+      expect(thread.publicly_visible?).to be(true)
     end
 
     it "sets approved for a board_member author" do
