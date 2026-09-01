@@ -1,4 +1,5 @@
 <% if total_pages > 1 %>
+  <% turbo_frame = local_assigns[:turbo_frame] %>
   <% link_data = turbo_frame.present? ? { turbo_frame: turbo_frame } : {} %>
   <% prev_params = extra_params.merge(page: page - 1) %>
   <% next_params = extra_params.merge(page: page + 1) %>
