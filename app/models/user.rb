@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   include AuditableAdminChanges
+  include ChileanRut
 
   ROLES = %w[sympathizer militant board_member moderator technical_admin].freeze
 
@@ -38,27 +39,41 @@ class User < ApplicationRecord
     technical_admin: 4
   }, default: :sympathizer
 
-  validates :first_name, presence: true
-  validates :last_name, presence: true
+  validates :rut, presence: true, on: :create, unless: :skip_rut_validation?
   validates :residence_commune, presence: true, if: :militant_or_above?
   validate :acceptable_avatar
-
-  def profile_complete?
-    first_name.present? && last_name.present?
-  end
 
   def terms_accepted?
     terms_accepted_at.present?
   end
 
   def onboarding_complete?
-    profile_complete? && terms_accepted?
+    terms_accepted?
   end
 
   alias_method :complete?, :onboarding_complete?
 
+  def profile_enrichment_fields
+    %i[profession residence_commune work_commune study_commune first_name last_name]
+  end
+
+  def profile_enrichment_missing?
+    profile_enrichment_fields.any? { |field| public_send(field).blank? }
+  end
+
+  def profile_enrichment_percent
+    fields = profile_enrichment_fields
+    filled = fields.count { |field| public_send(field).present? }
+    (filled * 100.0 / fields.size).round
+  end
+
   def full_name
-    [ first_name, last_name ].compact_blank.join(" ")
+    name = [ first_name, last_name ].compact_blank.join(" ")
+    name.presence || email
+  end
+
+  def display_rut
+    rut.present? ? ChileanRut.format(rut) : nil
   end
 
   def militant_or_above?
@@ -74,6 +89,11 @@ class User < ApplicationRecord
   end
 
   private
+
+  def skip_rut_validation?
+    Rails.application.config.respond_to?(:skip_user_rut_validation) &&
+      Rails.application.config.skip_user_rut_validation
+  end
 
   def acceptable_avatar
     return unless avatar.attached?

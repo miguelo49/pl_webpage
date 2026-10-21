@@ -30,6 +30,14 @@
     </div>
 
     <p class="text-sm text-gray-600"><%= user.email %></p>
+    <% if user.display_rut.present? %>
+      <p class="text-sm text-gray-600">RUT <%= user.display_rut %></p>
+    <% end %>
+
+    <div>
+      <%= form.label :profession, "Profesión u oficio", class: form_label_class %>
+      <%= form.text_field :profession, class: filter_input_class, placeholder: "Ej. Ingeniero, estudiante, comerciante" %>
+    </div>
   </div>
 
   <%= render "shared/commune_fields", form: form, regions: regions %>

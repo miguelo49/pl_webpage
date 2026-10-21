@@ -99,8 +99,11 @@ admin_password = ENV["SEED_TECHNICAL_ADMIN_PASSWORD"].presence
 if admin_email && admin_password
   valparaiso = Commune.find_by(name: "Valparaíso", region: region)
 
+  admin_rut = ENV["SEED_TECHNICAL_ADMIN_RUT"].presence
+
   user = User.find_or_initialize_by(email: admin_email)
   user.assign_attributes(
+    rut: admin_rut || user.rut,
     password: admin_password,
     password_confirmation: admin_password,
     first_name: ENV.fetch("SEED_TECHNICAL_ADMIN_FIRST_NAME", "Administrador"),

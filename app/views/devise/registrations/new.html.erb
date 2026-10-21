@@ -1,7 +1,7 @@
 <div class="space-y-6">
   <div>
     <h2 class="text-xl font-semibold text-gray-900">Crear cuenta</h2>
-    <p class="mt-1 text-sm text-gray-500">Create an account to get started.</p>
+    <p class="mt-1 text-sm text-gray-500">Solo necesitas tu correo, RUT y contraseña. Luego podrás completar tu perfil.</p>
   </div>
 
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-4" }) do |f| %>
@@ -9,25 +9,19 @@
 
     <%= render "devise/shared/form_field",
           form: f,
-          field: :first_name,
-          label: "Nombre",
-          field_type: :text_field,
-          autocomplete: "given-name",
+          field: :email,
+          label: "Correo electrónico",
+          field_type: :email_field,
+          autocomplete: "email",
           html_options: { autofocus: true } %>
 
     <%= render "devise/shared/form_field",
           form: f,
-          field: :last_name,
-          label: "Apellido",
+          field: :rut,
+          label: "RUT",
           field_type: :text_field,
-          autocomplete: "family-name" %>
-
-    <%= render "devise/shared/form_field",
-          form: f,
-          field: :email,
-          label: "Correo electrónico",
-          field_type: :email_field,
-          autocomplete: "email" %>
+          autocomplete: "off",
+          html_options: { placeholder: "12.345.678-5" } %>
 
     <%= render "devise/shared/form_field",
           form: f,

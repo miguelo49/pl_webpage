@@ -109,10 +109,16 @@ TRAINING_CATEGORIES = [
   "Marco legal y normativo"
 ].freeze
 
-def seed_user(email:, role:, first_name:, last_name:, terms: true, commune: nil)
+def seed_user(email:, role:, first_name:, last_name:, terms: true, commune: nil, rut: nil)
+  rut_value = rut || begin
+    body = format("%08d", (email.hash.abs % 90_000_000) + 10_000_000)
+    "#{body}#{ChileanRut.verification_digit(body)}"
+  end
+
   user = User.find_or_create_by!(email: email) do |record|
     record.password = SEED_PASSWORD
     record.password_confirmation = SEED_PASSWORD
+    record.rut = rut_value
     record.first_name = first_name
     record.last_name = last_name
     record.role = role

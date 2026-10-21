@@ -1,23 +1,24 @@
 module Admin
   class UsersController < BaseController
     include UserRoleManagement
+    include UserDirectory
 
     before_action :set_user, only: [ :edit, :update ]
 
     def index
-      authorize :admin, :index?
-      @users = User.order(:last_name, :first_name, :email)
+      authorize User, :index?
+      load_users_directory
     end
 
     def edit
-      authorize :admin, :edit?
+      authorize @user, :edit?
     end
 
     def update
-      authorize :admin, :update?
+      authorize @user, :update?
 
       @user.audit_actor = current_user
-      assign_user_role_and_active(@user)
+      assign_user_role_and_active(@user, allowed_roles: policy(@user).assignable_roles)
       ensure_commune_for_militant_role(@user)
 
       if @user.save

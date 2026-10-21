@@ -45,6 +45,20 @@ RSpec.describe "Admin panel", type: :request do
     end
   end
 
+  describe "GET /admin/users" do
+    it "lists users with roles for a technical admin" do
+      admin = create_user(role: :technical_admin)
+      target = create_user(role: :sympathizer, email: "listed@example.com")
+
+      sign_in admin
+      get admin_users_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(target.email)
+      expect(response.body).to include("Simpatizante")
+    end
+  end
+
   describe "PATCH /admin/users/:id" do
     it "changes a user role, records audit log, and updates permissions immediately" do
       admin = create_user(role: :technical_admin, email: "admin@example.com")

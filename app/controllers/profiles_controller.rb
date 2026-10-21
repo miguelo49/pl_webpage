@@ -27,6 +27,7 @@ class ProfilesController < ApplicationController
     params.require(:user).permit(
       :first_name,
       :last_name,
+      :profession,
       :avatar,
       :residence_commune_id,
       :work_commune_id,

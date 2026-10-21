@@ -4,6 +4,10 @@
         liberal: true,
         subtitle: "Consulta y edita tus datos básicos." %>
 
+  <%= render "profiles/staff_tools" %>
+
+  <%= render "profiles/profile_enrichment", user: current_user %>
+
   <%= turbo_frame_tag "profile" do %>
     <%= render "profiles/profile", user: @user, regions: @regions %>
   <% end %>

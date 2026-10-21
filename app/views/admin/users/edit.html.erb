@@ -4,6 +4,12 @@
   <div>
     <h2 class="text-xl font-semibold text-gray-900"><%= @user.full_name %></h2>
     <p class="text-sm text-gray-600"><%= @user.email %></p>
+    <p class="mt-2 text-sm text-gray-600">
+      Rol actual:
+      <span class="rounded-full px-2 py-0.5 text-xs font-medium <%= user_role_badge_class(@user.role) %>">
+        <%= user_role_label(@user.role) %>
+      </span>
+    </p>
   </div>
 
   <%= render "admin/shared/nav" %>
@@ -18,7 +24,7 @@
     <div>
       <%= form.label :role, "Rol", class: filter_label_class.sub("text-xs", "text-sm") %>
       <%= form.select :role,
-            User.roles.keys.map { |role| [ user_role_label(role), role ] },
+            policy(@user).assignable_roles.map { |role| [ user_role_label(role), role ] },
             {},
             class: filter_input_class %>
     </div>

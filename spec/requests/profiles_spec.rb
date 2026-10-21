@@ -60,12 +60,12 @@ RSpec.describe "Profile", type: :request do
       expect(response.body).to include("turbo-stream")
     end
 
-    it "returns unprocessable entity for invalid data" do
+    it "allows clearing optional name fields" do
       patch profile_path, params: { user: { first_name: "", last_name: "García" } }
 
-      expect(response).to have_http_status(:unprocessable_entity)
-      expect(response.body).to include("Mi perfil")
-      expect(user.reload.first_name).to eq("Ana")
+      expect(response).to redirect_to(profile_path)
+      expect(user.reload.first_name).to eq("")
+      expect(user.last_name).to eq("García")
     end
 
     it "rejects invalid avatar content type" do

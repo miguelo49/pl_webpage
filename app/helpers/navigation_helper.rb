@@ -1,4 +1,21 @@
 module NavigationHelper
+  STAFF_SIDEBAR_ITEMS = [
+    {
+      key: :staff_users,
+      label: "Usuarios",
+      path_helper: :admin_users_path,
+      controllers: %w[admin/users],
+      if: ->(user) { user.technical_admin? }
+    },
+    {
+      key: :staff_users,
+      label: "Usuarios",
+      path_helper: :moderation_users_path,
+      controllers: %w[moderation/users],
+      if: ->(user) { user.board_member? || user.moderator? }
+    }
+  ].freeze
+
   BOTTOM_NAV_ITEMS = [
     { key: :home, label: "Inicio", path_helper: :root_path, controllers: %w[home] },
     { key: :news, label: "Noticias", path_helper: :news_index_path, controllers: %w[news] },
@@ -27,6 +44,21 @@ module NavigationHelper
     else
       "#{base} lg:grid-cols-2 xl:grid-cols-3"
     end
+  end
+
+  def sidebar_nav_items
+    items = BOTTOM_NAV_ITEMS.dup
+    return items unless user_signed_in?
+
+    STAFF_SIDEBAR_ITEMS.each do |item|
+      items << item if item[:if].call(current_user)
+    end
+
+    items
+  end
+
+  def staff_sidebar_active?(item)
+    controller_path.in?(item[:controllers])
   end
 
   def bottom_nav_active?(item)
@@ -263,6 +295,8 @@ module NavigationHelper
       nav_svg("M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z")
     when :profile
       nav_svg("M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z")
+    when :staff_users
+      nav_svg("M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z")
     end
   end
 

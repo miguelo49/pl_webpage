@@ -18,7 +18,7 @@
     <div>
       <%= form.label :role, "Rol", class: filter_label_class.sub("text-xs", "text-sm") %>
       <%= form.select :role,
-            UserPolicy::MODERATOR_ASSIGNABLE_ROLES.map { |role| [ user_role_label(role), role ] },
+            policy(@user).assignable_roles.map { |role| [ user_role_label(role), role ] },
             {},
             class: filter_input_class %>
     </div>

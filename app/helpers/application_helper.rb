@@ -38,6 +38,14 @@ module ApplicationHelper
     status_badge_class(:neutral)
   end
 
+  def technical_admin_panel?
+    user_signed_in? && current_user.technical_admin?
+  end
+
+  def staff_moderation_panel?
+    user_signed_in? && current_user.moderator?
+  end
+
   AVATAR_SIZE_CLASSES = {
     sm: "h-7 w-7 text-[10px]",
     md: "h-9 w-9 text-xs",

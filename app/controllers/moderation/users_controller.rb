@@ -1,12 +1,14 @@
 module Moderation
-  class UsersController < BaseController
+  class UsersController < ApplicationController
     include UserRoleManagement
+    include UserDirectory
 
+    before_action :authenticate_user!
     before_action :set_user, only: [ :edit, :update ]
 
     def index
       authorize User, :index?
-      @users = policy_scope(User).order(:last_name, :first_name, :email)
+      load_users_directory
     end
 
     def edit
@@ -17,7 +19,7 @@ module Moderation
       authorize @user, :update?
 
       @user.audit_actor = current_user
-      assign_user_role_and_active(@user, allowed_roles: UserPolicy::MODERATOR_ASSIGNABLE_ROLES)
+      assign_user_role_and_active(@user, allowed_roles: policy(@user).assignable_roles)
       ensure_commune_for_militant_role(@user)
 
       if @user.save

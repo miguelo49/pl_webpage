@@ -1,5 +1,7 @@
 <nav class="flex flex-wrap gap-2 border-b border-gray-300 pb-3" aria-label="Secciones de moderación">
-  <%= link_to "Cola pendiente", moderation_root_path, class: secondary_nav_class(moderation_root_path) %>
-  <%= link_to "Reportes", moderation_reports_path, class: secondary_nav_class(moderation_reports_path) %>
+  <% if policy(:moderation).access? %>
+    <%= link_to "Cola pendiente", moderation_root_path, class: secondary_nav_class(moderation_root_path) %>
+    <%= link_to "Reportes", moderation_reports_path, class: secondary_nav_class(moderation_reports_path) %>
+  <% end %>
   <%= link_to "Usuarios", moderation_users_path, class: secondary_nav_class(moderation_users_path) %>
 </nav>

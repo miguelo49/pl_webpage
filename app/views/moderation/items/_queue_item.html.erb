@@ -43,12 +43,8 @@
 
     <% if entry.record.is_a?(ForumThread) %>
       <div class="flex items-center gap-2">
-        <%= form.check_box :sympathizer_visible,
-              { checked: entry.record.sympathizer_visible },
-              "1",
-              "0",
-              class: checkbox_class %>
-        <%= form.label :sympathizer_visible, "Visible para simpatizantes", class: "text-sm text-gray-700" %>
+        <%= check_box_tag :sympathizer_visible, "1", entry.record.sympathizer_visible, class: checkbox_class %>
+        <%= label_tag :sympathizer_visible, "Visible para simpatizantes", class: "text-sm text-gray-700" %>
       </div>
       <p class="text-xs text-gray-500">Desmarca para restringir el hilo a militantes y roles superiores.</p>
     <% end %>

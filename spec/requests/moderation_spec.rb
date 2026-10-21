@@ -128,6 +128,31 @@ RSpec.describe "Moderation panel", type: :request do
       expect(target.residence_commune).to eq(commune)
     end
 
+    it "does not allow a moderator to assign the moderator role" do
+      moderator = create_user(role: :moderator)
+      target = create_user(role: :sympathizer, email: "promote-target@example.com")
+
+      sign_in moderator
+
+      patch moderation_user_path(target), params: { user: { role: "moderator", active: "1" } }
+
+      expect(target.reload.role).to eq("sympathizer")
+    end
+
+    it "allows a board member to list users and promote to militant" do
+      board = create_user(role: :board_member)
+      target = create_user(role: :sympathizer, email: "board-target@example.com")
+
+      sign_in board
+
+      get moderation_users_path
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(target.email)
+
+      patch moderation_user_path(target), params: { user: { role: "militant", active: "1" } }
+      expect(target.reload.role).to eq("militant")
+    end
+
     it "denies a moderator from editing a technical admin" do
       moderator = create_user(role: :moderator)
       admin = create_user(role: :technical_admin, email: "tech-admin@example.com")
