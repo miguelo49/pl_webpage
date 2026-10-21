@@ -107,4 +107,36 @@ RSpec.describe "Moderation panel", type: :request do
       expect(thread.reload).to be_pending
     end
   end
+
+  describe "Moderation users" do
+    it "allows a moderator to list users and change roles" do
+      moderator = create_user(role: :moderator)
+      target = create_user(role: :sympathizer, email: "role-target@example.com")
+
+      sign_in moderator
+
+      get moderation_users_path
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(target.email)
+
+      expect {
+        patch moderation_user_path(target), params: { user: { role: "militant", active: "1" } }
+      }.to change(AuditLog, :count).by(1)
+
+      target.reload
+      expect(target.role).to eq("militant")
+      expect(target.residence_commune).to eq(commune)
+    end
+
+    it "denies a moderator from editing a technical admin" do
+      moderator = create_user(role: :moderator)
+      admin = create_user(role: :technical_admin, email: "tech-admin@example.com")
+
+      sign_in moderator
+
+      get edit_moderation_user_path(admin)
+
+      expect(response).to redirect_to(root_path)
+    end
+  end
 end

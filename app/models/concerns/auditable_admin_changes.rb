@@ -12,7 +12,7 @@ module AuditableAdminChanges
   private
 
   def record_admin_audit_log
-    return unless audit_actor&.technical_admin?
+    return unless audit_actor&.moderator? || audit_actor&.technical_admin?
 
     if saved_change_to_role?
       audit_logs.create!(

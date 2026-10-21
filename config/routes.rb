@@ -56,6 +56,7 @@ Rails.application.routes.draw do
   namespace :moderation do
     root to: "queue#index"
     resources :reports, only: [ :index ]
+    resources :users, only: [ :index, :edit, :update ]
     patch "items/:type/:id", to: "items#update", as: :item
   end
 

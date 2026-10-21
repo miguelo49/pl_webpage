@@ -1,5 +1,7 @@
 module Admin
   class UsersController < BaseController
+    include UserRoleManagement
+
     before_action :set_user, only: [ :edit, :update ]
 
     def index
@@ -15,7 +17,7 @@ module Admin
       authorize :admin, :update?
 
       @user.audit_actor = current_user
-      assign_admin_user_attributes
+      assign_user_role_and_active(@user)
       ensure_commune_for_militant_role(@user)
 
       if @user.save
@@ -27,24 +29,8 @@ module Admin
 
     private
 
-    def assign_admin_user_attributes
-      role = params.dig(:user, :role)
-      @user.role = role if role.present? && User.roles.key?(role)
-
-      if params[:user].key?(:active)
-        @user.active = ActiveModel::Type::Boolean.new.cast(params[:user][:active])
-      end
-    end
-
     def set_user
       @user = User.find(params[:id])
-    end
-
-    def ensure_commune_for_militant_role(user)
-      return unless user.militant_or_above?
-      return if user.residence_commune_id.present?
-
-      user.residence_commune = current_user.residence_commune || Commune.first
     end
   end
 end
