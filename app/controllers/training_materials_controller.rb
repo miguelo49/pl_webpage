@@ -3,7 +3,7 @@ class TrainingMaterialsController < ApplicationController
   include ReadMarkHandling
 
   before_action :authenticate_user!
-  before_action :set_training_material, only: [ :show, :download, :bookmark, :read_mark ]
+  before_action :set_training_material, only: [ :show, :edit, :update, :download, :bookmark, :read_mark ]
 
   def index
     authorize TrainingMaterial
@@ -38,6 +38,22 @@ class TrainingMaterialsController < ApplicationController
       redirect_to training_material_path(@training_material), notice: "Material publicado correctamente."
     else
       render :new, status: :unprocessable_entity
+    end
+  end
+
+  def edit
+    authorize @training_material
+    @training_categories = TrainingCategory.order(:name)
+  end
+
+  def update
+    authorize @training_material
+    @training_categories = TrainingCategory.order(:name)
+
+    if @training_material.update(training_material_params)
+      redirect_to training_material_path(@training_material), notice: "Material actualizado correctamente."
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 

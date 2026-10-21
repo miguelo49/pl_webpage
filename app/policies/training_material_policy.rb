@@ -17,6 +17,10 @@ class TrainingMaterialPolicy < ApplicationPolicy
     authenticated? && (user.board_member? || user.technical_admin?)
   end
 
+  def update?
+    create?
+  end
+
   class Scope < Scope
     def resolve
       return scope.none unless user

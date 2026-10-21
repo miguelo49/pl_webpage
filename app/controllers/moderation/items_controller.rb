@@ -23,6 +23,7 @@ module Moderation
 
       @item.moderated_by = current_user
       @item.moderation_rejection_reason = params[:rejection_reason]
+      apply_thread_audience if @item.is_a?(ForumThread)
 
       if @item.update(status: DECISIONS.fetch(params[:decision]))
         respond_to do |format|
@@ -48,6 +49,12 @@ module Moderation
 
     def reject_without_reason?
       params[:decision] == "reject" && params[:rejection_reason].to_s.strip.blank?
+    end
+
+    def apply_thread_audience
+      return unless params.key?(:sympathizer_visible)
+
+      @item.sympathizer_visible = ActiveModel::Type::Boolean.new.cast(params[:sympathizer_visible])
     end
   end
 end

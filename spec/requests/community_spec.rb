@@ -22,12 +22,13 @@ RSpec.describe "Community threads and comments", type: :request do
     User.create!(attrs)
   end
 
-  def create_thread(author:, title: "Hilo visible", status: nil, topic_for: topic)
+  def create_thread(author:, title: "Hilo visible", status: nil, topic_for: topic, sympathizer_visible: true)
     thread = ForumThread.create!(
       title: title,
       body: "Contenido del hilo",
       topic: topic_for,
-      user: author
+      user: author,
+      sympathizer_visible: sympathizer_visible
     )
     thread.update_column(:status, status) if status
     thread.reload
@@ -108,6 +109,17 @@ RSpec.describe "Community threads and comments", type: :request do
       expect(response.body).not_to include("Hilo paginado 10")
     end
 
+    it "hides militant-only threads from sympathizers" do
+      author = create_user(role: :board_member)
+      viewer = create_user(role: :sympathizer)
+      create_thread(author: author, title: "Solo militantes", status: :approved, sympathizer_visible: false)
+
+      sign_in viewer
+      get threads_path
+
+      expect(response.body).not_to include("Solo militantes")
+    end
+
     it "does not list news discussion threads in the forum" do
       author = create_user(role: :board_member)
       viewer = create_user(role: :sympathizer)
@@ -160,6 +172,26 @@ RSpec.describe "Community threads and comments", type: :request do
       expect(response).to redirect_to(threads_path)
       follow_redirect!
       expect(response.body).to include("Las noticias se publican desde la sección Noticias.")
+    end
+  end
+
+  describe "PATCH /topics/:topic_id/threads/:id" do
+    it "allows a moderator to change thread audience after publication" do
+      author = create_user(role: :sympathizer)
+      moderator = create_user(role: :moderator)
+      thread = create_thread(author: author, title: "Hilo restringido", status: :approved)
+
+      sign_in moderator
+      patch topic_thread_path(topic, thread), params: {
+        forum_thread: {
+          title: thread.title,
+          body: thread.body,
+          sympathizer_visible: "0"
+        }
+      }
+
+      expect(response).to redirect_to(topic_thread_path(topic, thread))
+      expect(thread.reload.sympathizer_visible).to be(false)
     end
   end
 

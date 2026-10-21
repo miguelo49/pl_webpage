@@ -41,6 +41,18 @@
             placeholder: "Obligatorio al rechazar" %>
     </div>
 
+    <% if entry.record.is_a?(ForumThread) %>
+      <div class="flex items-center gap-2">
+        <%= form.check_box :sympathizer_visible,
+              { checked: entry.record.sympathizer_visible },
+              "1",
+              "0",
+              class: checkbox_class %>
+        <%= form.label :sympathizer_visible, "Visible para simpatizantes", class: "text-sm text-gray-700" %>
+      </div>
+      <p class="text-xs text-gray-500">Desmarca para restringir el hilo a militantes y roles superiores.</p>
+    <% end %>
+
     <%= form.submit "Resolver", class: primary_button_class, data: { turbo_stream: true } %>
   <% end %>
 </div>

@@ -39,6 +39,20 @@ RSpec.describe TrainingMaterialPolicy, type: :policy do
     end
   end
 
+  describe "#update?" do
+    context "when user is a board member" do
+      let(:user) { build_user(:board_member) }
+
+      it { expect(described_class.new(user, TrainingMaterial.new).update?).to be true }
+    end
+
+    context "when user is a sympathizer" do
+      let(:user) { build_user(:sympathizer) }
+
+      it { expect(described_class.new(user, TrainingMaterial.new).update?).to be false }
+    end
+  end
+
   describe "#create?" do
     context "when user is not authenticated" do
       let(:user) { nil }

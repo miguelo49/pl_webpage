@@ -28,7 +28,7 @@ Rails.application.routes.draw do
     resource :attendance, only: [ :create, :update ]
   end
 
-  resources :training_materials, only: [ :index, :show, :new, :create ] do
+  resources :training_materials, only: [ :index, :show, :new, :create, :edit, :update ] do
     member do
       get :download
       post :bookmark

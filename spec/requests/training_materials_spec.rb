@@ -161,6 +161,29 @@ RSpec.describe "Training materials library", type: :request do
       expect(response.body).to include(material.title)
     end
 
+    it "allows board members to update audience and metadata" do
+      board_member = create_user(role: :board_member)
+      material = create_material(category: ideology_category, title: "Manual editable", sympathizer_visible: true)
+
+      sign_in board_member
+      patch training_material_path(material), params: {
+        training_material: {
+          title: "Manual actualizado",
+          description: material.description,
+          author: material.author,
+          date: material.date,
+          training_category_id: ideology_category.id,
+          tags: "",
+          sympathizer_visible: "0"
+        }
+      }
+
+      expect(response).to redirect_to(training_material_path(material))
+      material.reload
+      expect(material.title).to eq("Manual actualizado")
+      expect(material.sympathizer_visible).to be(false)
+    end
+
     it "forbids militants from creating materials" do
       militant = create_user(role: :militant)
 

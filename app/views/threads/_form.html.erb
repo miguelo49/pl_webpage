@@ -21,5 +21,9 @@
     <%= form.text_area :body, rows: 5, class: filter_input_class %>
   </div>
 
-  <%= form.submit "Publicar hilo", class: primary_button_class %>
+  <% if policy(thread).manage_audience? %>
+    <%= render "shared/sympathizer_audience_fields", form: form %>
+  <% end %>
+
+  <%= form.submit(thread.persisted? ? "Guardar cambios" : "Publicar hilo", class: primary_button_class) %>
 <% end %>

@@ -11,7 +11,13 @@ class ThreadPolicy < ApplicationPolicy
   def update?
     return false unless authenticated?
 
-    record.user_id == user.id || user.board_member? || user.moderator?
+    record.user_id == user.id || manage_audience?
+  end
+
+  def manage_audience?
+    return false unless authenticated?
+
+    user.board_member? || user.moderator? || user.technical_admin?
   end
 
   def index?
@@ -21,10 +27,13 @@ class ThreadPolicy < ApplicationPolicy
   def show?
     return false unless authenticated?
 
-    return true if record.approved?
-    return true if record.user_id == user.id
+    return true if manage_audience?
 
-    user.board_member? || user.moderator? || user.technical_admin?
+    return true if record.user_id.present? && record.user_id == user.id
+
+    return false unless record.approved?
+
+    audience_visible?
   end
 
   class Scope < Scope
@@ -33,9 +42,17 @@ class ThreadPolicy < ApplicationPolicy
 
       if user.board_member? || user.moderator? || user.technical_admin?
         scope.all
-      else
+      elsif user.militant_or_above?
         scope.publicly_visible
+      else
+        scope.publicly_visible.where(sympathizer_visible: true)
       end
     end
+  end
+
+  private
+
+  def audience_visible?
+    record.sympathizer_visible? || militant_or_above?
   end
 end

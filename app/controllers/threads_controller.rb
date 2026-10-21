@@ -56,7 +56,8 @@ class ThreadsController < ApplicationController
   end
 
   def create
-    @thread = @topic.threads.build(thread_params.merge(user: current_user))
+    @thread = @topic.threads.build(user: current_user)
+    @thread.assign_attributes(thread_params)
     authorize @thread
 
     if @thread.save
@@ -103,7 +104,11 @@ class ThreadsController < ApplicationController
   end
 
   def thread_params
-    params.require(:forum_thread).permit(:title, :body)
+    permitted_keys = [ :title, :body ]
+    thread_for_policy = @thread || ForumThread.new(user: current_user)
+    permitted_keys << :sympathizer_visible if policy(thread_for_policy).manage_audience?
+
+    params.require(:forum_thread).permit(*permitted_keys)
   end
 
   def visible_comments
