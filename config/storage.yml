@@ -8,7 +8,7 @@ test:
   service: Disk
   root: <%= Rails.root.join("tmp/storage") %>
 
-# Local disk storage for development and as a production fallback.
+# Local disk storage for development and Render persistent disk in production.
 local:
   service: Disk
   root: <%= Rails.root.join("storage") %>

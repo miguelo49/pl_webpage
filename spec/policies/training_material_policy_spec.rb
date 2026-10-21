@@ -13,6 +13,32 @@ RSpec.describe TrainingMaterialPolicy, type: :policy do
     )
   end
 
+  describe "#show?" do
+    let(:material) { TrainingMaterial.new(sympathizer_visible: true) }
+
+    subject(:policy) { described_class.new(user, material) }
+
+    context "when user is a sympathizer and material is visible to sympathizers" do
+      let(:user) { build_user(:sympathizer) }
+
+      it { expect(policy.show?).to be true }
+    end
+
+    context "when user is a sympathizer and material is militant-only" do
+      let(:user) { build_user(:sympathizer) }
+      let(:material) { TrainingMaterial.new(sympathizer_visible: false) }
+
+      it { expect(policy.show?).to be false }
+    end
+
+    context "when user is a militant and material is militant-only" do
+      let(:user) { build_user(:militant) }
+      let(:material) { TrainingMaterial.new(sympathizer_visible: false) }
+
+      it { expect(policy.show?).to be true }
+    end
+  end
+
   describe "#create?" do
     context "when user is not authenticated" do
       let(:user) { nil }

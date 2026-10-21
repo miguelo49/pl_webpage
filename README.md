@@ -88,3 +88,37 @@ bundle exec rspec
 ## CI
 
 GitHub Actions runs its own PostgreSQL service; no Docker Compose required in CI.
+
+## Production (Render + Supabase)
+
+The app ships with a [`render.yaml`](render.yaml) blueprint for [Render](https://render.com):
+
+- **Web service**: Docker image from [`Dockerfile`](Dockerfile), health check at `/up`.
+- **Database**: [Supabase](https://supabase.com) PostgreSQL. Prefer the **Session pooler** URI (port `5432`) in `DATABASE_URL` so `db:prepare` / migrations work on deploy; the Transaction pooler (`6543`) can break migrations.
+- **Uploaded files**: Render **persistent disk** mounted at `/rails/storage` (Active Storage `local` service in production).
+
+### Render environment variables
+
+| Variable | Required | Notes |
+|----------|----------|--------|
+| `DATABASE_URL` | Yes | Supabase pooler URL (`?sslmode=require` is usually included) |
+| `RAILS_MASTER_KEY` | Yes | Contents of `config/master.key` |
+| `SECRET_KEY_BASE` | Yes | Can use Render’s generated value |
+| `APP_HOST` | Recommended | Public hostname (custom domain or `*.onrender.com`) for mailer URLs and host authorization |
+| `SEED_TECHNICAL_ADMIN_EMAIL` | For first deploy | Creates the initial technical admin when running `db:seed` |
+| `SEED_TECHNICAL_ADMIN_PASSWORD` | For first deploy | Strong password for that account |
+
+`preDeployCommand` runs `db:prepare` and `db:seed`. Production seeds load only reference data (regions, communes, topics, training categories) and optionally the technical admin—no demo news or users.
+
+### Deploy steps
+
+1. Create a Supabase project and note the pooled `DATABASE_URL`.
+2. In Render, **New → Blueprint** and point at this repo (or create a Web Service manually with the same settings as `render.yaml`).
+3. Set the env vars above; attach a 1 GB disk at `/rails/storage`.
+4. Deploy. Sign in with the seeded technical admin, then create moderators via the admin panel.
+
+### Roles and documents
+
+- New registrations are always **simpatizante** (`sympathizer`).
+- Training materials can be marked **visible para simpatizantes**; otherwise only militantes and higher roles can open or download them.
+- **Moderadores** manage roles under `/moderation/users` (simpatizante, militante, directiva, moderador).

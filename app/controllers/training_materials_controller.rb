@@ -12,7 +12,7 @@ class TrainingMaterialsController < ApplicationController
     @selected_category_id = params[:training_category_id]
     @training_categories = TrainingCategory.order(:name)
 
-    @training_materials = TrainingMaterial
+    @training_materials = policy_scope(TrainingMaterial)
       .includes(:training_category, :bookmarks, :read_marks, cover_image_attachment: :blob)
       .search_by(@query)
       .by_category(@selected_category_id)
@@ -79,6 +79,7 @@ class TrainingMaterialsController < ApplicationController
       :date,
       :training_category_id,
       :tags,
+      :sympathizer_visible,
       :pdf,
       :cover_image
     )

@@ -61,6 +61,6 @@ test:
 #
 production:
   <<: *default
-  database: pl_webpage_production
-  username: pl_webpage
-  password: <%= ENV["PL_WEBPAGE_DATABASE_PASSWORD"] %>
+  url: <%= ENV["DATABASE_URL"] %>
+  # Supabase pooler (transaction mode) works best without prepared statements.
+  prepared_statements: false

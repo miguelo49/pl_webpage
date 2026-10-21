@@ -21,14 +21,15 @@ RSpec.describe "Training materials library", type: :request do
     User.create!(attrs)
   end
 
-  def create_material(category:, title:, tags: [], attach_pdf: false)
+  def create_material(category:, title:, tags: [], attach_pdf: false, sympathizer_visible: true)
     material = TrainingMaterial.create!(
       title: title,
       description: "Descripción de #{title}",
       author: "Equipo editorial",
       date: Date.current,
       training_category: category,
-      tags: tags
+      tags: tags,
+      sympathizer_visible: sympathizer_visible
     )
 
     if attach_pdf
@@ -57,6 +58,19 @@ RSpec.describe "Training materials library", type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include("Manual de estatutos")
       expect(response.body).not_to include("Guía territorial")
+    end
+
+    it "hides militant-only materials from sympathizers" do
+      user = create_user(role: :sympathizer)
+      create_material(category: ideology_category, title: "Público simpatizantes", sympathizer_visible: true)
+      create_material(category: organization_category, title: "Solo militantes", sympathizer_visible: false)
+
+      sign_in user
+      get training_materials_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Público simpatizantes")
+      expect(response.body).not_to include("Solo militantes")
     end
 
     it "filters materials by tag search" do

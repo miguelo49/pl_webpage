@@ -1,0 +1,36 @@
+# Render Blueprint: https://render.com/docs/blueprint-spec
+# Database: use Supabase PostgreSQL and set DATABASE_URL on the web service.
+# File uploads: persistent disk mounted at /rails/storage (Active Storage local service).
+
+services:
+  - type: web
+    name: pl-webpage
+    runtime: docker
+    plan: starter
+    region: oregon
+    healthCheckPath: /up
+    dockerfilePath: ./Dockerfile
+    disk:
+      name: pl-storage
+      mountPath: /rails/storage
+      sizeGB: 1
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_LOG_TO_STDOUT
+        value: "true"
+      - key: RAILS_SERVE_STATIC_FILES
+        value: "true"
+      - key: DATABASE_URL
+        sync: false
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: SECRET_KEY_BASE
+        generateValue: true
+      - key: APP_HOST
+        sync: false
+      - key: SEED_TECHNICAL_ADMIN_EMAIL
+        sync: false
+      - key: SEED_TECHNICAL_ADMIN_PASSWORD
+        sync: false
+    preDeployCommand: bin/rails db:prepare && bin/rails db:seed

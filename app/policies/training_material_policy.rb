@@ -6,7 +6,7 @@ class TrainingMaterialPolicy < ApplicationPolicy
   end
 
   def show?
-    index?
+    visible_material?
   end
 
   def download?
@@ -15,5 +15,25 @@ class TrainingMaterialPolicy < ApplicationPolicy
 
   def create?
     authenticated? && (user.board_member? || user.technical_admin?)
+  end
+
+  class Scope < Scope
+    def resolve
+      return scope.none unless user
+
+      if user.militant_or_above?
+        scope.all
+      else
+        scope.where(sympathizer_visible: true)
+      end
+    end
+  end
+
+  private
+
+  def visible_material?
+    return false unless authenticated?
+
+    record.sympathizer_visible? || militant_or_above?
   end
 end
